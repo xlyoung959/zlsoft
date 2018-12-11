@@ -10,9 +10,9 @@ namespace Domain
     {
         
         public string ID { get; set; }
-        public string 上级ID { get; set; }
-        public string 编码 { get; set; }
-        public string 名称 { get; set; }
+        public string parentId { get; set; }   //上级ID
+        public string code { get; set; }      //编码
+        public string name { get; set; }     //姓名
         public string 简码 { get; set; }
         public string 位置 { get; set; }
         public string 末级 { get; set; }
