@@ -8,15 +8,15 @@ namespace Domain
 {
     public class Peopel
     {
-        public string ID { get; set; }
+        public int Id { get; set; }  
         public string code { get; set; }//编号
-        public string name { get; set; }
-        public string 简码 { get; set; }
-        public string 身份证号 { get; set; }
-        public string 出生日期 { get; set; }
-        public string 性别 { get; set; }
-        public string 民族 { get; set; }
-        public string 工作日期 { get; set; }
+        public string name { get; set; }//名称
+        public string simCode { get; set; }//简码
+        public string IdCard { get; set; }//身份证
+        public string birthday { get; set; }//出生日期
+        public string sex { get; set; }//性别
+        public string national { get; set; }//民族
+        public string workDate { get; set; }//工作日期
         public string 办公室电话 { get; set; }
         public string 电子邮件 { get; set; }
         public string 执业类别 { get; set; }

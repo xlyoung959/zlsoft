@@ -26,17 +26,17 @@ namespace case1.Controllers
         [HttpPost]
         public int insertDept()
         {
-            dept.ID = Request.Form["id"];
-            dept.上级ID = Request.Form["上级ID"];
-            dept.位置 = Request.Form["位置"];
-            dept.名称 = Request.Form["名称"];
-            dept.建档时间 = Request.Form["建档时间"];
-            dept.末级 = Request.Form["末级"];
-            dept.环境类别 = Request.Form["环境类别"];
-            dept.位置 = Request.Form["位置"];
-            dept.站点 = Request.Form["站点"];
-            dept.简码 = Request.Form["简码"];
-            dept.编码 = Request.Form["编码"];
+            dept.Id = int.Parse(Request.Form["Id"]);
+            dept.parentId = int.Parse(Request.Form["parentId"]);
+            dept.location = Request.Form["location"];
+            dept.name = Request.Form["name"];
+            dept.createTime = Request.Form["createTime"];
+            dept.finalNode = int.Parse(Request.Form["finalNode"]);
+            dept.envCat = Request.Form["envCat"];
+            dept.location = Request.Form["location"];
+            dept.site = Request.Form["site"];
+            dept.simCode = Request.Form["simCode"];
+            dept.code = Request.Form["code"];
             return deptService.insertDept(dept);
         }
     }
