@@ -1,0 +1,10 @@
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Service.dll
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Service.pdb
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Dao.dll
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Domain.dll
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Oracle.DataAccess.dll
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Dao.pdb
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Domain.pdb
+E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.csprojResolveAssemblyReference.cache
+E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.dll
+E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.pdb

@@ -1,0 +1,8 @@
+E:\visual studio 2015\Projects\case1\Dao\bin\Debug\Dao.dll
+E:\visual studio 2015\Projects\case1\Dao\bin\Debug\Dao.pdb
+E:\visual studio 2015\Projects\case1\Dao\bin\Debug\Domain.dll
+E:\visual studio 2015\Projects\case1\Dao\bin\Debug\Oracle.DataAccess.dll
+E:\visual studio 2015\Projects\case1\Dao\bin\Debug\Domain.pdb
+E:\visual studio 2015\Projects\case1\Dao\obj\Debug\Dao.csprojResolveAssemblyReference.cache
+E:\visual studio 2015\Projects\case1\Dao\obj\Debug\Dao.dll
+E:\visual studio 2015\Projects\case1\Dao\obj\Debug\Dao.pdb
