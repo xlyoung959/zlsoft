@@ -9,9 +9,8 @@ namespace Domain
     public class Peopel
     {
         public string ID { get; set; }
-        public string 编号 { get; set; }
-        public string 姓名 { get; set; }
-
+        public string code { get; set; }//编号
+        public string name { get; set; }
         public string 简码 { get; set; }
         public string 身份证号 { get; set; }
         public string 出生日期 { get; set; }
