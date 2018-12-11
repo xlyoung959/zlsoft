@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dept.cs" />
+    <Compile Include="DeptTree.cs" />
     <Compile Include="OracleHelper.cs" />
     <Compile Include="Peopel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

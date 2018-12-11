@@ -62,27 +62,35 @@ namespace Dao
                  new OracleParameter("finalNode",OracleDbType.Int32,1) { Value=dept.finalNode},
                  new OracleParameter("site",OracleDbType.Varchar2,1) { Value=dept.site},
                  new OracleParameter("envCat",OracleDbType.Varchar2,10) { Value=dept.envCat},
-                 new OracleParameter("lastTime",OracleDbType.Date) { Value=dept.lastTime},
+                 new OracleParameter("lastTime",OracleDbType.Date) { Value=DateTime.Now.ToShortDateString()},
                  new OracleParameter("ID",OracleDbType.Int32,10) { Value=dept.Id}
                 };
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
         }
         /// <summary>
-        /// 删除组织（删除组织并不真的删除，而是传入侧档时间）
+        /// 删除组织
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int deleteDept(int id,string deleteTime)
+        public int deleteDept(int id)
         {
-            string sql = "update 部门表 set 撤档时间=:deleteTime where ID=:ID";
+            string sql = "delete from 部门表 where ID=:ID";
             OracleParameter[] prms = new OracleParameter[]
                {
-                 new OracleParameter("deleteTime",OracleDbType.Int32,10) { Value=deleteTime},
                  new OracleParameter("ID",OracleDbType.Varchar2,10) { Value=id}
                };
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
+        }
+        /// <summary>
+        /// 查询所有的组织
+        /// </summary>
+        /// <returns></returns>
+        public DataTable selectDeptTree()
+        {
+            string sql = "select 名称,ID,上级ID from 部门表";
+          return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
         }
     }
 }

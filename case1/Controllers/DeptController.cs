@@ -16,6 +16,7 @@ namespace case1.Controllers
         // GET: Dept
         public ActionResult Index()
         {
+            var aa= deptService.getTree();
             return View();
         }
         /// <summary>
