@@ -84,7 +84,7 @@ namespace Dao
             return r;
         }
         /// <summary>
-        /// 查询所有的组织
+        /// 查询所有组织的名称，ID，上级ID
         /// </summary>
         /// <returns></returns>
         public DataTable selectDeptTree()

@@ -16,7 +16,7 @@ namespace case1.Controllers
         // GET: Dept
         public ActionResult Index()
         {
-            var aa= deptService.getTree();
+            
             return View();
         }
         /// <summary>
@@ -39,6 +39,17 @@ namespace case1.Controllers
             dept.simCode = Request.Form["simCode"];
             dept.code = Request.Form["code"];
             return deptService.insertDept(dept);
+        }
+        /// <summary>
+        /// 返回组织列表树结构
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ContentResult getDeptTree()
+        {
+            var data = deptService.getTree();
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
+            return Content(dataStr);
         }
     }
 }
