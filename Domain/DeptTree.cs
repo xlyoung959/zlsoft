@@ -9,7 +9,7 @@ namespace Domain
     public class DeptTree
     {
         //ztree的target属性值设置为content
-        private  string target = "content";
+        public  string target = "content";
         public int id { get; set; }
         public int pid { get; set; }
         public string name { get; set; }
