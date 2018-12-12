@@ -45,11 +45,11 @@ namespace case1.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ContentResult getDeptTree()
+        public JsonResult getDeptTree()
         {
             var data = deptService.getTree();
-            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
-            return Content(dataStr);
+ 
+            return Json(data);
         }
     }
 }

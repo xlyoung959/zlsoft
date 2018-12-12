@@ -54,6 +54,8 @@ namespace Service
             resultList = getListByParentId(0, dt);
             return resultList;
         }
+
+      
         /// <summary>
         /// 
         /// </summary>
@@ -62,19 +64,22 @@ namespace Service
         /// <returns></returns>
         public List<DeptTree> getListByParentId(int parentId, DataTable dt)
         {
-            var treeList = new List<DeptTree>();
-            var deptTree = new DeptTree();
+            List<DeptTree> treeList = new List<DeptTree>();
+            
            
             var currentList = parentId==0? dt.Select("上级ID is NULL"): dt.Select("上级ID="+ parentId);
             if (currentList.Count() > 0)
             {
                 foreach (var dr in currentList)
                 {
+                    var deptTree = new DeptTree();
                     deptTree.id = Convert.ToInt32(dr["ID"]);
                     deptTree.name = dr["名称"].ToString();
                     deptTree.pid = parentId;
+                    deptTree.isParent = true;
                     treeList.Add(deptTree);
                     deptTree.children = getListByParentId(deptTree.id, dt);
+                 
                 }
             }
             return treeList;

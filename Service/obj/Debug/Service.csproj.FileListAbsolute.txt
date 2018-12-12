@@ -8,3 +8,6 @@ E:\visual studio 2015\Projects\case1\Service\bin\Debug\Domain.pdb
 E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.csprojResolveAssemblyReference.cache
 E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.dll
 E:\visual studio 2015\Projects\case1\Service\obj\Debug\Service.pdb
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Newtonsoft.Json.pdb
+E:\visual studio 2015\Projects\case1\Service\bin\Debug\Newtonsoft.Json.xml

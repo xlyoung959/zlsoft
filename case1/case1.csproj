@@ -48,6 +48,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -89,16 +93,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\layui.css" />
+    <Content Include="Content\layui.mobile.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\zTreeStyle.css" />
+    <Content Include="font\iconfont.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="font\iconfont.eot" />
+    <Content Include="font\iconfont.ttf" />
+    <Content Include="font\iconfont.woff" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="img\close.png" />
+    <Content Include="img\diy\2.png" />
+    <Content Include="img\diy\3.png" />
+    <Content Include="img\diy\4.png" />
+    <Content Include="img\diy\5.png" />
+    <Content Include="img\diy\6.png" />
+    <Content Include="img\diy\7.png" />
+    <Content Include="img\diy\8.png" />
+    <Content Include="img\diy\9.png" />
+    <Content Include="img\line_conn.gif" />
+    <Content Include="img\loading.gif" />
+    <Content Include="img\open.png" />
+    <Content Include="img\zTreeStandard.gif" />
+    <Content Include="img\zTreeStandard.png" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.ztree.core.min.js" />
+    <Content Include="Scripts\layui.all.js" />
+    <Content Include="Scripts\layui.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -115,9 +138,6 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

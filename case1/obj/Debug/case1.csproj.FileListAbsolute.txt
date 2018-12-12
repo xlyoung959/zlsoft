@@ -38,3 +38,12 @@ E:\visual studio 2015\Projects\case1\case1\bin\Dao.pdb
 E:\visual studio 2015\Projects\case1\case1\obj\Debug\case1.csprojResolveAssemblyReference.cache
 E:\visual studio 2015\Projects\case1\case1\obj\Debug\case1.dll
 E:\visual studio 2015\Projects\case1\case1\obj\Debug\case1.pdb
+E:\visual studio 2015\Projects\case1\case1\bin\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\case1\case1\bin\Newtonsoft.Json.pdb
+E:\visual studio 2015\Projects\case1\case1\bin\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Razor.resources.dll
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Webpages.resources.dll
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Webpages.Deployment.resources.dll
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Webpages.Razor.resources.dll
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Helpers.resources.dll
+E:\visual studio 2015\Projects\case1\case1\bin\zh-Hans\System.Web.Mvc.resources.dll

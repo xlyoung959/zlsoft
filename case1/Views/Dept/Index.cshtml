@@ -1,14 +1,83 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    Layout = null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>部门页面</title>
     <link href="~/Content/layui.css" rel="stylesheet" />
-    <script src="~/Scripts/layui.all.js"></script>
+    <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.ztree.core.min.js"></script>
+   
 </head>
 <body>
+    <button class="layui-btn layui-btn-normal" id="getTree">获取树形结构</button>
+    <div>
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
 
+    <script>
+        var zTreeObj;
+        //配置树的样式
+        var setting = {
+            view: {
+                dblClickExpand: false,//双击节点时，是否自动展开父节点的标识
+                showLine: true,//是否显示节点之间的连线
+                fontCss: { 'color': 'black', 'font-weight': '300','font-size':'14px' },//字体样式函数
+                selectedMulti: true //设置是否允许同时选中多个节点
+            },
+            check: {
+                chkboxType: { "Y": "", "N": "" },
+                chkStyle: "checkbox",//复选框类型
+                enable: true //每个节点上是否显示 CheckBox
+            },
+            edit: {
+                enable: true,
+                editNameSelectAll: true,
+                showRemoveBtn: true,
+                showRenameBtn: true,
+                removeTitle: "remove",
+                renameTitle: "rename"
+            },
+            data: {
+                simpleData: {//简单数据模式
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "IPARENTID",
+                    rootPId: null
+                }
+            },
+
+            callback: {
+                onClick: function (event, treeId, treeNode, clickFlag) {
+                    console.log(treeNode.id)//当前li的id，注意是dom id，原始的id自己去掉前缀treeDemo_，其中treeDemo是ztree容器id
+                    console.log(treeNode.name)
+                }
+            }
+
+        };
+            $("#getTree").click(function () {
+                $.ajax({
+                    url: "/Dept/getDeptTree",
+                    dateType: "json",
+                    type: "POST",
+                    success: function (data) {
+                        console.log(data);
+                        //调用layui.tree方法
+                        $(document).ready(function () {
+                            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+                        });
+                    }
+                });
+            });
+
+       
+    
+     
+    </script>
+   
 </body>
 </html>
 
