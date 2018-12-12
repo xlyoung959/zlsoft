@@ -13,17 +13,27 @@
    
 </head>
 <body>
+    
+    <div class="layui-header">
     <button class="layui-btn layui-btn-normal" id="getTree">获取树形结构</button>
-    <div>
-        <ul id="treeDemo" class="ztree"></ul>
+<button id="hide" class="layui-btn layui-btn-normal">隐藏</button></div>
+    <div class="layui-side" style="margin-top:50px">
+        <div>
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+       
     </div>
-    <div>12</div>
+  <div class="layui-body" >
+      <iframe name="content" width="100%" height="100%"></iframe>
+  </div>
+   
     <script>
+        
         var zTreeObj;
         //配置树的样式
         var setting = {
             view: {
-                dblClickExpand: false,//双击节点时，是否自动展开父节点的标识
+                dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
                 showLine: true,//是否显示节点之间的连线
                 fontCss: { 'color': 'black', 'font-weight': '300','font-size':'14px' },//字体样式函数
                 selectedMulti: true //设置是否允许同时选中多个节点
@@ -48,13 +58,10 @@
                     pIdKey: "IPARENTID",
                     rootPId: null
                 }
-            },
+            } ,
             callback: {
-                onClick: function (event, treeId, treeNode, clickFlag) {
-                    
-                }
+                onClick: zTreeOnClick
             }
-
         };
 
         //点击获取树形菜单
@@ -64,7 +71,6 @@
                     dateType: "json",
                     type: "POST",
                     success: function (data) {
-                        console.log(data);
                         //调用layui.tree方法
                         $(document).ready(function () {
                             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
@@ -72,7 +78,15 @@
                     }
                 });
             });
+            
+        //点击树的节点时要处理的方法
+            function zTreeOnClick(event, treeId, treeNode) {
+               
+              //  location.href = "/Dept/Content";
+                $("#treeDemo li a").attr('href', '/Dept/Content');
 
+                
+            }
     </script>
    
 </body>

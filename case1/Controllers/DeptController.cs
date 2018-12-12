@@ -17,7 +17,12 @@ namespace case1.Controllers
         public ActionResult Index()
         {
             
-            return View();
+            return View("Index");
+        }
+        public ActionResult Content()
+        {
+
+            return View("deptContent");
         }
         /// <summary>
         ///  新增组织控制器
