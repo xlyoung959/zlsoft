@@ -38,7 +38,23 @@ namespace Service
         /// <returns></returns>
         public int deleteDept(int id)
         {
-            DataTable dt = deptDao
+
+            string arr = "";
+            DataTable dt = deptDao.selectDeptIdByPid(id);
+            foreach (var r in dt.Rows)
+            {
+               arr+= r.ToString();
+                arr += '|';
+            }
+                DataRow dr = dt.Rows[0];
+                int? did = Convert.ToInt32(dr["ID"]);
+                deptDao.deleteDept(id);
+            while (did!=null)
+            {
+                deptDao.selectDeptIdByPid(Convert.ToInt32(did));
+                 dr = dt.Rows[0];
+                 did = Convert.ToInt32(dr["ID"]);
+            }
             return deptDao.deleteDept(id);
         }
 
