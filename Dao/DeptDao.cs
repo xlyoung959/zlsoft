@@ -92,13 +92,26 @@ namespace Dao
             string sql = "select 名称,ID,上级ID from 部门表";
           return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
         }
-
+        /// <summary>
+        /// 根据id查询组织的详细信息
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>这个组织的详细信息</returns>
         public DataTable selectDeptById(int id)
         {
             string sql = "select 名称,上级ID,编码,简码,位置,末级,建档时间,撤档时间,站点,环境类别,部门负责人,最后修改时间,顺序,别名 from 部门表 where ID=:id";
             OracleParameter[] prms = new OracleParameter[]
               {
-                 new OracleParameter("ID",OracleDbType.Varchar2,10) { Value=id}
+                 new OracleParameter("ID",OracleDbType.Int32,10) { Value=id}
+              };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+        }
+        public DataTable selectDeptIdByPid(int pid)
+        {
+            string sql = "select ID from 部门表 where 上级ID=:pid";
+            OracleParameter[] prms = new OracleParameter[]
+              {
+                 new OracleParameter("pid",OracleDbType.Varchar2,10) { Value=pid}
               };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }

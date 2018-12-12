@@ -8,11 +8,15 @@ namespace Domain
 {
     public class DeptTree
     {
+        //ztree的target属性值设置为content
+        private  string target = "content";
         public int id { get; set; }
         public int pid { get; set; }
         public string name { get; set; }
         public bool open { get; set; }
+        //设置是否是父节点，方便前端ztree展开
         public bool isParent { get; set; }
+        
         public List<DeptTree> children { get; set; }
 
     }
