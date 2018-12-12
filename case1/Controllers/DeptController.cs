@@ -48,7 +48,6 @@ namespace case1.Controllers
         public JsonResult getDeptTree()
         {
             var data = deptService.getTree();
- 
             return Json(data);
         }
     }

@@ -17,7 +17,7 @@
     <div>
         <ul id="treeDemo" class="ztree"></ul>
     </div>
-
+    <div>12</div>
     <script>
         var zTreeObj;
         //配置树的样式
@@ -49,15 +49,15 @@
                     rootPId: null
                 }
             },
-
             callback: {
                 onClick: function (event, treeId, treeNode, clickFlag) {
-                    console.log(treeNode.id)//当前li的id，注意是dom id，原始的id自己去掉前缀treeDemo_，其中treeDemo是ztree容器id
-                    console.log(treeNode.name)
+                    
                 }
             }
 
         };
+
+        //点击获取树形菜单
             $("#getTree").click(function () {
                 $.ajax({
                     url: "/Dept/getDeptTree",
@@ -73,9 +73,6 @@
                 });
             });
 
-       
-    
-     
     </script>
    
 </body>
