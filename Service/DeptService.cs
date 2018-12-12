@@ -38,7 +38,7 @@ namespace Service
         /// <returns></returns>
         public int deleteDept(int id)
         {
-
+            DataTable dt = deptDao
             return deptDao.deleteDept(id);
         }
 
@@ -60,8 +60,8 @@ namespace Service
         /// 
         /// </summary>
         /// <param name="parentId">上级Id</param>
-        /// <param name="dt"></param>
-        /// <returns></returns>
+        /// <param name="dt">查询出来的所有组织</param>
+        /// <returns>返回树结构的组织机构</returns>
         public List<DeptTree> getListByParentId(int parentId, DataTable dt)
         {
             List<DeptTree> treeList = new List<DeptTree>();

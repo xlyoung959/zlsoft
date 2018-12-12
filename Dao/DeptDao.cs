@@ -35,9 +35,9 @@ namespace Dao
              new OracleParameter("deleteTime",OracleDbType.Date) { Value=null},
              new OracleParameter("site",OracleDbType.Varchar2,1) { Value=dept.site},
              new OracleParameter("envCat",OracleDbType.Varchar2,10) { Value=dept.envCat},
-             new OracleParameter("deptId",OracleDbType.Int32,10) { Value=null},
+             new OracleParameter("deptId",OracleDbType.Int32,10) { Value=0},
              new OracleParameter("lastTime",OracleDbType.Date) { Value=null},
-             new OracleParameter("sort",OracleDbType.Int32,10) { Value=null},
+             new OracleParameter("sort",OracleDbType.Int32,10) { Value=0},
              new OracleParameter("otherName",OracleDbType.Varchar2,10) { Value=null}
             };
             int r =  OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
@@ -78,7 +78,7 @@ namespace Dao
             string sql = "delete from 部门表 where ID=:ID";
             OracleParameter[] prms = new OracleParameter[]
                {
-                 new OracleParameter("ID",OracleDbType.Varchar2,10) { Value=id}
+                 new OracleParameter("ID",OracleDbType.Int32,10) { Value=id}
                };
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
@@ -91,6 +91,16 @@ namespace Dao
         {
             string sql = "select 名称,ID,上级ID from 部门表";
           return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
+        }
+
+        public DataTable selectDeptById(int id)
+        {
+            string sql = "select 名称,上级ID,编码,简码,位置,末级,建档时间,撤档时间,站点,环境类别,部门负责人,最后修改时间,顺序,别名 from 部门表 where ID=:id";
+            OracleParameter[] prms = new OracleParameter[]
+              {
+                 new OracleParameter("ID",OracleDbType.Varchar2,10) { Value=id}
+              };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
     }
 }
