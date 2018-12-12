@@ -51,7 +51,7 @@ namespace Dao
         /// <returns>操作的行数</returns>
         public int updateDept(Dept dept)
         {
-            string sql = "update 部门表 set 上级ID=:parentId,编码=:code,名称=:name,简码=:simCode,位置=:location,末级=:finalNode,站点=:site,环境类别=:entCat,最后修改时间=:lastTime where ID=:Id";
+            string sql = "update 部门表 set 上级ID=:parentId,编码=:code,名称=:name,简码=:simCode,位置=:location,末级=:finalNode,站点=:site,环境类别=:entCat,最后修改时间=sysdate where ID=:Id";
             OracleParameter[] prms = new OracleParameter[]
                 {
                  new OracleParameter("parentId",OracleDbType.Int32,10) { Value=dept.parentId},
@@ -62,7 +62,7 @@ namespace Dao
                  new OracleParameter("finalNode",OracleDbType.Int32,1) { Value=dept.finalNode},
                  new OracleParameter("site",OracleDbType.Varchar2,1) { Value=dept.site},
                  new OracleParameter("envCat",OracleDbType.Varchar2,10) { Value=dept.envCat},
-                 new OracleParameter("lastTime",OracleDbType.Date) { Value=DateTime.Now.ToShortDateString()},
+                 
                  new OracleParameter("ID",OracleDbType.Int32,10) { Value=dept.Id}
                 };
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
