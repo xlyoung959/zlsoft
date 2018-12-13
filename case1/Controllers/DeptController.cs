@@ -21,7 +21,9 @@ namespace case1.Controllers
         }
         public ActionResult DeptContent(int id)
         {
-
+            var data = deptService.selectDeptById(id);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
+            ViewData["Dept"] = dataStr;
             return View("DeptContent");
         }
         public ActionResult Organization()
@@ -89,10 +91,10 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>上级组织的名称</returns>
-        public ActionResult getPnameBypid(int id)
+        public ContentResult getPnameBypid(int id)
         {
             var pname =  deptService.queryPnameById(id);
-            return View("updateDept",pname);
+            return Content(pname);
         }
         /// <summary>
         /// 删除组织(如果有子节点则不能删除)
