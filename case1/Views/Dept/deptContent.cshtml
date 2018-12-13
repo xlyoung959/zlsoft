@@ -137,7 +137,7 @@
                 <div class="layui-form-item">
                     <label class="label">上级科室</label>
                     <div>
-                        <input type="button" name="parentId" class="layui-btn layui-btn-normal" value="上级"  id="sup"/>
+                        <input type="button" name="parentId" class="layui-btn layui-btn-normal" value="没有上级"  id="sup"/>
                     </div>
                 </div>
             </li>
@@ -146,9 +146,11 @@
                     <label class="label">站点</label>
                     <div>
                         <select name="site" lay-verify="required">
+               
                             <option value="0" title="0">0</option>
                             <option value="1" title="1">1</option>
                             <option value="2" title="2">2</option>
+                            <option value="3" title=""></option>
                         </select>
                     </div>
                 </div>
@@ -156,17 +158,18 @@
                     <label class="label">环境类别</label>              
                     <div>
                         <select name="entCat" lay-verify="required">
-                            <option value="0" title="I类">I类</option>
-                            <option value="1" title="II类">II类</option>
-                            <option value="2" title="III类">III类</option>
-                            <option value="3" title="IV类">IV类</option>
+                            <option value="0" title=""></option>
+                            <option value="1" title="I类">I类</option>
+                            <option value="2" title="II类">II类</option>
+                            <option value="3" title="III类">III类</option>
+                            <option value="4" title="IV类">IV类</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="label">建档时间</label>
                     <div>
-                        <input type="date" name="createTime" class="layui-input" />
+                        <input type="text" name="createTime" class="layui-input" readonly/>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -200,20 +203,29 @@
         (function () {
             var jsonString = $("#hdData").val();
             var json = eval('(' + jsonString + ')');
-            $("input[name='code']").val(json[0].简码);
+            $("input[name='code']").val(json[0].CODE);
             $("input[name='name']").val(json[0].NAME);
             $("input[name='simCode']").val(json[0].SIMCODE);
             $("input[name='location']").val(json[0].LOCATION);
-           
+            $("input[name='site']").val(json[0].SITE);
+            $("input[name='createTime']").val(json[0].CREATETIME);
+            $("input[name='otherName']").val(json[0].OTHERNAME);
+            var id = json[0].ID;
+            if (json[0].PARENTID == null) {
+                $("input[name='parentId']").val("");
+            } else {
+                $.ajax({
+                    url: "/Dept/getPnameBypid?id=" + id,
+                    type: "POST",
+                    success: function (data) {
+                        $("input[name='parentId']").val(data);
+                    }
+                })
+            }
+          
         })();
         //根据上级ID获取上级ID的名字
-        $.ajax({
-            url: "/Dept/getPnameBypid",
-            type: "POST",
-            success: function (data) {
-                $("input[name='parentId']").val(data);
-            }
-        })
+       
         //点击上级科室，弹出选择上级科室界面,遮罩层
         $("#sup").click(function () {
             $("#mask").show();
