@@ -99,7 +99,8 @@
     </style>
 </head>
 <body>
-   
+    <input id="hdData" type="hidden" value="@ViewData["stu"]" />
+   <!--某个科室的内容-->
     <form class="layui-form" role="form" >
         <ul>
             <li>
@@ -196,6 +197,23 @@
    
     <script src="~/Scripts/layui.all.js"></script>
     <script>
+        (function () {
+            var jsonString = $("#hdData").val();
+            var json = eval('(' + jsonString + ')');
+            $("input[name='code']").val(json[0].简码);
+            $("input[name='name']").val(json[0].NAME);
+            $("input[name='simCode']").val(json[0].SIMCODE);
+            $("input[name='location']").val(json[0].LOCATION);
+           
+        })();
+        //根据上级ID获取上级ID的名字
+        $.ajax({
+            url: "/Dept/getPnameBypid",
+            type: "POST",
+            success: function (data) {
+                $("input[name='parentId']").val(data);
+            }
+        })
         //点击上级科室，弹出选择上级科室界面,遮罩层
         $("#sup").click(function () {
             $("#mask").show();
@@ -210,7 +228,9 @@
             $("#mask").hide(100);
             $("#dept").fadeOut(800);
         });
-       
+
+      
+        
         var zTreeObj;
         //配置树的样式
         var setting = {
