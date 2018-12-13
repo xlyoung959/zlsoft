@@ -75,8 +75,19 @@ namespace case1.Controllers
         {
             var data = deptService.selectDeptById(id);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
-            var pname = deptService.queryPnameById(id);
-            return Content(dataStr+pname);
+            
+            return Content(dataStr);
+        }
+
+        /// <summary>
+        /// 根据id查询上级部门的名称
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>上级组织的名称</returns>
+        public ActionResult getPnameBypid(int id)
+        {
+            var pname =  deptService.queryPnameById(id);
+            return View("updateDept",pname);
         }
         /// <summary>
         /// 删除组织(如果有子节点则不能删除)
