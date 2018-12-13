@@ -1,7 +1,7 @@
 ﻿@{ 
     Layout = null;
 }
-<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,85 +10,74 @@
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery.ztree.core.min.js"></script>
-   
+ 
+    <style>
+    
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .zuoce {
+            background: #2F4056;
+        }
+        .layui-layout-admin .layui-body{bottom:0}
+    </style>
 </head>
 <body>
-    
-    <div class="layui-header">
-    <button class="layui-btn layui-btn-normal" id="getTree">获取树形结构</button>
-<button id="hide" class="layui-btn layui-btn-normal">隐藏</button></div>
-    <div class="layui-side" style="margin-top:50px">
-        <div>
-            <ul id="treeDemo" class="ztree"></ul>
+    <div class="layui-layout  layui-layout-admin">
+        <div class="layui-header layui-bg-blue">
+            <div class="layui-logo layui-bg-black">在中联的第一个例子</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="javaScript:void(0);">控制一</a></li>
+                <li class="layui-nav-item"><a href="javaScript:void(0);">控制二</a></li>
+                <li class="layui-nav-item"><a href="javaScript:void(0);">控制三</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">其它系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javaScript:void(0);">邮件管理</a></dd>
+                        <dd><a href="javaScript:void(0);">消息管理</a></dd>
+                        <dd><a href="javaScript:void(0);">授权管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
         </div>
-       
+
+        <div class="layui-side zuoce">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;" title="基础管理">基础管理</a>
+                        <dl class="layui-nav-child zuoce">
+                            <dd><a href="javaScript:void(0);" title="组织机构" target="menu" id="organ">组织机构</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body" style="height:566px;">
+            <iframe name="menu" width="100%" height="100%" frameborder="0" scrolling="auto" ></iframe>
+        </div>
     </div>
-  <div class="layui-body" >
-      <iframe name="content" width="100%" height="100%"></iframe>
-  </div>
-   
-    <script>
-        
-        var zTreeObj;
-        //配置树的样式
-        var setting = {
-            view: {
-                dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
-                showLine: true,//是否显示节点之间的连线
-                fontCss: { 'color': 'black', 'font-weight': '300','font-size':'14px' },//字体样式函数
-                selectedMulti: true //设置是否允许同时选中多个节点
-            },
-            check: {
-                chkboxType: { "Y": "", "N": "" },
-                chkStyle: "checkbox",//复选框类型
-                enable: true //每个节点上是否显示 CheckBox
-            },
-            edit: {
-                enable: true,
-                editNameSelectAll: true,
-                showRemoveBtn: true,
-                showRenameBtn: true,
-                removeTitle: "remove",
-                renameTitle: "rename"
-            },
-            data: {
-                simpleData: {//简单数据模式
-                    enable: true,
-                    idKey: "id",
-                    pIdKey: "IPARENTID",
-                    rootPId: null
-                }
-            } ,
-            callback: {
-                onClick: zTreeOnClick
-            }
-        };
+ 
+    <script src="~/Scripts/layui.all.js"></script>
+ <script>
+     layui.use('element', function () {
+         var element = layui.element;
+     });
+     $("#organ").click(function () {
+         $("#organ").attr("target", "menu");
+         $("#organ").attr("href" , "/Dept/Organization");
+     })
+     var high = $(document.body).height() - 60 + "px";
+     
+  
+    
+ </script>
 
-        //点击获取树形菜单
-            $("#getTree").click(function () {
-                $.ajax({
-                    url: "/Dept/getDeptTree",
-                    dateType: "json",
-                    type: "POST",
-                    success: function (data) {
-                        //调用layui.tree方法
-                        $(document).ready(function () {
-                            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
-                        });
-                    }
-                });
-            });
-            
-        //点击树的节点时要处理的方法
-            function zTreeOnClick(event, treeId, treeNode) {
-               
-              //  location.href = "/Dept/Content";
-                $("#treeDemo li a").attr('href', '/Dept/Content');
-
-                
-            }
-    </script>
-   
 </body>
 </html>
 

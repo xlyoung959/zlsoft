@@ -1,0 +1,135 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>部门页面</title>
+    <link href="~/Content/layui.css" rel="stylesheet" />
+    <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.ztree.core.min.js"></script>
+    <script src="~/Scripts/layui.all.js"></script>
+    <style>
+         body {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;   
+            position:relative;         
+        }
+          .layui-layout-admin .layui-body{bottom:0}
+         .shuxing{
+             overflow-x: hidden;
+             overflow-y: scroll;
+             margin-top:60px;
+         }
+         .shuxing::-webkit-scrollbar {
+              display: none;
+         }
+         .layui-header{
+             position:fixed;
+         }
+    </style>
+</head>
+<body>
+
+<div class="layui-layout">
+       <div class="layui-header" style="height:40px;margin-top:10px;  margin-left:20px;">
+           <button class="layui-btn layui-btn-normal" id="add">新增</button>
+           <button class="layui-btn layui-btn-danger" id="delete">删除</button>
+           <button class="layui-btn" id="keep">保存</button>
+       </div>
+        <div class="layui-side layui-side-scroll" style="width:25%;">
+                <div class="shuxing">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>        
+        </div>
+        <div class="layui-body" style="width:75%;margin-top:60px;height:600px;">
+            <iframe name="content" width="100%" height="90%" frameborder="0" scrolling="auto"></iframe>
+       </div>
+</div>
+
+    <script>
+
+                var zTreeObj;
+                //配置树的样式
+                var setting = {
+                    view: {
+                        dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
+                        showLine: true,//是否显示节点之间的连线
+                        fontCss: { 'color': 'black', 'font-weight': '300', 'font-size': '14px' },//字体样式函数
+                        selectedMulti: true //设置是否允许同时选中多个节点
+                    },
+                    check: {
+                        chkboxType: { "Y": "", "N": "" },
+                        chkStyle: "checkbox",//复选框类型
+                        enable: true //每个节点上是否显示 CheckBox
+                    },
+                    edit: {
+                        enable: true,
+                        editNameSelectAll: true,
+                        showRemoveBtn: true,
+                        showRenameBtn: true,
+                        removeTitle: "remove",
+                        renameTitle: "rename"
+                    },
+                    data: {
+                        simpleData: {//简单数据模式
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "IPARENTID",
+                            rootPId: null
+                        }
+                    },
+                    callback: {
+                        onClick: zTreeOnClick
+                    }
+                };
+                    $.ajax({
+                        url: "/Dept/getDeptTree",
+                        dateType: "json",
+                        type: "POST",
+                        success: function (data) {
+                            //调用layui.tree方法
+                            $(document).ready(function () {
+                                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+                            });
+                        }
+                    });
+          
+
+                //点击树的节点时要处理的方法
+                function zTreeOnClick(event, treeId, treeNode) {
+                    //location.href = "/Dept/Content";
+                    $("#treeDemo li a").attr('href', '/Dept/Content');
+                }
+        //点击新增按钮
+                $("#add").click(function (event) {
+                    //$("#add").attr('target', 'content');
+                   // window.open('url', 'content');
+                    window.location.href = "/Dept/DeptContent";               
+                })
+        //点击删除按钮
+                $("#delete").click(function () {
+                    var result = confirm("您确定要删除吗？");
+                    //返回ture或false
+                    if (result) {
+                        /*  var url="/SLMS/employee/del";
+                          var param={id:id};
+                          $.post(url,param,function(date){
+                              if(date==1){
+                                  alert("删除成功");
+                                  location.reload();
+                              }else{
+                                  alert("删除失败")
+                              }
+                          })*/
+                    }
+
+                });
+    </script>
+</body>
+</html>
+
