@@ -139,17 +139,18 @@ namespace Service
             //根据组织id查询他的上级id
             DataTable dt =deptDao.selectDeptById(id);
             DataRow dr =  dt.Rows[0];
-            int? pid = Convert.ToInt32( dr["parentId"]);
-            if (pid == null)
+            if (dr["parentId"] != null)
             {
-                return "";
-            }
-            else
-            {
+                int pid = Convert.ToInt32(dr["parentId"]);
                 //根据查到的上级id调用selectDeptById方法，查寻上级组织的名称
                 DataRow dr1 = deptDao.selectDeptById((int)pid).Rows[0];
                 string pname = dr1["name"].ToString();
                 return pname;
+            }
+           
+            else
+            {
+                return "";
             }
         }
 
