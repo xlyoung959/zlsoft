@@ -99,7 +99,7 @@ namespace Dao
         /// <returns></returns>
         public DataTable selectDeptTree()
         {
-            string sql = "select 名称,ID,上级ID from 部门表";
+            string sql = "select 名称 as name,ID,上级ID as parentId from 部门表";
           return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
         }
 
@@ -111,7 +111,7 @@ namespace Dao
         /// <returns>这个组织的详细信息</returns>
         public DataTable selectDeptById(int id)
         {
-            string sql = "select 名称,上级ID,编码,简码,位置,末级,建档时间,撤档时间,站点,环境类别,部门负责人,最后修改时间,顺序,别名 from 部门表 where ID=:id";
+            string sql = "select 名称 as name,上级ID as parentId,编码 as code,简码 as simCode,位置 as location,末级 as finalNode,建档时间 as createTime,撤档时间 as deleteTime,站点 as site,环境类别 as entCat,最后修改时间 as lastTime,别名 as otherName from 部门表 where ID=:id";
             OracleParameter[] prms = new OracleParameter[]
               {
                  new OracleParameter("ID",OracleDbType.Int32,10) { Value=id}
