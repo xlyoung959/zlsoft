@@ -109,14 +109,14 @@ namespace Service
             List<DeptTree> treeList = new List<DeptTree>();
             
            
-            var currentList = parentId==0? dt.Select("上级ID is NULL"): dt.Select("上级ID="+ parentId);
+            var currentList = parentId==0? dt.Select("parentId is NULL") : dt.Select("parentId=" + parentId);
             if (currentList.Count() > 0)
             {
                 foreach (var dr in currentList)
                 {
                     var deptTree = new DeptTree();
                     deptTree.id = Convert.ToInt32(dr["ID"]);
-                    deptTree.name = dr["名称"].ToString();
+                    deptTree.name = dr["name"].ToString();
                     deptTree.pid = parentId;
                     deptTree.isParent = true;
                     treeList.Add(deptTree);
@@ -139,11 +139,18 @@ namespace Service
             //根据组织id查询他的上级id
             DataTable dt =deptDao.selectDeptById(id);
             DataRow dr =  dt.Rows[0];
-            int pid = Convert.ToInt32( dr["ID"]);
-            //根据查到的上级id调用selectDeptById方法，查寻上级组织的名称
-            DataRow dr1 = deptDao.selectDeptById(pid).Rows[0];
-            string pname = dr1["name"].ToString();
-            return pname;
+            int? pid = Convert.ToInt32( dr["parentId"]);
+            if (pid == null)
+            {
+                return "";
+            }
+            else
+            {
+                //根据查到的上级id调用selectDeptById方法，查寻上级组织的名称
+                DataRow dr1 = deptDao.selectDeptById((int)pid).Rows[0];
+                string pname = dr1["name"].ToString();
+                return pname;
+            }
         }
 
         /// <summary>
