@@ -14,6 +14,7 @@ namespace Dao
     public class DeptDao
     {
 
+
     
         /// <summary>
         /// 新增组织
@@ -44,6 +45,8 @@ namespace Dao
             return r;
         }
 
+
+
         /// <summary>
         /// 修改组织
         /// </summary>
@@ -68,6 +71,9 @@ namespace Dao
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
         }
+
+
+
         /// <summary>
         /// 删除组织
         /// </summary>
@@ -83,6 +89,10 @@ namespace Dao
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
         }
+
+
+
+
         /// <summary>
         /// 查询所有组织的名称，ID，上级ID
         /// </summary>
@@ -92,6 +102,8 @@ namespace Dao
             string sql = "select 名称,ID,上级ID from 部门表";
           return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
         }
+
+
         /// <summary>
         /// 根据id查询组织的详细信息
         /// </summary>
@@ -115,5 +127,7 @@ namespace Dao
               };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
+
+       
     }
 }

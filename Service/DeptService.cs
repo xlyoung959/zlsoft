@@ -13,6 +13,8 @@ namespace Service
     {
         private DeptDao deptDao = new DeptDao();
 
+
+
         /// <summary>
         /// 新增组织
         /// </summary>
@@ -22,6 +24,9 @@ namespace Service
         {
             return deptDao.insertDept(dept);
         }
+
+
+
         /// <summary>
         /// 修改组织
         /// </summary>
@@ -31,32 +36,53 @@ namespace Service
         {
             return deptDao.updateDept(dept);
         }
+
+
+
         /// <summary>
-        /// 删除组织
+        /// 删除(如果有子节点就不能删除)
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public int deleteDept(int id)
         {
-
-            string arr = "";
             DataTable dt = deptDao.selectDeptIdByPid(id);
-            foreach (var r in dt.Rows)
+            if (dt.Rows.Count == 0)
             {
-               arr+= r.ToString();
-                arr += '|';
+               return deptDao.deleteDept(id);
             }
-                DataRow dr = dt.Rows[0];
-                int? did = Convert.ToInt32(dr["ID"]);
-                deptDao.deleteDept(id);
-            while (did!=null)
+            else
             {
-                deptDao.selectDeptIdByPid(Convert.ToInt32(did));
-                 dr = dt.Rows[0];
-                 did = Convert.ToInt32(dr["ID"]);
+                return -1;
             }
-            return deptDao.deleteDept(id);
         }
+
+        ///// <summary>
+        ///// 删除组织
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public int deleteDept(int id)
+        //{
+
+        //    string arr = "";
+        //    DataTable dt = deptDao.selectDeptIdByPid(id);
+        //    foreach (var r in dt.Rows)
+        //    {
+        //       arr+= r.ToString();
+        //        arr += '|';
+        //    }
+        //        DataRow dr = dt.Rows[0];
+        //        int? did = Convert.ToInt32(dr["ID"]);
+        //        deptDao.deleteDept(id);
+        //    while (did!=null)
+        //    {
+        //        deptDao.selectDeptIdByPid(Convert.ToInt32(did));
+        //         dr = dt.Rows[0];
+        //         did = Convert.ToInt32(dr["ID"]);
+        //    }
+        //    return deptDao.deleteDept(id);
+        //}
 
         /// <summary>
         /// 先获取最高级的组织,然后调用getListByParentId方法,获取他的子节点
@@ -102,6 +128,34 @@ namespace Service
         }
 
 
+
+        /// <summary>
+        /// 修改页，上级部门的值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>上级部门的名称</returns>
+        public string queryPnameById(int id)
+        {
+            //根据组织id查询他的上级id
+            DataTable dt =deptDao.selectDeptById(id);
+            DataRow dr =  dt.Rows[0];
+            int pid = Convert.ToInt32( dr["ID"]);
+            //根据查到的上级id调用selectDeptById方法，查寻上级组织的名称
+            DataRow dr1 = deptDao.selectDeptById(pid).Rows[0];
+            string pname = dr1["name"].ToString();
+            return pname;
+        }
+
+        /// <summary>
+        /// 根据id查询该部门的详细信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public DataTable selectDeptById(int id)
+        {
+           
+            return deptDao.selectDeptById(id);
+        }
 
     }
 }

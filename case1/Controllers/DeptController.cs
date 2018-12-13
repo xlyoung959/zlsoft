@@ -16,7 +16,7 @@ namespace case1.Controllers
         // GET: Dept
         public ActionResult Index()
         {
-            
+
             return View("Index");
         }
         public ActionResult DeptContent()
@@ -35,7 +35,7 @@ namespace case1.Controllers
         /// <param name="dept"></param>
         /// <returns></returns>
         [HttpPost]
-        public int insertDept()
+        public int insertDept(Dept dept)
         {
             dept.Id = int.Parse(Request.Form["Id"]);
             dept.parentId = int.Parse(Request.Form["parentId"]);
@@ -59,6 +59,38 @@ namespace case1.Controllers
         {
             var data = deptService.getTree();
             return Json(data);
+        }
+        /// <summary>
+        /// 修改组织
+        /// </summary>
+        /// <param name="dept"></param>
+        /// <returns></returns>
+        public int updateDept(Dept dept)
+        {
+            return deptService.insertDept(dept);
+        }
+
+
+        /// <summary>
+        /// 根据组织id获取组织的详细信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ContentResult getDeptById(int id)
+        {
+            var data = deptService.selectDeptById(id);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
+            var pname = deptService.queryPnameById(id);
+            return Content(dataStr+pname);
+        }
+        /// <summary>
+        /// 删除组织(如果有子节点则不能删除)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int deleteDept(int id)
+        {
+            return deptService.deleteDept(id);
         }
     }
 }
