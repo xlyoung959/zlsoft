@@ -19,6 +19,17 @@ namespace case1.Controllers
 
             return View("Index");
         }
+        //返回组织结构页面
+        public ActionResult Organization()
+        {
+            return View("Organization");
+        }
+        //去到添加组织结构页面
+        public ActionResult AddDept()
+        {
+            return View("AddDept");
+        }
+        //去到科室的具体内容页面 DeptContent
         public ActionResult DeptContent(int id)
         {
             var data = deptService.selectDeptById(id);
@@ -26,20 +37,16 @@ namespace case1.Controllers
             ViewData["Dept"] = dataStr;
             return View("DeptContent");
         }
-        public ActionResult Organization()
-        {
-
-            return View("Organization");
-        }
+       
         /// <summary>
         ///  新增组织控制器
         /// </summary>
         /// <param name="dept"></param>
         /// <returns></returns>
         [HttpPost]
-        public int insertDept(Dept dept)
+        public int insertDept()
         {
-            dept.Id = int.Parse(Request.Form["Id"]);
+            Dept dept = new Dept();
             dept.parentId = int.Parse(Request.Form["parentId"]);
             dept.location = Request.Form["location"];
             dept.name = Request.Form["name"];
@@ -67,8 +74,11 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="dept"></param>
         /// <returns></returns>
-        public int updateDept(Dept dept)
+        public int updateDept()
         {
+            //updateDept不用带参  改一下注意自己把ID从前台取到和DeptContent中的内容对应一下吧 只取parentId就行 parentname不要取哟
+            //dao层李的末级删了吧，前台没有涉及到改，当然也可在前台加起  
+            Dept dept = new Dept();
             return deptService.insertDept(dept);
         }
 
@@ -81,8 +91,7 @@ namespace case1.Controllers
         public ContentResult getDeptById(int id)
         {
             var data = deptService.selectDeptById(id);
-            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
-            
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化          
             return Content(dataStr);
         }
 

@@ -92,7 +92,6 @@ namespace Dao
 
 
 
-
         /// <summary>
         /// 查询所有组织的名称，ID，上级ID
         /// </summary>
@@ -118,6 +117,11 @@ namespace Dao
               };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
+        /// <summary>
+        /// 查出这个部门下的子部门有多少，如果有不能删除
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public DataTable selectDeptIdByPid(int pid)
         {
             string sql = "select ID from 部门表 where 上级ID=:pid";
