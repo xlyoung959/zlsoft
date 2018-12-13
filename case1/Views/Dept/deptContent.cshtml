@@ -10,23 +10,265 @@
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery.ztree.core.min.js"></script>
+  
+    
+    <style>
+         body {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            overflow: hidden;
+        }
+         body::-webkit-scrollbar { width: 0 !important }
+         .layui-layout-admin .layui-body{bottom:0}
+       *{margin:0;padding:0;}
+        form {
+            margin-left: 10px;
+        }
+        .label {
+            width: 100px;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+
+        input[type=text] {
+            width: 240px;
+            height: 32px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+          input[type=text]:hover {
+                border-radius: 6px;
+                border: #333 1px solid;
+            }
+
+     form>ul>li {
+            float: left;
+        }
+
+  .dept{
+ min-width: 360px;
+ width:auto;
+  height: 460px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #FFFFFF;
+  transform: translate(-50%, -50%);
+  border: #000000 2px solid;
+  display: none;
+  z-index: 1002;
+  overflow:auto;
+  }
+
+ header{
+    height: 30px;
+    width: 360px;
+    font-size: 20px;
+    background: none;
+    border-bottom: #cccccc 1px solid;
+    }
+        header > span {
+            margin-left: 10px;
+        }
+        .drop {
+            float: right;
+            margin-right: 8px;
+            font-size: 24px;
+            color: #000000;
+        }
+       .drop:hover{
+          color: #ff0000;
+        }
+.dept>button{
+    margin-top:12px;
+}
+        #mask {
+            height:100%;
+            width:100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            filter: alpha(opacity=60);
+            background-color: #bbb;
+            z-index: 1000;
+            opacity: 0.5;
+            display: none;
+        }
+    </style>
 </head>
 <body>
    
-    <form class="layui-form " role="form" action="/Emp/" method="post">
-        上级ID:<input type="text" name="parentId" readonly /><br />
-        编码:<input type="text" name="code" /><br />
-        名称:<input type="text" name="name" /><br />
-        简码:<input type="text" name="location" /><br />
-        位置:<input type="text" name="parentId" /><br />
-        末级:<input type="text" name="finalNode" /><br />
-        站点:<input type="text" name="site" /><br />
-        环境类别:<input type="text" name="entCat" /><br />
-        最后修改时间:<input type="text" name="lastTime" />
+    <form class="layui-form" role="form" >
+        <ul>
+            <li>
+                <div class="layui-form-item">
+                    <label class="label">编码</label>
+                    <div>
+                        <input type="text" name="code" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">名称</label>
+                    <div>
+                        <input type="text" name="name" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">简码</label>
+                    <div>
+                        <input type="text" name="simCode" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">位置</label>
+                    <div >
+                        <select name="location" lay-verify="required">
+                            <option value="0" title="A01.内科">A01.内科</option>
+                            <option value="1" title="A02.老年科">A02.老年科</option>
+                            <option value="2" title="A03.外科">A03.外科</option>
+                            <option value="3" title="A04.妇产科">A04.妇产科</option>
+                            <option value="4" title="A05.急诊科">A05.急诊科</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">上级科室</label>
+                    <div>
+                        <input type="button" name="parentId" class="layui-btn layui-btn-normal" value="上级"  id="sup"/>
+                    </div>
+                </div>
+            </li>
+            <li style="margin-left: 40px">
+                <div class="layui-form-item">
+                    <label class="label">站点</label>
+                    <div>
+                        <select name="site" lay-verify="required">
+                            <option value="0" title="0">0</option>
+                            <option value="1" title="1">1</option>
+                            <option value="2" title="2">2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">环境类别</label>              
+                    <div>
+                        <select name="entCat" lay-verify="required">
+                            <option value="0" title="I类">I类</option>
+                            <option value="1" title="II类">II类</option>
+                            <option value="2" title="III类">III类</option>
+                            <option value="3" title="IV类">IV类</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">建档时间</label>
+                    <div>
+                        <input type="date" name="createTime" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">别名</label>
+                    <div>
+                        <input type="text" name="otherName" class="layui-input" />
+                    </div>
+                </div>
+            </li>
+        </ul>
 
     </form>
+    <!---上级科室，树形-->
+    <div class="dept" id="dept">
+        <header>
+            <span>添加</span>
+            <a href="#" class="drop">×</a>
+        </header>
+               <div>
+                   <ul id="treeDemo" class="ztree"></ul>
+               </div>
+            <button class="layui-btn layui-btn-warm" id="confirm" style="margin-left:30px;">确认</button>
+            <button class="layui-btn" id="cancel">取消</button>
+    </div>
+    <!--遮罩层-->
+    <div id="mask"></div>
 
+   
+    <script src="~/Scripts/layui.all.js"></script>
+    <script>
+        //点击上级科室，弹出选择上级科室界面,遮罩层
+        $("#sup").click(function () {
+            $("#mask").show();
+            $(".dept").fadeIn(1000);
+        });
+        //点击×和放弃隐藏用户界面
+        $(".drop").click(function () {
+            $("#mask").hide(1000);
+            $("#dept").fadeOut(800);
+        });
+        $("#cancel").click(function () {
+            $("#mask").hide(100);
+            $("#dept").fadeOut(800);
+        });
+       
+        var zTreeObj;
+        //配置树的样式
+        var setting = {
+            view: {
+                dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
+                showLine: true,//是否显示节点之间的连线
+                fontCss: { 'color': 'black', 'font-weight': '300', 'font-size': '14px' },//字体样式函数
+                selectedMulti: true //设置是否允许同时选中多个节点
+            },
+            check: {
+                chkboxType: { "Y": "", "N": "" },
+                chkStyle: "checkbox",//复选框类型
+                enable: true //每个节点上是否显示 CheckBox
+            },
+            edit: {
+                enable: true,
+                editNameSelectAll: true,
+                showRemoveBtn: true,
+                showRenameBtn: true,
+                removeTitle: "remove",
+                renameTitle: "rename"
+            },
+            data: {
+                simpleData: {//简单数据模式
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "IPARENTID",
+                    rootPId: null
+                }
+            },
+            callback: {
+                onClick: zTreeOnClick
+            }
+        };
 
+        $.ajax({
+            url: "/Dept/getDeptTree",
+            dateType: "json",
+            type: "POST",
+            success: function (data) {
+                //调用layui.tree方法
+                $(document).ready(function () {
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+                });
+            }
+        });
+
+        //点击树的节点时要处理的方法
+        function zTreeOnClick(event, treeId, treeNode) {
+            var name = treeNode.name;
+            $("#confirm").click(function () {
+                $("#sup").val(name);
+                $("#mask").hide(600);
+                $("#dept").fadeOut(500);
+            });
+        }
+       
+    </script>
 </body>
 </html>
-       
+     
