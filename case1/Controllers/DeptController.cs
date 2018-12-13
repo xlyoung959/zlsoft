@@ -19,7 +19,7 @@ namespace case1.Controllers
 
             return View("Index");
         }
-        public ActionResult DeptContent()
+        public ActionResult DeptContent(int id)
         {
 
             return View("DeptContent");

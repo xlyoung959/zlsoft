@@ -37,7 +37,7 @@
 
 <div class="layui-layout">
        <div class="layui-header" style="height:40px;margin-top:10px;  margin-left:20px;">
-           <button class="layui-btn layui-btn-normal" id="add">新增</button>
+           <a href="javaScript:void(0)" target="content" class="layui-btn layui-btn-normal" id="add">新增</a>
            <button class="layui-btn layui-btn-danger" id="delete">删除</button>
            <button class="layui-btn" id="keep">保存</button>
        </div>
@@ -87,6 +87,7 @@
                         onClick: zTreeOnClick
                     }
                 };
+              //ajax请求生成树
                     $.ajax({
                         url: "/Dept/getDeptTree",
                         dateType: "json",
