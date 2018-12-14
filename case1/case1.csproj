@@ -117,6 +117,7 @@
     <Content Include="img\open.png" />
     <Content Include="img\zTreeStandard.gif" />
     <Content Include="img\zTreeStandard.png" />
+    <Content Include="Scripts\DeptContent.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.ztree.core.min.js" />
@@ -143,6 +144,7 @@
     <Content Include="Views\Dept\Index.cshtml" />
     <Content Include="Views\Dept\DeptContent.cshtml" />
     <Content Include="Views\Dept\Organization.cshtml" />
+    <Content Include="Views\Dept\AddDept.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

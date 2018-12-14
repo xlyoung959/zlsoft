@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>部门页面</title>
+    <title>组织结构页面</title>
     <link href="~/Content/layui.css" rel="stylesheet" />
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -37,9 +37,8 @@
 
 <div class="layui-layout">
        <div class="layui-header" style="height:40px;margin-top:10px;  margin-left:20px;">
-           <a href="javaScript:void(0)" target="content" class="layui-btn layui-btn-normal" id="add">新增</a>
-           <button class="layui-btn layui-btn-danger" id="delete">删除</button>
-           <button class="layui-btn" id="keep">保存</button>
+           <a href="/Dept/AddDept" target="content" class="layui-btn layui-btn-normal" id="add" title="新增">新增</a>
+           <button class="layui-btn layui-btn-danger" id="delete" title="删除">删除</button>
        </div>
         <div class="layui-side layui-side-scroll" style="width:25%;">
                 <div class="shuxing">

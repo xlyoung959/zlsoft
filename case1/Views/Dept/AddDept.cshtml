@@ -5,13 +5,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>部门内容</title>
+    <title>添加部门页面</title>
     <link href="~/Content/layui.css" rel="stylesheet" />
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery.ztree.core.min.js"></script>
-  
-    
     <style>
          body {
             margin-left: 0px;
@@ -31,7 +29,6 @@
             font-size: 16px;
             margin-top: 4px;
         }
-
         input[type=text] {
             width: 240px;
             height: 32px;
@@ -46,75 +43,23 @@
      form>ul>li {
             float: left;
         }
-
-  .dept{
- min-width: 360px;
- width:auto;
-  height: 460px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  background: #FFFFFF;
-  transform: translate(-50%, -50%);
-  border: #000000 2px solid;
-  display: none;
-  z-index: 1002;
-  overflow:auto;
-  }
-
- header{
-    height: 30px;
-    width: 360px;
-    font-size: 20px;
-    background: none;
-    border-bottom: #cccccc 1px solid;
-    }
-        header > span {
-            margin-left: 10px;
-        }
-        .drop {
-            float: right;
-            margin-right: 8px;
-            font-size: 24px;
-            color: #000000;
-        }
-       .drop:hover{
-          color: #ff0000;
-        }
-.dept>button{
-    margin-top:12px;
-}
-        #mask {
-            height:100%;
-            width:100%;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            filter: alpha(opacity=60);
-            background-color: #bbb;
-            z-index: 1000;
-            opacity: 0.5;
-            display: none;
-        }
     </style>
-</head>
+ </head>
 <body>
-    <input id="hdData" type="hidden" value="@ViewData["Dept"]" />
-   <!--某个科室的内容-->
-    <form class="layui-form" role="form" action="/Dept/updateDept" method="post" >
-        <input  type="hidden" name="id"/>
+    <form class="layui-form" role="form" action="/Dept/insertDept" method="post">
         <ul>
             <li>
-                <div class="layui-form-item">
-                    <label class="label">编码</label>
-                    <div>
-                        <input type="text" name="code" class="layui-input" />
-                    </div>
-                </div>
+                
                 <div class="layui-form-item">
                     <label class="label">名称</label>
                     <div>
                         <input type="text" name="name" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">编码</label>
+                    <div>
+                        <input type="text" name="code" class="layui-input" />
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -125,9 +70,9 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="label">位置</label>
-                    <div >
+                    <div>
                         <select name="location" lay-verify="required">
-                            <option value="0" ></option>
+                            <option value="0"></option>
                             <option value="A01.内科" title="A01.内科">A01.内科</option>
                             <option value="A02.老年科" title="A02.老年科">A02.老年科</option>
                             <option value="A03.外科" title="A03.外科">A03.外科</option>
@@ -140,21 +85,15 @@
                     <label class="label">上级科室</label>
                     <div>
                         <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" />
-                        <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="没有上级"  id="parentname" />
+                        <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="没有上级" id="parentname" />
                     </div>
                 </div>
             </li>
             <li style="margin-left: 40px">
                 <div class="layui-form-item">
-                    <label class="label">建档时间</label>
-                    <div>
-                        <input type="text" name="createTime" class="layui-input" readonly />
-                    </div>
-                </div>
-                <div class="layui-form-item">
                     <label class="label">站点</label>
                     <div>
-                        <select name="site" lay-verify="required">             
+                        <select name="site" lay-verify="required">
                             <option value="0" title="0">0</option>
                             <option value="1" title="1">1</option>
                             <option value="2" title="2">2</option>
@@ -163,7 +102,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="label">环境类别</label>              
+                    <label class="label">环境类别</label>
                     <div>
                         <select name="entCat" lay-verify="required">
                             <option value="0" title=""></option>
@@ -174,92 +113,26 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="layui-form-item">
-                    <label class="label">别名</label>
+                    <label class="label">建档时间</label>
                     <div>
-                        <input type="text" name="otherName" class="layui-input" />
+                        <input type="text" name="createTime" class="layui-input" readonly />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="label">是否末级</label>
+                    <div>
+                        <input type="radio" name="finalNode" value="1" title="是">是
+                        <input type="radio" name="finalNode" value="0" title="否" checked>否
                     </div>
                 </div>
             </li>
         </ul>
-
-        <button type="submit" class="layui-btn layui-btn-normal">修改</button>
+        <button type="submit" class="layui-btn layui-btn-normal">添加</button>
     </form>
-    <!---上级科室，树形-->
-    <div class="dept" id="dept">
-        <header>
-            <span>添加</span>
-            <a href="#" class="drop">×</a>
-        </header>
-               <div>
-                   <ul id="treeDemo" class="ztree"></ul>
-               </div>
-            <button class="layui-btn layui-btn-warm" id="confirm" style="margin-left:30px;">确认</button>
-            <button class="layui-btn" id="cancel">取消</button>
-    </div>
-    <!--遮罩层-->
-    <div id="mask"></div>
 
-   
     <script src="~/Scripts/layui.all.js"></script>
     <script>
-        (function () {
-            var jsonString = $("#hdData").val();
-            var json = eval('(' + jsonString + ')');
-            //给form表单里面的赋值
-            $("input[name='id']").val(json[0].ID);
-            $("input[name='code']").val(json[0].CODE);//
-            $("input[name='name']").val(json[0].NAME);
-            $("input[name='simCode']").val(json[0].SIMCODE);
-            
-            if (json[0].LOCATION == null) {
-                $("input[name='location']").val(0);
-            } else { $("input[name='location']").val(json[0].LOCATION) }
-            //判断传来的值是否为空 站点
-            if (json[0].SITE == null) {
-                $("input[name='entCat']").val(3);
-            } else { $("input[name='site']").val(json[0].SITE); }
-            //环境类别
-            if (json[0].ENTCAT == null) {
-                $("input[name='entCat']").val(0);
-            } else { $("input[name='entCat']").val(json[0].ENTCAT) }
-
-            $("input[name='createTime']").val(json[0].CREATETIME);
-            $("input[name='otherName']").val(json[0].OTHERNAME);
-            //获取上级科室的名称
-            var id = json[0].ID;
-            if (json[0].PARENTID == null) {
-                $("input[name='parentId']").val("上级");
-            } else {
-                $.ajax({
-                    url: "/Dept/getPnameBypid?id=" + id,
-                    type: "POST",
-                    success: function (data) {
-                        $("input[name='parentId']").val(data);
-                    }
-                })
-            }
-          
-        })();
-        //根据上级ID获取上级ID的名字
-       
-        //点击上级科室，弹出选择上级科室界面,遮罩层
-        $("#sup").click(function () {
-            $("#mask").show();
-            $(".dept").fadeIn(1000);
-        });
-        //点击×和放弃隐藏用户界面
-        $(".drop").click(function () {
-            $("#mask").hide(1000);
-            $("#dept").fadeOut(800);
-        });
-        $("#cancel").click(function () {
-            $("#mask").hide(100);
-            $("#dept").fadeOut(800);
-        });
-
-     
         var zTreeObj;
         //配置树的样式
         var setting = {
@@ -318,8 +191,7 @@
                 $("#dept").fadeOut(500);
             });
         }
-       
     </script>
 </body>
 </html>
-     
+
