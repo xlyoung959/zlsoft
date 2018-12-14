@@ -39,7 +39,7 @@ namespace Dao
              new OracleParameter("deptId",OracleDbType.Int32,10) { Value=0},
              new OracleParameter("lastTime",OracleDbType.Date) { Value=null},
              new OracleParameter("sort",OracleDbType.Int32,10) { Value=0},
-             new OracleParameter("otherName",OracleDbType.Varchar2,10) { Value=null}
+             new OracleParameter("otherName",OracleDbType.Varchar2,10) { Value=dept.otherName}
             };
             int r =  OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
