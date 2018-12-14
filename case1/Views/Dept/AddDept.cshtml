@@ -22,7 +22,10 @@
          .layui-layout-admin .layui-body{bottom:0}
        *{margin:0;padding:0;}
         form {
-            margin-left: 10px;
+            height:370px;
+            width:540px;    
+            margin-left:auto;
+            margin-right:auto;
         }
         .label {
             width: 100px;
@@ -35,104 +38,188 @@
             border-radius: 4px;
             margin-top: 4px;
         }
-          input[type=text]:hover {
-                border-radius: 6px;
-                border: #333 1px solid;
-            }
+  input[type=text]:hover {
+          border-radius: 6px;
+               border: #333 1px solid;
+     }
 
      form>ul>li {
             float: left;
+        }
+  .keep{
+        float:none;
+      margin-top:30px;
+  }
+  .dept{
+ min-width: 360px;
+ width:auto;
+  height: 460px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #FFFFFF;
+  transform: translate(-50%, -50%);
+  border: #000000 2px solid;
+  display: none;
+  z-index: 1002;
+  overflow:auto;
+
+  }
+   
+ .dept>header{
+    height: 30px;
+    width: 360px;
+    font-size: 20px;
+    background: none;
+    border-bottom: #cccccc 1px solid;
+    }
+  .dept  header > span {
+          margin-left: 10px;
+ }
+        .drop {
+            float: right;
+            margin-right: 8px;
+            font-size: 24px;
+            color: #000000;
+        }
+       .drop:hover{
+          color: #ff0000;
+        }
+.dept>button{
+    margin-top:12px;
+}
+        #mask {
+            height:100%;
+            width:100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            filter: alpha(opacity=60);
+            background-color: #bbb;
+            z-index: 1000;
+            opacity: 0.5;
+            display: none;
         }
     </style>
  </head>
 <body>
     <form class="layui-form" role="form" action="/Dept/insertDept" method="post">
-        <ul>
-            <li>
-                
-                <div class="layui-form-item">
-                    <label class="label">名称</label>
-                    <div>
-                        <input type="text" name="name" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">编码</label>
-                    <div>
-                        <input type="text" name="code" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">简码</label>
-                    <div>
-                        <input type="text" name="simCode" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">位置</label>
-                    <div>
-                        <select name="location" lay-verify="required">
-                            <option value="0"></option>
-                            <option value="A01.内科" title="A01.内科">A01.内科</option>
-                            <option value="A02.老年科" title="A02.老年科">A02.老年科</option>
-                            <option value="A03.外科" title="A03.外科">A03.外科</option>
-                            <option value="A04.妇产科" title="A04.妇产科">A04.妇产科</option>
-                            <option value="A05.急诊科" title="A05.急诊科">A05.急诊科</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">上级科室</label>
-                    <div>
-                        <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" />
-                        <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="没有上级" id="parentname" />
-                    </div>
-                </div>
-            </li>
-            <li style="margin-left: 40px">
-                <div class="layui-form-item">
-                    <label class="label">站点</label>
-                    <div>
-                        <select name="site" lay-verify="required">
-                            <option value="0" title="0">0</option>
-                            <option value="1" title="1">1</option>
-                            <option value="2" title="2">2</option>
-                            <option value="3" title=""></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">环境类别</label>
-                    <div>
-                        <select name="entCat" lay-verify="required">
-                            <option value="0" title=""></option>
-                            <option value="I类" title="I类">I类</option>
-                            <option value="II类" title="II类">II类</option>
-                            <option value="III类" title="III类">III类</option>
-                            <option value="IV类" title="IV类">IV类</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">建档时间</label>
-                    <div>
-                        <input type="text" name="createTime" class="layui-input" readonly />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="label">是否末级</label>
-                    <div>
-                        <input type="radio" name="finalNode" value="1" title="是">是
-                        <input type="radio" name="finalNode" value="0" title="否" checked>否
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <button type="submit" class="layui-btn layui-btn-normal">添加</button>
+        
+            <ul>
+    <li>
+        <div class="layui-form-item">
+            <label class="label">名称</label>
+            <div>
+                <input type="text" name="name" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">编码</label>
+            <div>
+                <input type="text" name="code" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">简码</label>
+            <div>
+                <input type="text" name="simCode" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">位置</label>
+            <div>
+                <select name="location" lay-verify="required">
+                    <option value="0"></option>
+                    <option value="A01.内科" title="A01.内科">A01.内科</option>
+                    <option value="A02.老年科" title="A02.老年科">A02.老年科</option>
+                    <option value="A03.外科" title="A03.外科">A03.外科</option>
+                    <option value="A04.妇产科" title="A04.妇产科">A04.妇产科</option>
+                    <option value="A05.急诊科" title="A05.急诊科">A05.急诊科</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">上级科室</label>
+            <div>
+                <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" />
+                <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="上级" id="parentname" />
+            </div>
+        </div>
+    </li>
+    <li style="margin-left: 40px">
+        <div class="layui-form-item">
+            <label class="label">站点</label>
+            <div>
+                <select name="site" lay-verify="required">
+                    <option value="0" title="0">0</option>
+                    <option value="1" title="1">1</option>
+                    <option value="2" title="2">2</option>
+                    <option value="3" title=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">环境类别</label>
+            <div>
+                <select name="envCat" lay-verify="required">
+                    <option value="0" title=""></option>
+                    <option value="I类" title="I类">I类</option>
+                    <option value="II类" title="II类">II类</option>
+                    <option value="III类" title="III类">III类</option>
+                    <option value="IV类" title="IV类">IV类</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">建档时间</label>
+            <div>
+                <input type="date" name="createTime" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="label">是否末级</label>
+            <div>
+                <input type="radio" name="finalNode" value="1" title="是">
+                <input type="radio" name="finalNode" value="0" title="否" checked>
+            </div>
+        </div>
+        <div class="keep">
+            <button type="submit" class="layui-btn layui-btn-lg">添加</button>
+        </div>
+    </li>
+</ul>
+
     </form>
+
+    <!---上级科室，树形-->
+    <div class="dept" id="dept">
+        <header>
+            <span>添加</span>
+            <a href="#" class="drop">×</a>
+        </header>
+        <div>
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+        <button class="layui-btn layui-btn-warm" id="confirm" style="margin-left:30px;">确认</button>
+        <button class="layui-btn" id="cancel">取消</button>
+    </div>
+    <!--遮罩层-->
+    <div id="mask"></div>
+
 
     <script src="~/Scripts/layui.all.js"></script>
     <script>
+      
+        //点击×和放弃隐藏用户界面
+        $(".drop").click(function () {
+            $("#mask").hide(1000);
+            $("#dept").fadeOut(800);
+        });
+        $("#cancel").click(function () {
+            $("#mask").hide(100);
+            $("#dept").fadeOut(800);
+        });
+
         var zTreeObj;
         //配置树的样式
         var setting = {
@@ -167,23 +254,30 @@
                 onClick: zTreeOnClick
             }
         };
-        //得到部门的树
-        $.ajax({
-            url: "/Dept/getDeptTree",
-            dateType: "json",
-            type: "POST",
-            success: function (data) {
-                //调用layui.tree方法
-                $(document).ready(function () {
-                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
-                });
-            }
-        });
-
+        //点击上级的得到部门的树  显示遮罩
+        $("#parentname").click(function () {
+                $("#mask").show();
+                $(".dept").fadeIn(1000);
+        //后台ajax请求           
+            $.ajax({
+                url: "/Dept/getDeptTree",
+                dateType: "json",
+                type: "POST",
+                success: function (data) {
+                    //调用layui.tree方法
+                    $(document).ready(function () {
+                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+                    });
+                }
+            });
+        })
+     
         //点击树的节点时要处理的方法
         function zTreeOnClick(event, treeId, treeNode) {
             var id = treeNode.id;
+            
             var name = treeNode.name;
+            console.log(id + ",name" + name);
             $("#confirm").click(function () {
                 $("#parentId").val(id);
                 $("#parentname").val(name);

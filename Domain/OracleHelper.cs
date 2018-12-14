@@ -29,7 +29,8 @@ namespace Domain
                     con.Open();
                     try
                     {
-                        return cmd.ExecuteNonQuery();
+                        int i= cmd.ExecuteNonQuery();
+                        return i;
 
                     }
                     catch

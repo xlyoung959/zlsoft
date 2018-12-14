@@ -47,7 +47,7 @@ namespace case1.Controllers
         public int insertDept()
         {
             Dept dept = new Dept();
-            dept.parentId = int.Parse(Request.Form["parentId"]);
+            dept.parentId =int.Parse( Request.Form["parentId"]);
             dept.location = Request.Form["location"];
             dept.name = Request.Form["name"];
             dept.createTime = Request.Form["createTime"];

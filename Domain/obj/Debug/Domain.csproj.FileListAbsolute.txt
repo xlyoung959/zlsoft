@@ -6,4 +6,3 @@ E:\visual studio 2015\Projects\case1\Domain\bin\Debug\Newtonsoft.Json.dll
 E:\visual studio 2015\Projects\case1\Domain\bin\Debug\Newtonsoft.Json.pdb
 E:\visual studio 2015\Projects\case1\Domain\bin\Debug\Newtonsoft.Json.xml
 E:\visual studio 2015\Projects\case1\Domain\obj\Debug\Domain.csprojResolveAssemblyReference.cache
-E:\visual studio 2015\Projects\case1\Domain\bin\Debug\Oracle.DataAccess.dll

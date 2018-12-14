@@ -173,13 +173,15 @@
                             <option value="IV类" title="IV类">IV类</option>
                         </select>
                     </div>
-                </div>
-                
+                </div>      
                 <div class="layui-form-item">
                     <label class="label">别名</label>
                     <div>
                         <input type="text" name="otherName" class="layui-input" />
                     </div>
+                </div>
+                <div class="keep">
+                    <button type="submit" class="layui-btn layui-btn-lg">修改</button>
                 </div>
             </li>
         </ul>
@@ -245,7 +247,7 @@
         //根据上级ID获取上级ID的名字
        
         //点击上级科室，弹出选择上级科室界面,遮罩层
-        $("#sup").click(function () {
+        $("#parentname").click(function () {
             $("#mask").show();
             $(".dept").fadeIn(1000);
         });
