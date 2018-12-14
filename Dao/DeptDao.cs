@@ -23,7 +23,7 @@ namespace Dao
         /// <returns>int操作的行数</returns>
         public int insertDept(Dept dept)
         {
-            string sql = "insert into 部门表 values(deptid_seq.nextval,:parentId,':code',':name',':simCode',':location',:finalNode,to_date(':createTime','YYYY-MM-DD'),to_date(':deleteTime','YYYY-MM-DD'),':site',':envCat',:deptId,to_date(':lastTime','YYYY-MM-DD'),:sort,':otherName')";
+            string sql = "insert into 部门表 values(deptid_seq.nextval,:parentId,':code',':name',':simCode',':location',:finalNode,to_date(':createTime','YYYY-MM-DD'),:deleteTime,':site',':envCat',:deptId,:lastTime,:sort,':otherName')";
             OracleParameter[] prms = new OracleParameter[]
             {
              new OracleParameter("parentId",OracleDbType.Int32,10) { Value=dept.parentId},
