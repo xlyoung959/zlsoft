@@ -24,7 +24,10 @@
          .layui-layout-admin .layui-body{bottom:0}
        *{margin:0;padding:0;}
         form {
-            margin-left: 10px;
+           height:370px;
+            width:540px;    
+            margin-left:auto;
+            margin-right:auto;
         }
         .label {
             width: 100px;
@@ -99,6 +102,7 @@
     </style>
 </head>
 <body>
+    <input id="erro" type="hidden" value="@ViewData["erro"]" />
     <input id="hdData" type="hidden" value="@ViewData["Dept"]" />
    <!--某个科室的内容-->
     <form class="layui-form" role="form" action="/Dept/updateDept" method="post" >
@@ -146,12 +150,6 @@
             </li>
             <li style="margin-left: 40px">
                 <div class="layui-form-item">
-                    <label class="label">建档时间</label>
-                    <div>
-                        <input type="text" name="createTime" class="layui-input" readonly />
-                    </div>
-                </div>
-                <div class="layui-form-item">
                     <label class="label">站点</label>
                     <div>
                         <select name="site" lay-verify="required">             
@@ -180,13 +178,17 @@
                         <input type="text" name="otherName" class="layui-input" />
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="label">建档时间</label>
+                    <div>
+                        <input type="text" name="createTime" class="layui-input" readonly />
+                    </div>
+                </div>
                 <div class="keep">
                     <button type="submit" class="layui-btn layui-btn-lg">修改</button>
                 </div>
             </li>
         </ul>
-
-        <button type="submit" class="layui-btn layui-btn-normal">修改</button>
     </form>
     <!---上级科室，树形-->
     <div class="dept" id="dept">
@@ -207,6 +209,9 @@
     <script src="~/Scripts/layui.all.js"></script>
     <script>
         (function () {
+            if ($("#erro").val() != "") {
+                alert($("#erro").val());
+            }
             var jsonString = $("#hdData").val();
             var json = eval('(' + jsonString + ')');
             //给form表单里面的赋值
@@ -230,15 +235,17 @@
             $("input[name='createTime']").val(json[0].CREATETIME);
             $("input[name='otherName']").val(json[0].OTHERNAME);
             //获取上级科室的名称
+            
             var id = json[0].ID;
             if (json[0].PARENTID == null) {
-                $("input[name='parentId']").val("上级");
+                $("input[name='parentId']").val(0);
             } else {
+                $("input[name='parentId']").val(json[0].PARENTID);
                 $.ajax({
                     url: "/Dept/getPnameBypid?id=" + id,
                     type: "POST",
                     success: function (data) {
-                        $("input[name='parentId']").val(data);
+                        $("input[name='parentname']").val(data);
                     }
                 })
             }

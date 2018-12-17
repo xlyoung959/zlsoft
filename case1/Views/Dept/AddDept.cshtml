@@ -103,6 +103,7 @@
     </style>
  </head>
 <body>
+    <input id="erro" type="hidden" value="@ViewData["erro"]" />
     <form class="layui-form" role="form" action="/Dept/insertDept" method="post">
         
             <ul>
@@ -110,7 +111,7 @@
         <div class="layui-form-item">
             <label class="label">名称</label>
             <div>
-                <input type="text" name="name" class="layui-input" />
+                <input type="text" name="name" class="layui-input" required/>
             </div>
         </div>
         <div class="layui-form-item">
@@ -138,11 +139,12 @@
                 </select>
             </div>
         </div>
+       
         <div class="layui-form-item">
             <label class="label">上级科室</label>
             <div>
-                <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" />
-                <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="上级" id="parentname" />
+                <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="上级" id="parentname"  />
+                <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" value="0" />
             </div>
         </div>
     </li>
@@ -155,6 +157,7 @@
                     <option value="1" title="1">1</option>
                     <option value="2" title="2">2</option>
                     <option value="3" title=""></option>
+                    
                 </select>
             </div>
         </div>
@@ -173,7 +176,7 @@
         <div class="layui-form-item">
             <label class="label">建档时间</label>
             <div>
-                <input type="date" name="createTime" class="layui-input" />
+                <input type="date" name="createTime" class="layui-input" required />
             </div>
         </div>
         <div class="layui-form-item">
@@ -209,7 +212,10 @@
 
     <script src="~/Scripts/layui.all.js"></script>
     <script>
-      
+        //添加成功的信息
+        if ($("#erro").val() != "") { 
+            alert($("#erro").val());    
+        }
         //点击×和放弃隐藏用户界面
         $(".drop").click(function () {
             $("#mask").hide(1000);

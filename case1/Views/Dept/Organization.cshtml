@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-
+    <input type="hidden" id="erro" value="@ViewData["erro"]" />
 <div class="layui-layout">
        <div class="layui-header" style="height:40px;margin-top:10px;  margin-left:20px;">
            <a href="/Dept/AddDept" target="content" class="layui-btn layui-btn-normal" id="add" title="新增">新增</a>
@@ -51,7 +51,10 @@
 </div>
 
     <script>
-
+        if ($("#erro").val() != "") {
+            alert($("#erro").val());
+            
+        }
                 var zTreeObj;
                 //配置树的样式
                 var setting = {
@@ -99,32 +102,33 @@
                         }
                     });
           
-
+                    var nodeId;
                 //点击树的节点时要处理的方法
-                function zTreeOnClick(event, treeId, treeNode) {
-                    //location.href = "/Dept/Content";
+                    function zTreeOnClick(event, treeId, treeNode) {
+                         nodeId = treeNode.id;
                     $("#treeDemo li a").attr('href', '/Dept/DeptContent?id=' + treeNode.id);
-                }
-        //点击新增按钮
-               
-        //点击删除按钮
-                $("#delete").click(function () {
-                    var result = confirm("您确定要删除吗？");
-                    //返回ture或false
-                    if (result) {
-                        /*  var url="/SLMS/employee/del";
-                          var param={id:id};
-                          $.post(url,param,function(date){
-                              if(date==1){
-                                  alert("删除成功");
-                                  location.reload();
-                              }else{
-                                  alert("删除失败")
-                              }
-                          })*/
                     }
 
-                });
+                 //点击删除按钮
+                    $("#delete").click(function () {
+                        var result = confirm("您确定要删除吗？");
+                        //返回ture或false
+                        if (result) {
+                            var url = "/Dept/deleteDept" ;
+                            var param = { id: nodeId };
+                            $.post(url, param, function (date) {
+                                if (date == 1) {
+                                    alert("删除成功");
+                                    location.reload();
+                                } else {
+                                    alert("删除失败")
+                                }
+                            })
+                        }
+                    });
+        //点击新增按钮
+        
+               
     </script>
 </body>
 </html>
