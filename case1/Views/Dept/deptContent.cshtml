@@ -209,11 +209,9 @@
     <script src="~/Scripts/layui.all.js"></script>
     <script>
         (function () {
-            if ($("#erro").val() != "") {
-                alert($("#erro").val());
-            }
             var jsonString = $("#hdData").val();
             var json = eval('(' + jsonString + ')');
+           
             //给form表单里面的赋值
             $("input[name='id']").val(json[0].ID);
             $("input[name='code']").val(json[0].CODE);//
@@ -235,12 +233,12 @@
             $("input[name='createTime']").val(json[0].CREATETIME);
             $("input[name='otherName']").val(json[0].OTHERNAME);
             //获取上级科室的名称
-            
             var id = json[0].ID;
             if (json[0].PARENTID == null) {
                 $("input[name='parentId']").val(0);
             } else {
                 $("input[name='parentId']").val(json[0].PARENTID);
+                //根据ID获取上级ID的名字
                 $.ajax({
                     url: "/Dept/getPnameBypid?id=" + id,
                     type: "POST",
@@ -249,9 +247,15 @@
                     }
                 })
             }
-          
+            //如果有错误信息弹出，并刷新父及页面和自动跳转
+            if ($("#erro").val() != "") {
+                alert($("#erro").val());
+                parent.location.reload();
+                $(window.parent.document).find("#update").css(" href", "/Dept/DeptContent?id=" + json[0].ID);
+                $(window.parent.document).find("#update")[0].click()
+            }
         })();
-        //根据上级ID获取上级ID的名字
+       
        
         //点击上级科室，弹出选择上级科室界面,遮罩层
         $("#parentname").click(function () {
@@ -320,6 +324,7 @@
         function zTreeOnClick(event, treeId, treeNode) {
             var id = treeNode.id;
             var name = treeNode.name;
+            //选择上级科室 点击确认时
             $("#confirm").click(function () {
                 $("#parentId").val(id);
                 $("#parentname").val(name);

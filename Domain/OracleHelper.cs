@@ -82,10 +82,15 @@ namespace Domain
                 }
                 catch
                 {
-                    con.Close();
-                    con.Dispose();
+               
                     throw;
                 }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+
             }
         }
 
