@@ -50,6 +50,7 @@
     <Compile Include="DeptTree.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="MenuOperating.cs" />
+    <Compile Include="MenuTree.cs" />
     <Compile Include="OracleHelper.cs" />
     <Compile Include="Peopel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

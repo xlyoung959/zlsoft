@@ -25,6 +25,7 @@
     </style>
 </head>
 <body>
+    <input type="hidden" value="@ViewData["username"]" id="username"/><!--隐藏标签，用户子页面获取登录的用户名-->
     <div class="layui-layout  layui-layout-admin">
         <div class="layui-header layui-bg-blue">
             <div class="layui-logo layui-bg-black">在中联的第一个例子</div>
@@ -36,16 +37,16 @@
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
-                    <a href="javascript:;">
+                    <a href="javascript:void(0);">
                         <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
                         @ViewData["username"]
                     </a>
                     <dl class="layui-nav-child" style="text-align:center;">
-                        <dd><a href="">基本资料</a></dd>
-                        <dd><a href="">安全设置</a></dd>
+                        <dd><a href="javascript:void(0);" title="基本资料">基本资料</a></dd>
+                        <dd><a href="javascript:void(0);" title="安全设置">安全设置</a></dd>
+                        <dd><a href="/User/Logout" title="退出">退&emsp;&emsp;出</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">退出</a></li>
             </ul>
         </div>
        
@@ -56,8 +57,8 @@
                     <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;" title="基础管理">基础管理</a>
                         <dl class="layui-nav-child zuoce">
-                            <dd><a href="javaScript:void(0);" title="组织机构" target="menuContent" id="organ">组织机构</a></dd>
-                            <dd><a href="javaScript:void(0);" title="菜单维护" target="menuContent" id="menu">菜单维护</a></dd>
+                            <dd><a href="/Dept/Organization" title="组织机构" target="menuContent" id="organ">组织机构</a></dd>
+                            <dd><a href="/Menu/MenuManagement" title="菜单维护" target="menuContent" id="menu">菜单维护</a></dd>
                         </dl>
                     </li>
                    
@@ -75,11 +76,16 @@
      layui.use('element', function () {
          var element = layui.element;
      });
-     $("#organ").click(function () {
-        // $("#organ").attr("target", "menuContent");
-         $("#organ").attr("href" , "/Dept/Organization");
-     })
-     var high = $(document.body).height() - 60 + "px";
+
+     ////点击组织机构事件
+     //$("#organ").click(function () {
+     //   // $("#organ").attr("target", "menuContent");
+     //    $("#organ").attr("href" , "/Dept/Organization");
+     //})
+     ////点击菜单维护事件
+     //$("#menu").click(function () {
+     //    $("menu").attr("href", "/Menu/MenuManagement")
+     //})
      
   
     
