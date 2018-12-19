@@ -19,11 +19,11 @@ namespace Dao
         /// <returns>正确，返回1 不正确返回0</returns>
         public int Login(string username,string password)
         {
-            string sql = "select * from 系统_用户信息 where 用户名=:username and 密码=:password";
+            string sql = "select * from 系统_用户信息 where 用户名=:username and 密码=:password and 是否作废=0";
            OracleParameter[] prms = new OracleParameter[]
               {
                  new OracleParameter("username",OracleDbType.Varchar2,36) { Value=username},
-                 new OracleParameter("username",OracleDbType.Varchar2,20) { Value=password}
+                 new OracleParameter("password",OracleDbType.Varchar2,20) { Value=password}
               };
              var u=OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
             if (u != null)

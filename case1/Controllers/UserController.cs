@@ -15,6 +15,11 @@ namespace case1.Controllers
         {
             return View("Login");
         }
+
+        /// <summary>
+        /// 点击登录 判断用户名和密码
+        /// </summary>
+        /// <returns></returns>
         public ActionResult LoginSubmit()
         {
             string name = Request.Form["username"];
@@ -31,6 +36,13 @@ namespace case1.Controllers
                 return View("Login");
             }
 
+        }
+
+        //退出登录
+        public ActionResult Logout()
+        {
+            Session.Abandon();
+            return View("Login");
         }
     }
 }
