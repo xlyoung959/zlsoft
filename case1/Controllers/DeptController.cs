@@ -1,17 +1,13 @@
 ﻿using Domain;
 using Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace case1.Controllers
 {
     public class DeptController : Controller
     {
-        DeptService deptService = new DeptService();
-        Dept dept;
+        DeptService deptService = new DeptService(); 
 
         // GET: Dept
         public ActionResult Index()
@@ -44,10 +40,10 @@ namespace case1.Controllers
         /// <param name="dept"></param>
         /// <returns></returns>
         [HttpPost]
-        public int insertDept()
+        public ActionResult insertDept()
         {
             Dept dept = new Dept();
-            dept.parentId = int.Parse(Request.Form["parentId"]);
+            dept.parentId =int.Parse( Request.Form["parentId"]);
             dept.location = Request.Form["location"];
             dept.name = Request.Form["name"];
             dept.createTime = Request.Form["createTime"];
@@ -57,7 +53,18 @@ namespace case1.Controllers
             dept.site = Request.Form["site"];
             dept.simCode = Request.Form["simCode"];
             dept.code = Request.Form["code"];
-            return deptService.insertDept(dept);
+            int i= deptService.insertDept(dept);
+            if (i > 0)
+            {
+                ViewData["erro"] = "添加成功";
+             
+                return View("Organization");
+            }
+            else
+            {
+                ViewData["erro"] = "添加失败";
+                return View("AddDept");
+            }
         }
         /// <summary>
         /// 返回组织列表树结构
@@ -74,12 +81,37 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="dept"></param>
         /// <returns></returns>
-        public int updateDept()
+        public ActionResult updateDept()
         {
-            //updateDept不用带参  改一下注意自己把ID从前台取到和DeptContent中的内容对应一下吧 只取parentId就行 parentname不要取哟
-            //dao层李的末级删了吧，前台没有涉及到改，当然也可在前台加起  
             Dept dept = new Dept();
-            return deptService.insertDept(dept);
+            dept.Id = Int32.Parse(Request.Form["id"]);
+            dept.code = Request.Form["code"];
+            dept.parentId = Int32.Parse(Request.Form["parentId"]);
+            dept.location = Request.Form["location"];
+            dept.name = Request.Form["name"];
+            dept.simCode = Request.Form["simCode"];
+            dept.envCat = Request.Form["envCat"];
+            dept.location = Request.Form["location"];
+            dept.site = Request.Form["site"];
+            dept.createTime = Request.Form["createTime"];
+
+            int u= deptService.updateDept(dept);
+            if (u > 0)
+            {
+                var data = deptService.selectDeptById(dept.Id);
+                var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
+                ViewData["Dept"] = dataStr;
+                ViewData["erro"] = "修改成功";
+                return View("DeptContent");
+            }
+            else
+            {
+                var data = deptService.selectDeptById(dept.Id);
+                var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
+                ViewData["Dept"] = dataStr;
+                ViewData["erro"] = "修改失败";
+                return View("DeptContent");
+            }
         }
 
 

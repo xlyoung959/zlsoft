@@ -24,7 +24,10 @@
          .layui-layout-admin .layui-body{bottom:0}
        *{margin:0;padding:0;}
         form {
-            margin-left: 10px;
+           height:370px;
+            width:540px;    
+            margin-left:auto;
+            margin-right:auto;
         }
         .label {
             width: 100px;
@@ -99,6 +102,7 @@
     </style>
 </head>
 <body>
+    <input id="erro" type="hidden" value="@ViewData["erro"]" />
     <input id="hdData" type="hidden" value="@ViewData["Dept"]" />
    <!--某个科室的内容-->
     <form class="layui-form" role="form" action="/Dept/updateDept" method="post" >
@@ -140,17 +144,11 @@
                     <label class="label">上级科室</label>
                     <div>
                         <input type="hidden" name="parentId" class="layui-btn layui-btn-normal" id="parentId" />
-                        <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="没有上级"  id="parentname" />
+                        <input type="button" name="parentname" class="layui-btn layui-btn-normal" value="上级"  id="parentname" />
                     </div>
                 </div>
             </li>
             <li style="margin-left: 40px">
-                <div class="layui-form-item">
-                    <label class="label">建档时间</label>
-                    <div>
-                        <input type="text" name="createTime" class="layui-input" readonly />
-                    </div>
-                </div>
                 <div class="layui-form-item">
                     <label class="label">站点</label>
                     <div>
@@ -173,18 +171,24 @@
                             <option value="IV类" title="IV类">IV类</option>
                         </select>
                     </div>
-                </div>
-                
+                </div>      
                 <div class="layui-form-item">
                     <label class="label">别名</label>
                     <div>
                         <input type="text" name="otherName" class="layui-input" />
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="label">建档时间</label>
+                    <div>
+                        <input type="text" name="createTime" class="layui-input" readonly />
+                    </div>
+                </div>
+                <div class="keep">
+                    <button type="submit" class="layui-btn layui-btn-lg">修改</button>
+                </div>
             </li>
         </ul>
-
-        <button type="submit" class="layui-btn layui-btn-normal">修改</button>
     </form>
     <!---上级科室，树形-->
     <div class="dept" id="dept">
@@ -207,6 +211,7 @@
         (function () {
             var jsonString = $("#hdData").val();
             var json = eval('(' + jsonString + ')');
+           
             //给form表单里面的赋值
             $("input[name='id']").val(json[0].ID);
             $("input[name='code']").val(json[0].CODE);//
@@ -230,22 +235,30 @@
             //获取上级科室的名称
             var id = json[0].ID;
             if (json[0].PARENTID == null) {
-                $("input[name='parentId']").val("上级");
+                $("input[name='parentId']").val(0);
             } else {
+                $("input[name='parentId']").val(json[0].PARENTID);
+                //根据ID获取上级ID的名字
                 $.ajax({
                     url: "/Dept/getPnameBypid?id=" + id,
                     type: "POST",
                     success: function (data) {
-                        $("input[name='parentId']").val(data);
+                        $("input[name='parentname']").val(data);
                     }
                 })
             }
-          
+            //如果有错误信息弹出，并刷新父及页面和自动跳转
+            if ($("#erro").val() != "") {
+                alert($("#erro").val());
+                parent.location.reload();
+                $(window.parent.document).find("#update").css(" href", "/Dept/DeptContent?id=" + json[0].ID);
+                $(window.parent.document).find("#update")[0].click()
+            }
         })();
-        //根据上级ID获取上级ID的名字
+       
        
         //点击上级科室，弹出选择上级科室界面,遮罩层
-        $("#sup").click(function () {
+        $("#parentname").click(function () {
             $("#mask").show();
             $(".dept").fadeIn(1000);
         });
@@ -311,6 +324,7 @@
         function zTreeOnClick(event, treeId, treeNode) {
             var id = treeNode.id;
             var name = treeNode.name;
+            //选择上级科室 点击确认时
             $("#confirm").click(function () {
                 $("#parentId").val(id);
                 $("#parentname").val(name);

@@ -23,7 +23,13 @@ namespace Dao
         /// <returns>int操作的行数</returns>
         public int insertDept(Dept dept)
         {
-            string sql = "insert into 部门表 values(deptid_seq.nextval,:parentId,:code,:name,:simCode,:location,:finalNode,:createTime,:deleteTime,:site,:envCat,:deptId,:lastTime,:sort,:otherName)";
+            string sql = "insert into 部门表(ID,上级ID,编码,名称,简码,位置,末级,建档时间,站点,环境类别) values(deptid_seq.nextval,:parentId,:code,:name,:simCode,:location,:finalNode,to_date(:createTime,'YYYY-MM-DD'),:site,:envCat)";
+            //insert into(ID,上级ID,编码,名称,简码,位置,末级,建档时间,撤档时间,站点,环境类别,部门负责人,最后修改时间,顺序,别名) 部门表 
+           // values(deptid_seq.nextval,:parentId,:code,:name,:simCode,:location,:finalNode, to_date(:createTime, 'YYYY-MM-DD'), to_date(:deleteTime, 'YYYY-MM-DD'),:site,:envCat,:deptId, to_date(:lastTime, 'YYYY-MM-DD'),:sort,:otherName)
+            if (dept.parentId == 0)
+            {
+                dept.parentId = null;
+            }
             OracleParameter[] prms = new OracleParameter[]
             {
              new OracleParameter("parentId",OracleDbType.Int32,10) { Value=dept.parentId},
@@ -32,14 +38,14 @@ namespace Dao
              new OracleParameter("simCode",OracleDbType.Varchar2,100) { Value=dept.simCode},
              new OracleParameter("location",OracleDbType.Varchar2,50) { Value=dept.location},
              new OracleParameter("finalNode",OracleDbType.Int32,1) { Value=dept.finalNode},
-             new OracleParameter("createTime",OracleDbType.Date) { Value=dept.createTime},
-             new OracleParameter("deleteTime",OracleDbType.Date) { Value=null},
+             new OracleParameter("createTime",OracleDbType.Varchar2,50) { Value=dept.createTime},
+            //new OracleParameter("deleteTime",OracleDbType.Date) { Value=null},
              new OracleParameter("site",OracleDbType.Varchar2,1) { Value=dept.site},
              new OracleParameter("envCat",OracleDbType.Varchar2,10) { Value=dept.envCat},
-             new OracleParameter("deptId",OracleDbType.Int32,10) { Value=0},
-             new OracleParameter("lastTime",OracleDbType.Date) { Value=null},
-             new OracleParameter("sort",OracleDbType.Int32,10) { Value=0},
-             new OracleParameter("otherName",OracleDbType.Varchar2,10) { Value=dept.otherName}
+            // new OracleParameter("deptId",OracleDbType.Int32,10) { Value=0},
+           // new OracleParameter("lastTime",OracleDbType.Date) { Value=null},
+             //new OracleParameter("sort",OracleDbType.Int32,10) { Value=null},
+             //new OracleParameter("otherName",OracleDbType.Varchar2,10) { Value=null}
             };
             int r =  OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
@@ -55,6 +61,10 @@ namespace Dao
         public int updateDept(Dept dept)
         {
             string sql = "update 部门表 set 上级ID=:parentId,编码=:code,名称=:name,简码=:simCode,位置=:location,末级=:finalNode,站点=:site,环境类别=:entCat,最后修改时间=sysdate where ID=:Id";
+            if (dept.parentId == 0)
+            {
+                dept.parentId =null;
+            }
             OracleParameter[] prms = new OracleParameter[]
                 {
                  new OracleParameter("parentId",OracleDbType.Int32,10) { Value=dept.parentId},
@@ -66,7 +76,7 @@ namespace Dao
                  new OracleParameter("site",OracleDbType.Varchar2,1) { Value=dept.site},
                  new OracleParameter("envCat",OracleDbType.Varchar2,10) { Value=dept.envCat},
                  
-                 new OracleParameter("ID",OracleDbType.Int32,10) { Value=dept.Id}
+                 new OracleParameter("Id",OracleDbType.Int32,10) { Value=dept.Id}
                 };
             int r = OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
             return r;
@@ -113,7 +123,7 @@ namespace Dao
             string sql = "select ID , 名称 as name,上级ID as parentId,编码 as code,简码 as simCode,位置 as location,末级 as finalNode,建档时间 as createTime,撤档时间 as deleteTime,站点 as site,环境类别 as entCat,最后修改时间 as lastTime,别名 as otherName from 部门表 where ID=:id";
             OracleParameter[] prms = new OracleParameter[]
               {
-                 new OracleParameter("ID",OracleDbType.Int32,10) { Value=id}
+                 new OracleParameter("id",OracleDbType.Int32,10) { Value=id}
               };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }

@@ -1,7 +1,7 @@
 ﻿@{ 
     Layout = null;
 }
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,14 +33,19 @@
                 <li class="layui-nav-item"><a href="javaScript:void(0);">控制一</a></li>
                 <li class="layui-nav-item"><a href="javaScript:void(0);">控制二</a></li>
                 <li class="layui-nav-item"><a href="javaScript:void(0);">控制三</a></li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
-                    <a href="javascript:;">其它系统</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javaScript:void(0);">邮件管理</a></dd>
-                        <dd><a href="javaScript:void(0);">消息管理</a></dd>
-                        <dd><a href="javaScript:void(0);">授权管理</a></dd>
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        @ViewData["username"]
+                    </a>
+                    <dl class="layui-nav-child" style="text-align:center;">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
                     </dl>
                 </li>
+                <li class="layui-nav-item"><a href="">退出</a></li>
             </ul>
         </div>
        
@@ -51,15 +56,17 @@
                     <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;" title="基础管理">基础管理</a>
                         <dl class="layui-nav-child zuoce">
-                            <dd><a href="javaScript:void(0);" title="组织机构" target="menu" id="organ">组织机构</a></dd>
+                            <dd><a href="javaScript:void(0);" title="组织机构" target="menuContent" id="organ">组织机构</a></dd>
+                            <dd><a href="javaScript:void(0);" title="菜单维护" target="menuContent" id="menu">菜单维护</a></dd>
                         </dl>
                     </li>
+                   
                 </ul>
             </div>
         </div>
 
-        <div class="layui-body" style="height:566px;">
-            <iframe name="menu" width="100%" height="100%" frameborder="0" scrolling="auto" ></iframe>
+        <div class="layui-body" >
+            <iframe name="menuContent" width="100%" height="99%" frameborder="0" scrolling="auto" ></iframe>
         </div>
     </div>
  
@@ -69,7 +76,7 @@
          var element = layui.element;
      });
      $("#organ").click(function () {
-         $("#organ").attr("target", "menu");
+        // $("#organ").attr("target", "menuContent");
          $("#organ").attr("href" , "/Dept/Organization");
      })
      var high = $(document.body).height() - 60 + "px";

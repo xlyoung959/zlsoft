@@ -29,7 +29,8 @@ namespace Domain
                     con.Open();
                     try
                     {
-                        return cmd.ExecuteNonQuery();
+                        int i= cmd.ExecuteNonQuery();
+                        return i;
 
                     }
                     catch
@@ -81,10 +82,15 @@ namespace Domain
                 }
                 catch
                 {
-                    con.Close();
-                    con.Dispose();
+               
                     throw;
                 }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+
             }
         }
 
