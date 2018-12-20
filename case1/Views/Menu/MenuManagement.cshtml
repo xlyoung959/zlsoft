@@ -74,10 +74,11 @@
     </div>
 
     <script>
+        //添加成功的信息，如果不为空，就刷新当前页面并跳到添加页面
         if ($("#erro").val() != "") {
             alert($("#erro").val());
             window.location.reload();
-            $("#add")[0].click();
+            $("#add")[0].click();//自动执行add标签的点击事件
         }
                 var zTreeObj;
                 //配置树的样式
@@ -120,10 +121,10 @@
                 var username = $(window.parent.document).find("#username").val();
                     $.ajax({
                         url: "/Menu/getMenuTree?username=" + username ,
-                        dateType: "json",
+                        dataType: "json",
                         type: "POST",
                         success: function (data) {
-                            //调用layui.tree方法
+                            //调用ztree方法 在treeDemo标签里面生成树形
                             $(document).ready(function () {
                                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
                             });
@@ -140,7 +141,7 @@
                  //点击删除按钮
                     $("#delete").click(function () {
                         var result = confirm("您确定要删除吗？");
-                        //返回ture或false
+                        //返回ture或false,true是就去执行删除命令
                         if (result) {
                             var url = "/Menu/deleteMenu" ;
                             var param = { id: nodeId };
@@ -155,7 +156,6 @@
                         }
                     });
         //点击新增按钮
-
 
     </script>
 </body>

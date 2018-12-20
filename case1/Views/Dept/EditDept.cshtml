@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>部门内容</title>
+    <title>修改部门页面</title>
     <link href="~/Content/layui.css" rel="stylesheet" />
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -207,6 +207,7 @@
 
    
     <script src="~/Scripts/layui.all.js"></script>
+    <script src="~/Scripts/treeSetting.js"></script>
     <script>
         (function () {
             var jsonString = $("#hdData").val();
@@ -275,6 +276,7 @@
      
         var zTreeObj;
         //配置树的样式
+        //ztree中的配置信息
         var setting = {
             view: {
                 dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
@@ -310,7 +312,7 @@
         //得到部门的树
         $.ajax({
             url: "/Dept/getDeptTree",
-            dateType: "json",
+            dataType: "json",
             type: "POST",
             success: function (data) {
                 //调用layui.tree方法
