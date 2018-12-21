@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="Dept.cs" />
     <Compile Include="DeptTree.cs" />
-    <Compile Include="Layui.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="MenuOperating.cs" />
     <Compile Include="MenuTree.cs" />

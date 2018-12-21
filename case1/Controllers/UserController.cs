@@ -90,10 +90,52 @@ namespace case1.Controllers
             return Content(dataStr);
         }
 
-        public int AddRoleOfUser(string username,string roleId)
+        //给用户分配角色
+        public int AddRoleOfUser(string[] username,string roleId)
         {
-            return userService.AddRoleOfUser(username, roleId);
-         
+            var sum = 0;
+            for(int i = 0; i < username.Length; i++)
+            {
+               int a= userService.AddRoleOfUser(username[i], roleId);
+                if (a > 0)
+                {
+                    sum++;
+                }
+            }
+            //判断总的受影响的行数，如果等于传来的用户名数组的长度，就是全部分配角色完成，则返回sum,若没有返回0
+            if(sum == username.Length)
+            {
+                return sum;
+            }
+            else
+            {
+                return 0;
+            }
         }
+
+        //移除用的该角色
+        public int MoveRoleOfUser(string[] username, string roleId)
+        {
+            var sum = 0;
+            for (int i = 0; i < username.Length; i++)
+            {
+                int a = userService.MoveRoleOfUser(username[i], roleId);
+                if (a > 0)
+                {
+                    sum++;
+                }
+            }
+            //判断总的受影响的行数，如果等于传来的用户名数组的长度，就是全部分配角色完成，则返回sum,若没有返回0
+            if (sum == username.Length)
+            {
+                return sum;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
     }
 }

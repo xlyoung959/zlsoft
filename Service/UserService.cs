@@ -39,5 +39,10 @@ namespace Service
             return userDao.AddRoleOfUser(username, roleId);
         }
 
+        public int MoveRoleOfUser(string username, string roleId)
+        {
+            return userDao.MoveRoleOfUser(username, roleId);
+        }
+
     }
 }
