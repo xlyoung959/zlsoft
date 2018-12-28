@@ -1,0 +1,413 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>交班报告页面</title>
+    <link href="~/Content/layui.css" rel="stylesheet" />
+    <style>
+        body{background:#eeeeee}
+        .cuss-top{height:40px;width:100%;}
+        .cuss-kf input{height:28px;width:170px;border:1px solid #cccccc;padding-left:4px;}
+        .cuss-kf{float:left;margin-left:15px;margin-top:5px;}
+        .report{width:98%;height:566px;;background:#ffffff;margin-left:1%;margin-top:20px;}
+        .signature-table{width:98%;margin-left:1%;}
+        .signature-table>tr:nth-child(2){
+             height:46px;
+             font-size:12px;
+            
+         }
+        .signature-table>tr td{width:29%;}
+        .signature-table .secondList{margin-top:8px;}
+        .signature-table tr td div>span{display:inline-block; width:48%;}
+        .report-content{width:98%;margin-left:1%;}
+         .report-content-table{border-collapse:collapse; border-spacing:0; width:100%;}  
+        .report-content-table td{width:29%;font-size:14px;font-weight:400;}
+        .patient-status-day , .patient-status-late-night , .patient-status-night{width:100%;}
+         .patient-status-day td, .patient-status-late-night td , .patient-status-night td{border-bottom:1px solid #666666;height:26px;line-height:26px;color:#333333;}
+         .patient-status-day label , .patient-status-late-night label , .patient-status-night label{display:inline-block;width:20%;}
+         hr{background-color:#666;height:1px;border:none;}
+         .report-content-table .editDiagnosis{color:#1ad6f1;display:none;}
+         .report-content-table .editDiagnosis:hover{color:#eb3a40}
+        .report-content-table .happening{font-size:12px;}
+
+    </style>
+</head>
+<body>
+    <!--交班报告的头部，主要是一些按钮，选择-->
+    <div class="cuss-top">
+        <div class="cuss-kf">
+            <label> 选择日期:</label>
+            <input type="text" id="select_date"/>
+        </div>
+        <div class="cuss-kf">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" style="margin-left:-8px;" id="query">查 询</button>
+        </div>
+        <div class="cuss-kf">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="before-day">前一天</button>
+        </div>
+        <div class="cuss-kf">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="next-day">后一天</button>
+        </div>
+        <div class="cuss-kf">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="addPatient">增加病人</button>
+        </div>
+        <div class="cuss-kf">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="printPreview">打印预览</button>
+        </div>
+   
+    </div>
+    <!--报告-->
+    <div class="report" id="report">
+        <!--报告上的签名-->
+        <div class="signature" id="signature">
+            <table id="signature-table" class=" signature-table">
+                <tbody>
+                    <tr style="margin-left:auto;margin-right:auto;">
+                        <td></td>
+                        <td><button class="layui-btn layui-btn-sm layui-btn-normal" id="handOver">交班</button></td>
+                        <td><button class="layui-btn layui-btn-sm layui-btn-normal" id="handOver">交班</button></td>
+                        <td><button class="layui-btn layui-btn-sm layui-btn-normal" id="handOver">交班</button></td>
+                    </tr>
+                    <tr>
+                        <td  id="report-time" style="text-align:center;width:13%;font-size:14px;"></td><!--交班报告上的时间，平时隐藏，只有打印预览时看到-->
+                        <td>
+                            <div><span>交班人:</span> <span>交班时间:</span></div>
+                            <div class="secondList"><span>接班人:</span> <span>接班时间:</span></div>
+                        </td>
+                        <td>
+                           <div><span>交班人:</span><span>交班时间:</span></div>
+                           <div class="secondList"><span>接班人:</span><span>接班时间:</span></div>
+                        </td>
+                        <td>
+                            <div><span>交班人:</span><span>交班时间:</span></div>
+                            <div class="secondList"><span>接班人:</span><span>接班时间:</span></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--报告的主要内容，病人的详细信息-->
+        <div class="report-content" id="report-content">
+            <table id="report-content-table" class="report-content-table" border="1">
+                <tbody>
+                    <!--第一行是排班时间情况-->
+                    <tr>
+                        <td rowspan="2" colspan="2" style="width:12%;text-align:center;">患者总报告</td>
+                        <td class="widthTH">&ensp;8:00:00&ensp;至&ensp;15:59:59&ensp;患者总数<span id="patientsNum"></span>人</td>
+                        <td class="widthTH">&ensp;16:00:00&ensp;至&ensp;23:59:59&ensp;患者总数<span id="patientsNum"></span>人</td>
+                        <td class="widthTH">&ensp;00:00:00&ensp;至&ensp;07:59:59&ensp;患者总数<span id="patientsNum"></span>人</td>
+                    </tr>
+                    <!--第二行是每班病人总体的情况-->
+                    <tr>
+                        <td>
+                            <!--白班患者的总状态，比如：出院、入院、病危、手术等情况-->
+                            <table class="patient-status-day" id="patient-status-day" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <label>&ensp;入院<span id="admission"></span></label>
+                                        <label>病危<span id="critically-ill"></span></label>
+                                        <label>测试<span id="test"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;出院<span id="discharged"></span></label>
+                                        <label>转入<span id="transfer"></span></label>
+                                        <label>转出<span id="transfeOut"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;发热<span id="heat"></span></label>
+                                        <label>手术<span id="surgery"></span></label>
+                                        <label>分娩<span id="childbirth"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom:0px">
+                                        <label>&ensp;死亡<span id="death"></span></label>
+                                        <label>病重<span id="sick"></span></label>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                        <td>
+                            <!--小夜班患者的总状态，比如：出院、入院、病危、手术等情况-->
+                            <table class="patient-status-night" id="patient-status-night" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <label>&ensp;入院<span id="admission"></span></label>
+                                        <label>病危<span id="critically-ill"></span></label>
+                                        <label>测试<span id="test"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;出院<span id="discharged"></span></label>
+                                        <label>转入<span id="transfer"></span></label>
+                                        <label>转出<span id="transfeOut"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;发热<span id="heat"></span></label>
+                                        <label>手术<span id="surgery"></span></label>
+                                        <label>分娩<span id="childbirth"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom:0px">
+                                        <label>&ensp;死亡<span id="death"></span></label>
+                                        <label>病重<span id="sick"></span></label>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                        <td>
+                            <!--大夜班患者的总状态，比如：出院、入院、病危、手术等情况At night  Early morning-->
+                            <table class="patient-status-late-night" id="patient-status-late-night" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <label>&ensp;入院<span id="admission"></span></label>
+                                        <label>病危<span id="critically-ill"></span></label>
+                                        <label>测试<span id="test"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;出院<span id="discharged"></span></label>
+                                        <label>转入<span id="transfer"></span></label>
+                                        <label>转出<span id="transfeOut"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>&ensp;发热<span id="heat"></span></label>
+                                        <label>手术<span id="surgery"></span></label>
+                                        <label>分娩<span id="childbirth"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom:0px">
+                                        <label>&ensp;死亡<span id="death"></span></label>
+                                        <label>病重<span id="sick"></span></label>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                    <!--后面几行就是病人的特殊情况，病危。病重的有多少病人就有多少行，js自动生成-->
+                    
+                   <!-- <tr>
+                        <td rowspan="4" style="width:2%;">病人特殊情况</td>
+                        <td style="width:10%;">
+                            <div style="border-bottom:1px #666666 solid">
+                                <span id="bedNo">2床</span><span id="name">秦牧</span>
+                                <p>(HP023) 没有魂魄</p>
+                                <a href="javaScript:void(0);" title="编辑" class="editDiagnosis">[编辑]</a>
+                            </div>
+
+                            <div>&emsp;病危</div>
+                        </td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                    </tr>
+                    <tr>
+                        <td style="width:10%;">
+                            <div style="border-bottom:1px #666666 solid">
+                                <span id="bedNo">4床</span>&emsp;<span id="name">叶红鱼</span>
+                                <p style="margin-top:6px;">(HC125) 花痴</p>
+                                <a href="javaScript:void(0);" title="编辑" class="editDiagnosis">[编辑]</a>
+                            </div>
+                            <div>&emsp;病危</div>
+                        </td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                        <td><button class="layui-btn layui-btn-normal layui-btn-sm">编辑</button></td>
+                    </tr>
+                       -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--编辑病人诊断得一个弹框-->
+    <div id="patient-diagnosis" style="display:none;">
+        <div style="margin-top:20px;margin-left:80px;">病人姓名:</div>
+        <p id="patient-name" style="margin-top:6px;margin-left:86px;"></p>
+        <div style="margin-top:10px;margin-left:80px;">诊断内容</div>
+        <div style="margin-top:6px;margin-left:80px;"><textarea rows="5" cols="50"></textarea></div>
+        <input type="hidden" id="patientId" />
+        <div style="float:right;margin-top:30px;">
+            <button id="confirm" class="layui-btn layui-btn-normal layui-btn-sm">确认</button>
+            <button id="cancel" style="margin-right:20px;" class="layui-btn layui-btn-sm layui-btn-danger">取消</button>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/layui.all.js" charset="utf-8"></script>
+    <script>  
+        //layui加载日期的，可选择日期
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#select_date'
+                 , value: new Date()
+            });
+        });
+        
+        //获取今天的时间，并转换成 '2018-12-25'字符型格式
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        month = month < 10 ? "0" + month : month;//如果月份小于10变成01,02样
+        day = day < 10 ? "0" + day : day;
+        var nowTime = date.getFullYear() + "-" + month + "-" + day;
+        $("#report-time").html(nowTime);  //交班报告上的时间为今天，方便打印预览是看到
+        //点击查询按钮要处理的事情
+        $("#query").click(function () {
+            var select_date = $("#select_date").val();//获取select_date里面的值
+            $("#report-time").html(select_date);
+            //如果日期是今天，交班按钮就显示，否则隐藏
+            if (select_date != nowTime && $("#handOver").is(":visible")) {
+                $("#handOver").hide();
+                return;
+            }
+            if (select_date == nowTime && $("#handOver").is(":hidden")) {
+                $("#handOver").show();
+            }
+        })
+        //点击前一天要实现的功能
+        $("#before-day").click(function () {
+            var timeRed = new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。
+            timeRed = new Date(timeRed.getTime() - 1 * 24 * 60 * 60 * 1000); //在日期+1天。
+            timeRed = timeRed.getFullYear() + "-" + (timeRed.getMonth() + 1) + "-" + timeRed.getDate(); //重新格式化
+            $("#report-time").html(timeRed);
+            $("#select_date").val(timeRed);
+            //如果日期是今天，交班按钮就显示，否则隐藏
+            if (timeRed != nowTime && $("#handOver").is(":visible")) {
+                $("#handOver").hide();
+                return;
+            }
+            if (timeRed == nowTime && $("#handOver").is(":hidden")) {
+                $("#handOver").show();
+            }
+        });
+
+        //点击后一天要实现的功能
+        $("#next-day").click(function () {
+            var timeAdd= new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。
+            timeAdd = new Date(timeAdd.getTime() + 1 * 24 * 60 * 60 * 1000); //在日期+1天。
+            timeAdd = timeAdd.getFullYear() + "-" + (timeAdd.getMonth() + 1) + "-" + timeAdd.getDate(); //重新格式化
+            $("#select_date").val(timeAdd);
+            $("#report-time").html(timeAdd);
+            //如果日期是今天，交班按钮就显示，否则隐藏
+            if (timeAdd != nowTime && $("#handOver").is(":visible")) {
+                $("#handOver").hide();
+                return;
+            }
+            if (timeAdd == nowTime && $("#handOver").is(":hidden")) {
+                $("#handOver").show();
+            }
+        });
+
+        //点击增加病人
+        $("#addPatient").click(function () {
+
+        });
+
+        //填充病人特殊情况那里的信息，
+        $.ajax({
+            url: "/HandoverReport/QueryPatientsSpecial",
+            data: { "wardId": 507 },
+            type: "post",
+            async: false,
+            dataType: "json",
+            success: (res) => {
+                var special = "";
+                for (var i = 0; i < res.length; i++) {
+                    if(i==0){
+                        special += "<tr><td rowspan='" + res.length + "' style='width:2%;'>病人特殊情况</td><td style='width:10%;'  class='happening'><div><span id='bedNo'>"
+                           + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
+                           + "</p>&ensp;<a href='javaScript:void(0);' title='编辑' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID+ "'></div><hr/><div>&emsp;病"
+                           + res[i].ILLSTATE + "</div></td> <td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td>"
+                           + "<td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td><td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td> </tr>"
+                    } else {
+                        special += "<tr><td style='width:10%;'  class='happening'><div ><span id='bedNo'>"
+                      + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
+                      + "</p>&ensp;<a href='javaScript:void(0);' title='编辑' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><hr/><div>&emsp;病"
+                      + res[i].ILLSTATE + "</div></td> <td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td>"
+                      + "<td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td><td><button class='layui-btn layui-btn-normal layui-btn-sm'>编辑</button></td> </tr>"
+                    }
+                }
+                $("#report-content-table>tbody").append(special);
+            }
+        });
+        //让病人病症下面的编辑按钮在鼠标放在该a标签所在的td标签上是显示，鼠标离开隐藏
+        $("#report-content-table>tbody>tr .happening").mouseover(function () {
+            $(this).find("a").show();
+        });
+        $("#report-content-table>tbody>tr .happening").mouseleave(function () {
+            $(this).find("a").hide();
+        });
+        //点击病人信息中的编辑按钮
+        $("#report-content-table>tbody>tr .happening a").click(function () {
+            var name = $(this).parent().find('.name').html();
+            var illness = $(this).parent().find('p').html();
+            var patientId = $(this).parent().find('input').val();
+            layui.use('layer', function () {
+                var layer = layui.layer;
+               var index =layer.open({
+                    type: 1,
+                    title: ["  编辑病人诊断", ' background:#9cf9fc; color:#333;font-size:18px'],
+                    anim: 1,
+                    area: ['500px', '300px'],
+                    shade:[0.1,"#666666"],
+                    content: $('#patient-diagnosis')
+                });
+                //点击编辑诊断描述中的取消按钮，关闭弹窗。
+               $("#patient-diagnosis #cancel").click(function () {
+                   layer.close(index);//关闭弹窗
+                   $("#patient-diagnosis").hide();
+               });
+            });
+            $("#patient-diagnosis>#patient-name").html(name);
+            $("#patient-diagnosis textarea").val(illness);
+            $("#patient-diagnosis input").val(patientId);
+        });
+
+        //点击编辑病人诊断里面的确认按钮
+        $("#patient-diagnosis #confirm").click(function () {
+            var patientId = $("#patient-diagnosis #patientId").val();
+            console.log(patientId);
+            var diagnostic=$("#patient-diagnosis textarea").val();
+            $.ajax({
+                url: "/HandoverReport/ChangeDiagnosticDescription",
+                data: { "patientId": patientId, "diagnostic": diagnostic },
+                type: "post",
+                success: function (data) {
+                    if (data > 0) {
+                        location.reload();//修改成功后刷新界面
+                    } else {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('修改失败.', { icon: 5, time: 2000, anim: 3 });
+                        });
+                    }
+                }
+            });
+        });
+
+        //
+    </script>
+</body>
+</html>
+
+

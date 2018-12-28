@@ -64,7 +64,6 @@ namespace case1.Controllers
         {
             var data = userService.GetUserNotRole(roleId);
           var dataStr=Newtonsoft.Json.JsonConvert.SerializeObject(data);
-            
             return Content(dataStr);   
         }
 

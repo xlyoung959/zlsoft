@@ -46,8 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeptDao.cs" />
+    <Compile Include="HandoverReportDao.cs" />
     <Compile Include="MenuDao.cs" />
-    <Compile Include="PeopleDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserDao.cs" />
   </ItemGroup>
