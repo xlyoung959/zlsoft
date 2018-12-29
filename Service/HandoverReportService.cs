@@ -32,5 +32,40 @@ namespace Service
         {
             return handoverReportDao.ChangeDiagnosticDescription(patientId, diagnostic);
         }
+
+        public DataTable QueryPatientsInfo(string wardId)
+        {
+            return handoverReportDao.QueryPatientsInfo(wardId);
+        }
+
+        /// <summary>
+        /// 查询病人在院在该病区的总人数
+        /// </summary>
+        /// <param name="wardId"></param>
+        /// <returns></returns>
+        public string QueryPatientsTotalNumber(string wardId)
+        {
+            return handoverReportDao.QueryPatientsTotalNumber(wardId);
+        }
+
+        /// <summary>
+        /// 在交班记录表中有就修改五则添加，先判断
+        /// </summary>
+        /// <returns></returns>
+        public int AddOrUpdateHandoverRecord(HandoverRecord handoverRecord)
+        {
+            string id = handoverReportDao.SelectPatientID(handoverRecord.patientId,handoverRecord.recordTime);
+            //有数据修改，没有数据则添加
+            if (id == null)
+            {
+               return handoverReportDao.AddHandoverRecord(handoverRecord);
+            }
+            else
+            {
+               return handoverReportDao.UpdateHandoverRecord(handoverRecord.title, handoverRecord.content, id);
+            }
+        }
+
+
     }
 }

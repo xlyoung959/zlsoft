@@ -1,4 +1,5 @@
-﻿using Service;
+﻿using Dao;
+using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,37 @@ namespace case1.Controllers
             return handoverReportService.ChangeDiagnosticDescription(patientId, diagnostic);
         }
 
+        /// <summary>
+        /// 查询病人的一些基本信息，用户添加病人信息
+        /// </summary>
+        /// <param name="wardId"></param>
+        /// <returns></returns>
+        public ContentResult QueryPatientsInfo(string wardId)
+        {
+            var data = handoverReportService.QueryPatientsInfo(wardId);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
+
+        /// <summary>
+        ///某个病区病人的总人数
+        /// </summary>
+        /// <param name="wardId"></param>
+        /// <returns></returns>
+        public string QueryPatientsTotalNumber(string wardId)
+        {
+            return handoverReportService.QueryPatientsTotalNumber(wardId);
+        }
+
+        /// <summary>
+        /// 添加或者修改交班记录表中的信息
+        /// </summary>
+        /// <param name="handoverRecord"></param>
+        /// <returns></returns>
+        public int AddOrUpdateHandoverRecord(HandoverRecord handoverRecord)
+        {
+            return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
+        }
 
     }
 }

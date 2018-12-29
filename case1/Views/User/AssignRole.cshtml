@@ -56,7 +56,6 @@
            res[0].LAY_CHECKED = true;//可以自动选中第一行
            layui.use('table', function () {
                var table = layui.table;
-
                table.render({
                    elem: '#roleTable'
                   , cols: [[ //标题栏
@@ -130,7 +129,6 @@
        //角色表起单选框变化时重新加载是该角色用户和不是该角色的用户
        table.on('radio(test)', function (obj) {
            roleID = obj.data.ID;//获取选择的角色名
-
            //改变了角色 其对应的用户也会变化
            //没有这个角色的用户的表格  
            $.ajax({
