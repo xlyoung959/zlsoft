@@ -57,7 +57,7 @@ namespace Domain
                     }
                     con.Open();
                    string es= cmd.ExecuteScalar().ToString();
-                    if(es== null || es is DBNull)
+                    if(es== null)
                     {
                         return null;
                     }
