@@ -36,5 +36,79 @@ namespace Dao
             }
             
         }
+
+        /// <summary>
+        /// 根据传来的角色ID查询出哪些用户没有被赋予该角色
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetUserNotRole(string roleId)
+        {
+            string sql = "select 用户名 as username from 系统_用户信息 where ID not in (select 用户ID from 系统_角色成员 where 角色ID=:roleID)";
+            OracleParameter[] prms = new OracleParameter[]
+            { 
+                 new OracleParameter("roleID",OracleDbType.Varchar2,36) { Value=roleId}
+            };
+            return  OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+        }
+
+        /// <summary>
+        /// 根据传来的角色ID查询出哪些用户被赋予该角色
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetUserHaveRole(string roleId)
+        {
+            string sql = "select 用户名 as username  from 系统_用户信息 where ID in (select 用户ID from 系统_角色成员 where 角色ID=:roleID)";
+            OracleParameter[] prms = new OracleParameter[]
+            {
+                 new OracleParameter("roleID",OracleDbType.Varchar2,36) { Value=roleId}
+            };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+        }
+
+        /// <summary>
+        /// 查询出所有角色的名称
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetAllRoleName()
+        {
+            string sql = "select ID,名称 as name from 系统_角色";
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, null);
+        }
+
+        /// <summary>
+        /// 给用户分配角色也就是在角色成员表中添加数据
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="rolename"></param>
+        /// <returns></returns>
+        public int AddRoleOfUser(string username,string roleId)
+        {
+            string sql = "insert into 系统_角色成员(角色ID,用户ID) values(:roleID , (select ID from 系统_用户信息 where 用户名 =:UserName))";
+            OracleParameter[] prms = new OracleParameter[]
+             {
+                 new OracleParameter("roleID",OracleDbType.Varchar2,36) { Value=roleId},
+                 new OracleParameter("UserName",OracleDbType.Varchar2,20) { Value=username}
+             };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);        
+        }
+
+        /// <summary>
+        /// 移除某个用户的所拥有的角色
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public int MoveRoleOfUser(string username,string roleId)
+        {
+            string sql = @"delete from 系统_角色成员 where 角色ID=:roleID and  用户ID=(select ID from 系统_用户信息 where 用户名 =:userName)";
+            OracleParameter[] prms = new OracleParameter[]
+           {
+                new OracleParameter("roleID",OracleDbType.Varchar2,36) { Value=roleId},
+                 new OracleParameter("userName",OracleDbType.Varchar2,36) { Value=username}
+                
+           };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
+
     }
 }

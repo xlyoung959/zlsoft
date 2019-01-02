@@ -5,12 +5,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>部门页面</title>
+    <title>主页</title>
     <link href="~/Content/layui.css" rel="stylesheet" />
     <link href="~/Content/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery.ztree.core.min.js"></script>
- 
     <style>
     
         * {
@@ -20,7 +19,10 @@
 
         .zuoce {
             background: #2F4056;
+            font-size:15px;
+            letter-spacing:2px;
         }
+        .zuoce dd{text-align:center;}
         .layui-layout-admin .layui-body{bottom:0}
     </style>
 </head>
@@ -47,13 +49,14 @@
                         <dd><a href="/User/Logout" title="退出">退&emsp;&emsp;出</a></dd>
                     </dl>
                 </li>
+          
             </ul>
         </div>
        
         <div class="layui-side zuoce">
-            <div class="layui-side-scroll">
+            <div class="layui-side-scroll" >
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-shrink="all">
                     <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;" title="基础管理">基础管理</a>
                         <dl class="layui-nav-child zuoce">
@@ -61,7 +64,13 @@
                             <dd><a href="/Menu/MenuManagement" title="菜单维护" target="menuContent" id="menu">菜单维护</a></dd>
                         </dl>
                     </li>
-                   
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;" title="人事管理">人事管理</a>
+                        <dl class="layui-nav-child zuoce">
+                            <dd><a href="javascript:void(0);" title="用户管理" target="menuContent" id="organ">用户管理</a></dd>
+                            <dd><a href="/User/AssignRole" title="角色管理" target="menuContent" id="menu">角色管理</a></dd>
+                        </dl>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -77,17 +86,6 @@
          var element = layui.element;
      });
 
-     ////点击组织机构事件
-     //$("#organ").click(function () {
-     //   // $("#organ").attr("target", "menuContent");
-     //    $("#organ").attr("href" , "/Dept/Organization");
-     //})
-     ////点击菜单维护事件
-     //$("#menu").click(function () {
-     //    $("menu").attr("href", "/Menu/MenuManagement")
-     //})
-     
-  
     
  </script>
 

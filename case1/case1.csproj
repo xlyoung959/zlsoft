@@ -118,12 +118,22 @@
     <Content Include="img\open.png" />
     <Content Include="img\zTreeStandard.gif" />
     <Content Include="img\zTreeStandard.png" />
+    <Content Include="Scripts\css\modules\code.css" />
+    <Content Include="Scripts\css\modules\laydate\default\laydate.css" />
+    <Content Include="Scripts\css\modules\layer\default\icon-ext.png" />
+    <Content Include="Scripts\css\modules\layer\default\icon.png" />
+    <Content Include="Scripts\css\modules\layer\default\layer.css" />
+    <Content Include="Scripts\css\modules\layer\default\loading-0.gif" />
+    <Content Include="Scripts\css\modules\layer\default\loading-1.gif" />
+    <Content Include="Scripts\css\modules\layer\default\loading-2.gif" />
     <Content Include="Scripts\DeptContent.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.ztree.core.min.js" />
     <Content Include="Scripts\layui.all.js" />
+    <Content Include="Scripts\layui.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\treeSetting.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -131,6 +141,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DeptController.cs" />
+    <Compile Include="Controllers\HandoverReportController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -144,13 +155,15 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Dept\DeptContent.cshtml" />
+    <Content Include="Views\Dept\EditDept.cshtml" />
     <Content Include="Views\Dept\Organization.cshtml" />
     <Content Include="Views\Dept\AddDept.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Menu\MenuManagement.cshtml" />
     <Content Include="Views\Menu\MenuContent.cshtml" />
+    <Content Include="Views\User\AssignRole.cshtml" />
+    <Content Include="Views\HandoverReport\Report.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

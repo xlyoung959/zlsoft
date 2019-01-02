@@ -26,12 +26,12 @@ namespace case1.Controllers
             return View("AddDept");
         }
         //去到科室的具体内容页面 DeptContent
-        public ActionResult DeptContent(int id)
+        public ActionResult EditDept(int id)
         {
             var data = deptService.selectDeptById(id);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);//序列化
             ViewData["Dept"] = dataStr;
-            return View("DeptContent");
+            return View("EditDept");
         }
        
         /// <summary>

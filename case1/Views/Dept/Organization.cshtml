@@ -50,7 +50,7 @@
             <iframe name="content" width="100%" height="90%" frameborder="0" scrolling="auto"></iframe>
        </div>
 </div>
-
+    <script src="~/Scripts/treeSetting.js"></script>
     <script>
         if ($("#erro").val() != "") {
             alert($("#erro").val());
@@ -58,7 +58,7 @@
             $("#add")[0].click();
         }
                 var zTreeObj;
-                //配置树的样式
+                //ztree中的配置信息
                 var setting = {
                     view: {
                         dblClickExpand: true,//双击节点时，是否自动展开父节点的标识
@@ -94,7 +94,7 @@
               //ajax请求生成树
                     $.ajax({
                         url: "/Dept/getDeptTree",
-                        dateType: "json",
+                        dataType: "json",
                         type: "POST",
                         success: function (data) {
                             //调用layui.tree方法
@@ -108,7 +108,7 @@
                 //点击树的节点时要处理的方法
                     function zTreeOnClick(event, treeId, treeNode) {
                          nodeId = treeNode.id;
-                    $("#treeDemo li a").attr('href', '/Dept/DeptContent?id=' + treeNode.id);
+                         $("#treeDemo li a").attr('href', '/Dept/EditDept?id=' + treeNode.id);
                     }
 
                  //点击删除按钮

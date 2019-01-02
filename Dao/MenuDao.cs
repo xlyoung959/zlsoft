@@ -18,7 +18,9 @@ namespace Dao
         /// <returns></returns>
         public DataTable  selectMenuTree(string username)
         {
-            string sql = " select distinct a.ID,a.名称 as name,a.上级ID as parentId from 系统_菜单 a  left join 系统_角色权限 b on a.id = b.菜单id left join 系统_角色成员 c on b.角色id = c.角色id left join 系统_用户信息 d on c.用户id = d.id where d.用户名 =:username";
+            string sql = @" select distinct a.ID,a.名称 as name,a.上级ID as parentId from 系统_菜单 a 
+                 left join 系统_角色权限 b on a.id = b.菜单id left join 系统_角色成员 c on b.角色id = c.角色id 
+                left join 系统_用户信息 d on c.用户id = d.id where d.用户名 =:username";
             OracleParameter[] prms = new OracleParameter[]
               {
                  new OracleParameter("username",OracleDbType.Varchar2,20) { Value=username}

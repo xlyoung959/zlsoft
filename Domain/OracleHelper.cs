@@ -43,7 +43,7 @@ namespace Domain
 
 
         //返回单个值
-        public static object ExecuteScalar(string sql, CommandType cmdType, params OracleParameter[] prms)
+        public static string ExecuteScalar(string sql, CommandType cmdType, params OracleParameter[] prms)
         {
             using (OracleConnection con = new OracleConnection(conStr))
             {
@@ -56,7 +56,15 @@ namespace Domain
                         cmd.Parameters.AddRange(prms);
                     }
                     con.Open();
-                    return cmd.ExecuteScalar();
+                   string es= cmd.ExecuteScalar().ToString();
+                    if(es== null || es is DBNull)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return es;
+                    }
                 }
             }
         }

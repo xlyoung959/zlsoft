@@ -1,0 +1,380 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>给用户分配角色</title>
+    <link href="~/Content/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <style>
+        .allTable{position:relative;}
+        .layui-table-view .layui-table {width:100%}
+        .allTable>ul>li{float:left;}
+        .allocation{position:absolute;left:68%;top:500px;}
+        .allocation>button{border-radius:50%; width:40px;height:40px;background:#eeeeee;border:none;margin-left:10px;text-align:center;}
+         .allocation>button i{color:#aaaaaa}
+          .allocation>#add:hover,.allocation>#move:hover{background:#FFD18F}
+        .allocation>#add:hover i,.allocation>#move:hover i{color:#FF6D1A;}
+       
+    </style>
+</head>
+<body>
+   <div style="width:100%;" class="allTable">
+       <ul>
+           <li style="width:42%; margin-left:1%;">
+               <p>所有角色</p>
+               <table id="roleTable" lay-filter="test" class="layui-hide" lay-data="{id: 'roleTable'}"></table>
+           </li>
+           <li style="width:23%;margin-left:2%">
+               <p>未拥有该角色的用户</p>
+               <table id="noUserTable" lay-filter="noPossessUser" class="layui-hide" lay-data="{id: 'noUserTable'}"></table>
+           </li>
+           <li style="width:23%;margin-left:8%;margin-right:1%">
+               <p>该角色包含的用户</p>
+              <table id="haveUserTable" lay-filter="possessUser" class="layui-hide" lay-data="{id: 'haveUserTable'}"></table>
+           </li>  
+       </ul>
+   </div>
+    
+    <div class="allocation">
+        <button  title="移除" id="move" data-type="getHaveUserTable"><i class="layui-icon layui-icon-prev" style="font-size: 26px;"></i></button>  
+        <button  title="添加" id="add" data-type="getNoUserTable"><i class="layui-icon layui-icon-next" style="font-size: 26px;"></i></button>   
+    </div>
+
+
+<script src="~/Scripts/layui.all.js" charset="utf-8"></script>
+
+ <script>
+     //获取角色的表格
+   $.ajax({
+       url: "/User/GetAllRoleName",
+       type: "post",
+       dataType: "json",
+       success: (res) => {
+           res[0].LAY_CHECKED = true;//可以自动选中第一行
+           layui.use('table', function () {
+               var table = layui.table;
+               table.render({
+                   elem: '#roleTable'
+                  , cols: [[ //标题栏
+                        { type:'radio',title:'单选' }
+                          , { field: 'ID', title: '角色编号', sort: true }
+                        , { field: 'NAME', title: '角色名',width:126, sort: true }
+                  ]]
+                   , data: res                
+                   , page: true
+                   , limits: [5, 8, 10]
+                   , limit: 10
+                   ,id:'roleTable'
+               });
+           });
+       }
+   });
+   //没有第一行默认选择行这个角色的用户的表格  
+   $.ajax({
+       url: "/User/GetUserNotRole",
+       data:{"roleId":'33221'},
+       type: "post",
+       dataType: "json",
+       success: (res) => {
+           layui.use('table', function () {
+               var table = layui.table;
+               table.render({
+                   elem: '#noUserTable'
+                  , cols: [[ //标题栏
+                        { checkbox: true }
+                        , { type: 'numbers', title: '序号' }
+                        , { field: 'USERNAME', title: '用户名', sort: true }
+                  ]]
+                   , data: res
+                   , page: true
+                   , limits: [10, 20, 30, 40]
+                   , id: 'noUserTable'
+               });
+           });
+       }
+   });
+     //有第一行默认选择行这个角色的用户
+   $.ajax({
+       url: "/User/GetUserHaveRole",
+       data: { "roleId": '33221' },
+       type: "post",
+       dataType: "json",
+       success: (res) => {
+           layui.use('table', function () {
+               var table = layui.table;
+               table.render({
+                   elem: '#haveUserTable'
+                  , cols: [[ //标题栏
+                        { checkbox: true }
+                        , { type: 'numbers', title: '序号' }
+                        , { field: 'USERNAME', title: '用户名', sort: true }
+                  ]]
+                   , data: res
+                   , page: true
+                   , limits: [10, 20, 30, 40]
+                   , id: 'haveUserTable'
+               });
+           });
+       }
+   });
+   
+   var roleID = '33221';//选择的角色ID
+   var includeUser = [];//创建一个数组，用来存放对应表格选中行的数据
+
+   layui.use('table', function () {
+       var table = layui.table;
+       //角色表起单选框变化时重新加载是该角色用户和不是该角色的用户
+       table.on('radio(test)', function (obj) {
+           roleID = obj.data.ID;//获取选择的角色名
+           //改变了角色 其对应的用户也会变化
+           //没有这个角色的用户的表格  
+           $.ajax({
+               url: "/User/GetUserNotRole?roleId=" + roleID,
+               type: "post",
+               dataType: "json",
+               success: (res) => {
+                   layui.use('table', function () {
+                       var table = layui.table;
+                       table.render({
+                           elem: '#noUserTable'
+                          , cols: [[ //标题栏
+                                { checkbox: true }
+                                , { type: 'numbers', title: '序号' }
+                                , { field: 'USERNAME', title: '用户名', sort: true }
+                          ]]
+                           , data: res
+                           , page: true
+                           , limits: [10, 20, 30, 40]
+                           , id: 'noUserTable'
+                       });
+                   });
+               }
+           });
+           //有这个角色的用户
+           $.ajax({
+               url: "/User/GetUserHaveRole?roleId=" + roleID,
+               type: "post",
+               dataType: "json",
+               success: (res) => {
+                   layui.use('table', function () {
+                       var table = layui.table;
+                       var i = 1;
+                       table.render({
+                           elem: '#haveUserTable'
+                          , cols: [[ //标题栏
+                                { checkbox: true }
+                                , { type: 'numbers', title: '序号' }
+                                , { field: 'USERNAME', title: '用户名', sort: true }
+                          ]]
+                           , data: res
+                           , page: true
+                           , limits: [10, 20, 30, 40]
+                           , id: 'haveUserTable'
+                       });
+                   });
+               }
+           });
+       });
+       //选择haveUserTable表前的checkbox变化时
+       table.on('checkbox(noPossessUser)', function (obj) {
+           $(this).parent().parent().parent().toggleClass("layui-bg-green");//给这个对应这行添加一个背景色，再次点击取消  
+       });
+       //选择haveUserTable表前的checkbox变化时
+       table.on('checkbox(possessUser)', function (obj) {
+           $(this).parent().parent().parent().toggleClass("layui-bg-green");//给这一行添加颜色
+       });
+       
+       //获取表格被选中的行
+       var $ = layui.$, active = {
+           getNoUserTable: function () { //获取noUserTable表选中数据行中的用户名
+               var arr = [];
+               var checkStatus = table.checkStatus('noUserTable')
+               , data = checkStatus.data;
+               for (var i = 0; i < data.length; i++) {    //循环筛选出USERNAME
+                   arr.push(data[i].USERNAME);
+               }
+               return arr;//把这个数组返回
+           },
+           getHaveUserTable: function () { //获取HaveUserTable表选中数据行中的用户名
+               var arr = [];
+               var checkStatus = table.checkStatus('haveUserTable')
+               , data = checkStatus.data;
+               for (var i = 0; i < data.length; i++) {    //循环筛选出id
+                   arr.push(data[i].USERNAME);
+               }
+               return arr;//把这个数组返回
+           },
+           getRoleTable: function () { //获取HaveUserTable表选中数据行中的用户名
+               var arr ;
+               var checkStatus = table.checkStatus('roleTable')
+               , data = checkStatus.data;
+               arr = data.ID;
+               return arr;//把这个数组返回
+           }
+       };
+       //点击添加按钮，实现添加的功能
+       $("#add").click(function () {  
+           var type = $(this).data('type');
+           includeUser = active[type] ? active[type].call(this) : '';//先判断该按钮的类型，调用上面的 active 中的方法并把返回值赋给includeUser
+           console.log(includeUser);
+           if (includeUser.length <= 0) {//如果没有选择用户不能执行
+               alert("请先选择需要添加的用户");
+           }
+           else {
+               //ajax调用后台中给用户添加角色的方法，
+               $.ajax({
+                   url: "/User/AddRoleOfUser ",
+                   data: { "username": includeUser, "roleId": roleID },//向后台传递的数据
+                   traditional: true,//传递数组需要用到这个属性
+                   type: "post",
+                   success: function (data) {
+                       console.log(data);
+                       if (data > 0) {
+                           //刷新 新的用户表，更新数据，重新请求
+                           //没有这个角色的用户的表格  
+                           $.ajax({
+                               url: "/User/GetUserNotRole?roleId=" + roleID,
+                               type: "post",
+                               dataType: "json",
+                               success: (res) => {
+                                   layui.use('table', function () {
+                                       var table = layui.table;
+                                       table.render({
+                                           elem: '#noUserTable'
+                                          , cols: [[ //标题栏
+                                                { checkbox: true }
+                                                , { type: 'numbers', title: '序号' }
+                                                , { field: 'USERNAME', title: '用户名', sort: true }
+                                          ]]
+                                           , data: res
+                                           , page: true
+                                           , limits: [10, 20, 30, 40]
+                                           , id: 'noUserTable'
+                                       });
+                                   });
+                               }
+                           });
+                           //有这个角色的用户
+                           $.ajax({
+                               url: "/User/GetUserHaveRole?roleId=" + roleID,
+                               type: "post",
+                               dataType: "json",
+                               success: (res) => {
+                                   layui.use('table', function () {
+                                       var table = layui.table;
+                                       var i = 1;
+                                       table.render({
+                                           elem: '#haveUserTable'
+                                          , cols: [[ //标题栏
+                                                { checkbox: true }
+                                                , { type: 'numbers', title: '序号' }
+                                                , { field: 'USERNAME', title: '用户名', sort: true }
+                                          ]]
+                                           , data: res
+                                           , page: true
+                                           , limits: [10, 20, 30, 40]
+                                           , id: 'haveUserTable'
+                                       });
+                                   });
+                               }
+
+                           });
+                       }
+                       else {
+                           alert("分配角色失败");
+                       }
+                   }
+               });
+
+           }
+
+       });
+
+       //点击移除按钮，实现移除用户角色的功能
+       $("#move").click(function () {
+       
+           var type = $(this).data('type');
+           includeUser = active[type] ? active[type].call(this) : '';
+           console.log(includeUser);
+           if (includeUser.length <= 0) {
+               alert("请先选择需要移除的用户");
+           }
+           else {
+               //ajax调用后台中给用户添加角色的方法，
+               $.ajax({
+                   url: "/User/MoveRoleOfUser ",
+                   data: { "username": includeUser, "roleId": roleID },//向后台传递的数据
+                   traditional: true,//传递数组需要用到这个属性
+                   type: "post",
+                   success: function (data) {
+                       console.log(data);
+                       if (data > 0) {
+                           //刷新 新的用户表，更新数据，重新请求
+                           //没有这个角色的用户的表格  
+                           $.ajax({
+                               url: "/User/GetUserNotRole?roleId=" + roleID,
+                               type: "post",
+                               dataType: "json",
+                               success: (res) => {
+                                   layui.use('table', function () {
+                                       var table = layui.table;
+                                       table.render({
+                                           elem: '#noUserTable'
+                                          , cols: [[ //标题栏
+                                                { checkbox: true }
+                                                , { type: 'numbers', title: '序号' }
+                                                , { field: 'USERNAME', title: '用户名', sort: true }
+                                          ]]
+                                           , data: res
+                                           , page: true
+                                           , limits: [10, 20, 30, 40]
+                                           , id: 'noUserTable'
+                                       });
+                                   });
+                               }
+                           });
+                           //有这个角色的用户
+                           $.ajax({
+                               url: "/User/GetUserHaveRole?roleId=" + roleID,
+                               type: "post",
+                               dataType: "json",
+                               success: (res) => {
+                                   layui.use('table', function () {
+                                       var table = layui.table;
+                                       var i = 1;
+                                       table.render({
+                                           elem: '#haveUserTable'
+                                          , cols: [[ //标题栏
+                                                { checkbox: true }
+                                                , { type: 'numbers', title: '序号' }
+                                                , { field: 'USERNAME', title: '用户名', sort: true }
+                                          ]]
+                                           , data: res
+                                           , page: true
+                                           , limits: [10, 20, 30, 40]
+                                           , id: 'haveUserTable'
+                                       });
+                                   });
+                               }
+
+                           });
+                       }
+                       else {
+                           alert("移除用户的角色失败");
+                       }
+                   }
+               });
+
+           }
+
+       });
+
+   });
+                     
+</script>
+</body>
+</html>
+
