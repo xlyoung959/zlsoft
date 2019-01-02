@@ -325,7 +325,7 @@
             }
         });
 
-        //根据不同的时间段，交班按钮的显示情况
+        //根据不同的时间段，交班按钮的显示情况,以及每个时间段病人的大概信息的隐藏显示
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
                 $(".handOver").hide();
@@ -361,6 +361,7 @@
                 $(this).find("a").hide();
             });
         }
+        editHide();
         
         $("#report-content-table>tbody>tr td:gt(1)").mouseover(function () {
             $(this).find("button").show();
@@ -427,6 +428,7 @@
         //点击前一天要实现的功能
         $("#before-day").click(function () {
             var timeRed = new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。
+            console.log(timeRed);
             timeRed = new Date(timeRed.getTime() - 1 * 24 * 60 * 60 * 1000); //在日期+1天。
             timeRed = timeRed.getFullYear() + "-" + (timeRed.getMonth() + 1) + "-" + timeRed.getDate(); //重新格式化
             $("#report-time").html(timeRed);
@@ -457,7 +459,7 @@
             }
             else {
                 HourShow(hour);
-                editHide()
+                editHide();
                 $("#addPatient").show();
             }
         });
@@ -486,7 +488,6 @@
                           ]]
                             , data: res
                             , limit: len
-                            ,id:AddPatients
                         });
                     });
                    
@@ -513,7 +514,7 @@
             });
 
         });
-        $("#AddPatients tr").click(function () {
+      /*  $("#AddPatients tr").click(function () {
             $(this).css("background-color", "#eee");
         });
         //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
@@ -524,7 +525,7 @@
                 $(obj).css("background-color", "#eee");
                 information = obj.data; //得到当前行数据{NAME: "黄玉慧", HOSPITALNUM: "2009003359", BEDID: "+2"}
             });
-        });
+        });*/
         
         $("#info-confirm").click(function () {
             var patient = [{title:information,}];
