@@ -15,11 +15,11 @@ namespace Dao
         public string id { get; set; }
         public string title { get; set; }
         public string content { get; set; }
-        public string recordTime { get; set; }
-        public string reserved { get; set; }
-        public string patientId { get; set; }
-        public string wardId { get; set; }
-        public string recordUser { get; set; }
-        public int invalid = 0;
+        public string recordTime { get; set; }//记录时间
+        public string reserved { get; set; }//预留字段
+        public string patientId { get; set; }//病人ID
+        public string wardId { get; set; }//病区ID
+        public string recordUser { get; set; }//记录人
+        public int invalid = 0;//是否作废
     }
 }

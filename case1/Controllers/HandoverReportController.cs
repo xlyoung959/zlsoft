@@ -49,6 +49,12 @@ namespace case1.Controllers
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
+        public ContentResult QueryPatientsInfoByName(string wardId, string searchText)
+        {
+            var data= handoverReportService.QueryPatientsInfoByName(wardId, searchText);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
 
         /// <summary>
         ///某个病区病人的总人数
@@ -60,6 +66,15 @@ namespace case1.Controllers
             return handoverReportService.QueryPatientsTotalNumber(wardId);
         }
 
+        /// <summary>
+        /// 添加病人信息，往交班记录中添加数据
+        /// </summary>
+        /// <param name="handoverRecord"></param>
+        /// <returns></returns>
+        public int AddHandoverRecord(HandoverRecord handoverRecord)
+        {
+            return handoverReportService.AddHandoverRecord(handoverRecord);
+        }
         /// <summary>
         /// 添加或者修改交班记录表中的信息
         /// </summary>
