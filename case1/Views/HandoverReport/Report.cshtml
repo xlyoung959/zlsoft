@@ -37,9 +37,10 @@
          .report-content-table .editShift{margin-left:12px;}
           .report-content-table .illstatu{height:16px;border-top:1px solid #666;padding-top:4px;}
         /**添加病人信息的样式*/
-        .patient-info{width:600px;height:170px;}
-        .patient-info table{width:97%;margin-left:1%;overflow:auto;}
-        .layui-table-view .layui-table {width:100%;margin:0 0;}
+        .patient-info{width:600px;height:180px;}
+        .patient-info input{margin-left:20px;height:28px;margin-top:10px;}
+        .patient-info table{overflow:auto;}
+        .layui-table-view .layui-table {width:99%;margin:0 0;}
         /* patient-shift-state 病人班次的情况*/
         .patient-shift-state{width:500px;display:none;}
          .patient-shift-state p{margin-left:50px;}
@@ -239,8 +240,8 @@
     <!--添加病人信息得一个弹框，有病人的姓名、住院号、床号-->
     <div id="patient-info" style="display:none;" class="patient-info">
         <div>
-            <input type="text" id="p-name" />
-            <button class="layui-btn layui-btn-sm layui-btn-normal">筛选</button>
+            <input type="text" id="p_name" />
+            <button class="layui-btn layui-btn-sm layui-btn-normal" id="screen">筛选</button>
         </div>
         <table id="patient-info-table" class="layui-table" lay-filter="AddPatients" lay-skin="line"></table>
         <div style="float:right;margin-top:20px;">
@@ -428,9 +429,12 @@
         //点击前一天要实现的功能
         $("#before-day").click(function () {
             var timeRed = new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。
-            console.log(timeRed);
             timeRed = new Date(timeRed.getTime() - 1 * 24 * 60 * 60 * 1000); //在日期+1天。
-            timeRed = timeRed.getFullYear() + "-" + (timeRed.getMonth() + 1) + "-" + timeRed.getDate(); //重新格式化
+            var mon = timeRed.getMonth() + 1;
+            var timeDay = timeRed.getDate();
+            mon = mon < 10 ? "0" + mon : mon;//如果月份小于10变成01,02样
+            timeDay = timeDay < 10 ? "0" + timeDay : timeDay;
+            timeRed = timeRed.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
             $("#report-time").html(timeRed);
             $("#select_date").val(timeRed);
             //如果日期是今天，交班按钮就显示，否则隐藏
@@ -449,7 +453,11 @@
         $("#next-day").click(function () {
             var timeAdd= new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。
             timeAdd = new Date(timeAdd.getTime() + 1 * 24 * 60 * 60 * 1000); //在日期+1天。
-            timeAdd = timeAdd.getFullYear() + "-" + (timeAdd.getMonth() + 1) + "-" + timeAdd.getDate(); //重新格式化
+            var mon = timeAdd.getMonth() + 1;
+            var timeDay = timeAdd.getDate();
+            mon = mon < 10 ? "0" + mon : mon;//如果月份小于10变成01,02样
+            timeDay = timeDay < 10 ? "0" + timeDay : timeDay;
+            timeAdd = timeAdd.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
             $("#select_date").val(timeAdd);
             $("#report-time").html(timeAdd);
             //如果日期是今天，交班按钮就显示，否则隐藏
@@ -473,18 +481,20 @@
                 async:false,
                 dataType: "json",
                 success: function (res) {
-                    var len=res.length;
+                    var len = res.length;
+                    //给添加病人中，病人信息的表格中添加数据
                     layui.use('table', function () {
                         var table = layui.table;
                         //第一个实例
                         table.render({
                             elem: '#patient-info-table'
-                            ,height:300
+                            , height: 300
+                            ,width:590
                             , cols: [[ //表头
-                               { type:'radio',hide:true }
-                              ,{ field: 'NAME', title: '姓名',width:220 }
-                             , { field: 'HOSPITALNUM', title: '住院号', sort: true, width: 220 }
-                             , { field: 'BEDID', title: '床号', width: 152 }
+                              , { field: 'NAME', title: '姓名', width: 160 }
+                             , { field: 'HOSPITALNUM', title: '住院号', sort: true, width: 240 }
+                             , { field: 'BEDID', title: '床号', width: 160 }
+                             , { field: 'PATIENTID', hide: true }
                           ]]
                             , data: res
                             , limit: len
@@ -493,13 +503,14 @@
                    
                 }
             });
+            //弹出添加病人的弹窗
             layui.use('layer', function () {
                 var layer = layui.layer;
                 var index = layer.open({
                     type: 1,
                     title: ["  添加病人", ' background:#9cf9fc; color:#333;font-size:18px'],
                     anim: 1,
-                    area: ['600px', '460px'],
+                    area: ['600px', '480px'],
                     shade: [0.1, "#666666"],
                     content: $('#patient-info'), 
                     cancel: function () {                   
@@ -514,44 +525,85 @@
             });
 
         });
-      /*  $("#AddPatients tr").click(function () {
-            $(this).css("background-color", "#eee");
-        });
-        //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
+        //点击病人信息的某行，该行颜色变化,并获取选中的病人
         var information = "";
         layui.use("table", function () {
             var table = layui.table;
             table.on('row(AddPatients)', function (obj) {
-                $(obj).css("background-color", "#eee");
+                $(this).parent().find("tr").css('background-color', '#fff')
+                $(this).css('background-color', '#eee');               
+                table.render();
                 information = obj.data; //得到当前行数据{NAME: "黄玉慧", HOSPITALNUM: "2009003359", BEDID: "+2"}
+                $("#p_name").val(information.NAME);
+                console.log()
             });
-        });*/
-        
-        $("#info-confirm").click(function () {
-            var patient = [{title:information,}];
+        });
+        //点击添加病人里面的搜索按钮，筛选出你搜索的病人信息
+        $("#screen").click(function () {
+            var p_name = $("#p_name").val();
             $.ajax({
-                url: "/HandoverReport/AddOrUpdateHandoverRecord",
-                data:{},
+                url: "/HandoverReport/QueryPatientsInfoByName",
+                data: { "wardId": '507', "searchText": p_name },
                 type: "post",
-                success: function (data) {
-                    if (data > 0) {
-                        layui.use("layer", function () {
-                            var layer = layui.layer;
-                            layer.alert('添加病人成功', { icon: 1,time:1500 });
+                dataType: "json",
+                success: function (res) {
+                    var len = res.length;
+                    //给添加病人中，病人信息的表格中添加数据
+                    layui.use('table', function () {
+                        var table = layui.table;
+                        //第一个实例
+                        table.render({
+                            elem: '#patient-info-table'
+                            , height: 300
+                            , cols: [[ //表头
+                              , { field: 'NAME', title: '姓名', width: 160 }
+                             , { field: 'HOSPITALNUM', title: '住院号', sort: true, width: 200 }
+                             , { field: 'BEDID', title: '床号', width: 152 }
+                             , { field: 'PATIENTID', hide: true }
+                            ]]
+                            , data: res
+                            , limit: len
                         });
-                    }
-                    else {
-                        ayui.use("layer", function () {
-                            var layer = layui.layer;
-                            layer.alert('添加失败成功',{ icon: 5,time:2000 });
-                        });
-                    }
+                    });
+
                 }
             })
+
+        });
+        //点击添加病人里面的确认按钮，实现添加病人在病人特殊情况的表格那里，在交班日志和记录中添加数据
+        $("#info-confirm").click(function () {
+            if (information == "") {//先判断是否选择了病人
+                layui.use("layer", function () {
+                    var layer = layui.layer;
+                    layer.alert('请先选择病人', { icon: 5 });
+                });
+            } else {
+                var pId=information.PATIENTID;
+                $.ajax({
+                    url: "/HandoverReport/AddHandoverRecord",
+                    data: { "title": information, "wardId": '507', "patientId": pId ,"recordUser":"墨水之寒"},
+                    type: "post",
+                    success: function (data) {
+                        if (data > 0) {
+                            layui.use("layer", function () {
+                                var layer = layui.layer;
+                                layer.alert('添加病人成功', { icon: 1 });
+                            });
+                        }
+                        else {
+                            ayui.use("layer", function () {
+                                var layer = layui.layer;
+                                layer.alert('添加失败成功', { icon: 5 });
+                            });
+                        }
+                    }
+                })
+            }
+         
         })
       
      
-        //点击病人信息中的编辑按钮
+        //点击病人信息中的编辑按钮,弹出病人信息
         $("#report-content-table>tbody>tr .happening a").click(function () {
             var name = $(this).parent().find('.name').html();
             var illness = $(this).parent().find('p').html();

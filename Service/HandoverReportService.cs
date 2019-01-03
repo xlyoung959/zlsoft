@@ -33,9 +33,19 @@ namespace Service
             return handoverReportDao.ChangeDiagnosticDescription(patientId, diagnostic);
         }
 
+        /// <summary>
+        /// 查询病人的基本信息，用户在添加病人那里显示
+        /// </summary>
+        /// <param name="wardId"></param>
+        /// <returns></returns>
         public DataTable QueryPatientsInfo(string wardId)
         {
             return handoverReportDao.QueryPatientsInfo(wardId);
+        }
+
+        public DataTable QueryPatientsInfoByName(string wardId, string searchText)
+        {
+            return handoverReportDao.QueryPatientsInfoByName(wardId, searchText);
         }
 
         /// <summary>
@@ -49,7 +59,7 @@ namespace Service
         }
 
         /// <summary>
-        /// 在交班记录表中有就修改五则添加，先判断
+        /// 在交班记录表中有无该条记录，有添加就修改无则添加，先判断
         /// </summary>
         /// <returns></returns>
         public int AddOrUpdateHandoverRecord(HandoverRecord handoverRecord)
@@ -66,6 +76,11 @@ namespace Service
             }
         }
 
+        //想交班记录中添加信息，主要是添加病人时，数据库肯定无该条数据，只能添加
+        public int AddHandoverRecord(HandoverRecord handoverRecord)
+        {
+            return handoverReportDao.AddHandoverRecord(handoverRecord);
+        }
 
     }
 }

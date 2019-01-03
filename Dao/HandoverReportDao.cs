@@ -47,20 +47,38 @@ namespace Dao
         }
 
         /// <summary>
-        /// 查询不同部门的病人信息，用于添加病人
+        /// 查询不同病区的病人信息，用于添加病人
         /// </summary>
         /// <param name="wardId">当前病区相关id</param>
         /// <returns></returns>
         public DataTable QueryPatientsInfo(string wardId)
         {
-            string sql = @"select t.姓名 as name, t.住院号 as hospitalNum , t.床号 as bedId from PUB_病人基本信息 t where t.当前病区相关id=:WardId  and t.相关ID not in(
-                              select distinct a.病人Id from 病案主页 a where a.当前病区id =:WardId  and a.当前病况 in('重','危') and a.出院日期 is null ) order by t.床号 ";
+            string sql = @"select t.姓名 as name, t.住院号 as hospitalNum , t.床号 as bedId,t.相关ID as patientId from PUB_病人基本信息 t where t.当前病区相关id=:WardId  and t.相关ID not in(
+                              select distinct a.病人Id from 病案主页 a where a.当前病区id =:WardID  and a.当前病况 in('重','危') and a.出院日期 is null ) order by t.床号 ";
             OracleParameter[] prms = new OracleParameter[]
           {
                  new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardId}
           };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
 
+        }
+
+        /// <summary>
+        /// 根据病人姓名或住院号来筛选病人信息，在添加病人那里的弹框中的搜索时间
+        /// </summary>
+        /// <returns></returns>
+        public DataTable QueryPatientsInfoByName (string wardId,string searchText)
+        {
+            string sql = @"select t.姓名 as name, t.住院号 as hospitalNum , t.床号 as bedId,t.相关ID as patientId from PUB_病人基本信息 t 
+                                      where t.当前病区相关id=:WardID  and  (t.姓名 like :SearchName or  t.住院号 like :SearchText) and
+                                      t.相关ID not in(select distinct a.病人Id from 病案主页 a where a.当前病区id =:WardID  and a.当前病况 in('重','危') and a.出院日期 is null ) order by t.床号";
+            OracleParameter[] prms = new OracleParameter[]
+         {
+                 new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardId},
+                  new OracleParameter("SearchName",OracleDbType.Varchar2,64) { Value="%"+searchText+"%"},
+                  new OracleParameter("SearchText",OracleDbType.Varchar2,20) { Value="%"+searchText+"%"}
+         };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
 
         /// <summary>
@@ -86,10 +104,9 @@ namespace Dao
         public int AddHandoverRecord(HandoverRecord handoverRecord)
         {
             string sql = @"insert into PUB_交班记录 (ID, 标题, 内容, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
-                                  values(:ID, :Title, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0); ";
+                                  values(record_id_seq.nextval, :Title, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0); ";
             OracleParameter[] prms = new OracleParameter[]
          {
-                 new OracleParameter("ID",OracleDbType.Varchar2,36) { Value=handoverRecord.id},
                  new OracleParameter("Title",OracleDbType.Varchar2,4000) { Value=handoverRecord.title},
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=handoverRecord.content},
                  new OracleParameter("RecordTime",OracleDbType.Varchar2,36) { Value=handoverRecord.recordTime},
