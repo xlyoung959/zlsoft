@@ -67,13 +67,18 @@ namespace case1.Controllers
         }
 
         /// <summary>
-        /// 添加病人信息，往交班记录中添加数据
+        /// 添加病人里面的确认按钮点击后，往交班记录中添加数据
         /// </summary>
         /// <param name="handoverRecord"></param>
         /// <returns></returns>
-        public int AddHandoverRecord(HandoverRecord handoverRecord)
+        public int AddHandoverRecordTitle(string title,string wardId,string patientId,string recordUser)
         {
-            return handoverReportService.AddHandoverRecord(handoverRecord);
+            HandoverRecord handoverRecord = new HandoverRecord();
+            handoverRecord.title = title;
+            handoverRecord.wardId = wardId;
+            handoverRecord.patientId = patientId;
+            handoverRecord.recordUser = recordUser;
+            return handoverReportService.AddHandoverRecordTitle(handoverRecord);
         }
         /// <summary>
         /// 添加或者修改交班记录表中的信息
