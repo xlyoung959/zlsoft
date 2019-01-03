@@ -525,14 +525,14 @@
             });
 
         });
-<<<<<<< HEAD
+
         //点击病人信息的某行，该行颜色变化,并获取选中的病人
-=======
+
         $("#AddPatients tr").click(function () {
             $(this).css("background-color", "#eee");
         });
         //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
->>>>>>> 087fb5b779e46628faab730a50b41b4210a30c78
+
         var information = "";
         layui.use("table", function () {
             var table = layui.table;
@@ -542,46 +542,42 @@
                 table.render();
                 information = obj.data; //得到当前行数据{NAME: "黄玉慧", HOSPITALNUM: "2009003359", BEDID: "+2"}
                 $("#p_name").val(information.NAME);
-                console.log()
             });
         });
-<<<<<<< HEAD
+
         //点击添加病人里面的搜索按钮，筛选出你搜索的病人信息
         $("#screen").click(function () {
             var p_name = $("#p_name").val();
-=======
-        
-        $("#info-confirm").click(function () {
-            var patient = [{title:information,}];
->>>>>>> 087fb5b779e46628faab730a50b41b4210a30c78
-            $.ajax({
-                url: "/HandoverReport/QueryPatientsInfoByName",
-                data: { "wardId": '507', "searchText": p_name },
-                type: "post",
-                dataType: "json",
-                success: function (res) {
-                    var len = res.length;
-                    //给添加病人中，病人信息的表格中添加数据
-                    layui.use('table', function () {
-                        var table = layui.table;
-                        //第一个实例
-                        table.render({
-                            elem: '#patient-info-table'
-                            , height: 300
-                            , cols: [[ //表头
-                              , { field: 'NAME', title: '姓名', width: 160 }
-                             , { field: 'HOSPITALNUM', title: '住院号', sort: true, width: 200 }
-                             , { field: 'BEDID', title: '床号', width: 152 }
-                             , { field: 'PATIENTID', hide: true }
-                            ]]
-                            , data: res
-                            , limit: len
+            $("#info-confirm").click(function () {
+                var patient = [{ title: information, }];
+                $.ajax({
+                    url: "/HandoverReport/QueryPatientsInfoByName",
+                    data: { "wardId": '507', "searchText": p_name },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        var len = res.length;
+                        //给添加病人中，病人信息的表格中添加数据
+                        layui.use('table', function () {
+                            var table = layui.table;
+                            //第一个实例
+                            table.render({
+                                elem: '#patient-info-table'
+                                , height: 300
+                                , cols: [[ //表头
+                                  , { field: 'NAME', title: '姓名', width: 160 }
+                                 , { field: 'HOSPITALNUM', title: '住院号', sort: true, width: 200 }
+                                 , { field: 'BEDID', title: '床号', width: 152 }
+                                 , { field: 'PATIENTID', hide: true }
+                                ]]
+                                , data: res
+                                , limit: len
+                            });
                         });
-                    });
 
-                }
-            })
-
+                    }
+                })
+            });
         });
         //点击添加病人里面的确认按钮，实现添加病人在病人特殊情况的表格那里，在交班日志和记录中添加数据
         $("#info-confirm").click(function () {
