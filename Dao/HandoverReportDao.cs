@@ -153,6 +153,38 @@ namespace Dao
             return OracleHelper.ExecuteScalar(sql, CommandType.Text, prms);
 
         }
+        /// <summary>
+        /// 从交班报告中查询一般病人
+        /// </summary>
+        /// <param name="wardID"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public DataTable SelectReportPatientID(string wardID, string date)
+        {
+            string sql= @"select distinct 病人ID as patientID from pub_交班记录 where 记录时间 between to_date
+        (:startdate,'yyyy/mm/dd hh24:mi:ss')and to_date(:enddate,'yyyy/mm/dd hh24:mi:ss') and 病区ID=:wardID";
+            OracleParameter[] prms = new OracleParameter[]
+     {
+                 new OracleParameter("startdate",OracleDbType.Varchar2,32) { Value=date+" 00:00:00"},
+                  new OracleParameter("enddate",OracleDbType.Varchar2,64) { Value=date+" 23:59:59"},
+                  new OracleParameter("wardID",OracleDbType.Varchar2,20) { Value=wardID}
+     };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+
+        }
+
+        public DataTable SelectPatientInfoByID(string patientID)
+        {
+            string sql = @"select  a.床号 as bedID,a.姓名 as name,b.诊断描述 as illness ,a.相关ID as patientID 
+  from pub_病人基本信息 a,病人诊断记录 b where a.相关ID=b.病人ID and a.相关id=:patientID and a.当前病区相关ID='507'";
+            OracleParameter[] prms = new OracleParameter[]
+                {
+                    new OracleParameter("patientID",OracleDbType.Varchar2,32) { Value=patientID}
+                    
+
+                };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+        }
 
     }
 }

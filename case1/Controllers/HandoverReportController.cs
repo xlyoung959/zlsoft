@@ -85,5 +85,11 @@ namespace case1.Controllers
             return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
         }
 
+        public ContentResult queryPatientInfoByID(string patientID, string wardID)
+        {
+            var data = handoverReportService.SelectReportPatient(patientID, wardID);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
     }
 }

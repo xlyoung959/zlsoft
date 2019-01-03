@@ -82,5 +82,25 @@ namespace Service
             return handoverReportDao.AddHandoverRecord(handoverRecord);
         }
 
+        /// <summary>
+        /// 根据病人id查询病人的id，床号,姓名,诊断情况
+        /// </summary>
+        /// <param name="wardID"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<DataTable> SelectReportPatient(string wardID, string date)
+        {
+            DataTable dt = handoverReportDao.SelectReportPatientID(wardID, date);
+            DataTable d = new DataTable();
+            List<DataTable> list = new List<DataTable>();
+            foreach (var dr in dt.Rows)
+            {
+                
+                d = handoverReportDao.SelectPatientInfoByID(dr.ToString());
+                 list.Add(d);
+            }
+            return list;
+        }
+
     }
 }
