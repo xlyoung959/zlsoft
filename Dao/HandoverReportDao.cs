@@ -179,7 +179,9 @@ namespace Dao
         public DataTable SelectReportPatientID(string wardID, string date)
         {
             string sql= @"select distinct 病人ID as patientID from pub_交班记录 where 记录时间 between to_date
-        (:startdate,'yyyy/mm/dd hh24:mi:ss')and to_date(:enddate,'yyyy/mm/dd hh24:mi:ss') and 病区ID=:wardID";
+        (:startdate,'yyyy/mm/dd hh24:mi:ss')and to_date(:enddate,'yyyy/mm/dd hh24:mi:ss') and 病区ID=:wardID 
+        and  病人id not in(select distinct a.病人Id from 病案主页 a where a.当前病区id = '507' 
+        and a.当前病况 in('重','危') and a.出院日期 is null )"; 
             OracleParameter[] prms = new OracleParameter[]
      {
                  new OracleParameter("startdate",OracleDbType.Varchar2,32) { Value=date+" 00:00:00"},

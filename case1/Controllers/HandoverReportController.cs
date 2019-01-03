@@ -89,10 +89,15 @@ namespace case1.Controllers
         {
             return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
         }
-
-        public ContentResult queryPatientInfoByID(string patientID, string wardID)
+        /// <summary>
+        /// 查询交班报告中的病人的id，床号，诊断情况
+        /// </summary>
+        /// <param name="wardID"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public ContentResult queryPatientInfoByID(string wardID, string date)
         {
-            var data = handoverReportService.SelectReportPatient(patientID, wardID);
+            var data = handoverReportService.SelectReportPatient(wardID, date);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
