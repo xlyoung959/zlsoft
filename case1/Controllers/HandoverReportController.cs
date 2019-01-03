@@ -89,26 +89,17 @@ namespace case1.Controllers
         {
             return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-        public ContentResult QueryPatientInfoByID(string patientID, string wardID)
-=======
-=======
->>>>>>> e831f6658c3fcd5acbd49d62e2740e54e8240628
+
         /// <summary>
         /// 查询交班报告中的病人的id，床号，诊断情况
         /// </summary>
         /// <param name="wardID"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public ContentResult queryPatientInfoByID(string wardID, string date)
-<<<<<<< HEAD
->>>>>>> e831f6658c3fcd5acbd49d62e2740e54e8240628
-=======
->>>>>>> e831f6658c3fcd5acbd49d62e2740e54e8240628
+        public ContentResult QueryPatientInfoByID(string wardId,string dtime)
         {
-            var data = handoverReportService.SelectReportPatient(wardID, date);
+            var data = handoverReportService.SelectReportPatient(wardId, dtime);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
