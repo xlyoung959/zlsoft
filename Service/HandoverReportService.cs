@@ -68,18 +68,18 @@ namespace Service
             //有数据修改，没有数据则添加
             if (id == null)
             {
-               return handoverReportDao.AddHandoverRecord(handoverRecord);
+               return handoverReportDao.AddHandoverRecordContent(handoverRecord);
             }
             else
             {
-               return handoverReportDao.UpdateHandoverRecord(handoverRecord.title, handoverRecord.content, id);
+               return handoverReportDao.UpdateHandoverRecordContent(handoverRecord.content, id);
             }
         }
 
-        //想交班记录中添加信息，主要是添加病人时，数据库肯定无该条数据，只能添加
-        public int AddHandoverRecord(HandoverRecord handoverRecord)
+        //向交班记录中添加信息，主要是添加病人时，数据库肯定无该条数据，只能添加，而且只添加标体
+        public int AddHandoverRecordTitle(HandoverRecord handoverRecord)
         {
-            return handoverReportDao.AddHandoverRecord(handoverRecord);
+            return handoverReportDao.AddHandoverRecordTitle(handoverRecord);
         }
 
         /// <summary>

@@ -98,19 +98,18 @@ namespace Dao
         }
 
         /// <summary>
-        /// 向交班记录中添加数据
+        /// 向交班记录中添加数据，主要是对每个班次病人情况的详细说明，主要是添加内容
         /// </summary>
         /// <returns></returns>
-        public int AddHandoverRecord(HandoverRecord handoverRecord)
+        public int AddHandoverRecordContent(HandoverRecord handoverRecord)
         {
-            string sql = @"insert into PUB_交班记录 (ID, 标题, 内容, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
-                                  values(record_id_seq.nextval, :Title, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0); ";
+            string sql = @"insert into PUB_交班记录 (ID, 标题, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
+                                  values(record_id_seq.nextval,:Title, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0); ";
             OracleParameter[] prms = new OracleParameter[]
          {
-                 new OracleParameter("Title",OracleDbType.Varchar2,4000) { Value=handoverRecord.title},
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=handoverRecord.content},
-                 new OracleParameter("RecordTime",OracleDbType.Varchar2,36) { Value=handoverRecord.recordTime},
-                 new OracleParameter("WardID",OracleDbType.Varchar2,4000) { Value=handoverRecord.wardId},
+                 new OracleParameter("RecordTime",OracleDbType.Varchar2,32) { Value=handoverRecord.recordTime},
+                 new OracleParameter("WardID",OracleDbType.Varchar2,36) { Value=handoverRecord.wardId},
                  new OracleParameter("PatientId",OracleDbType.Varchar2,36) { Value=handoverRecord.patientId},                
                  new OracleParameter("RecordUser",OracleDbType.Varchar2,20) { Value=handoverRecord.recordUser}
          };
@@ -118,19 +117,37 @@ namespace Dao
         }
 
         /// <summary>
-        /// 修改交班记录里面的标题和，内容
+        /// 向交班记录中添加数据，最重要是添加表中的标题，用于添加病人里面的确认按钮后，添加数据
+        /// </summary>
+        /// <param name="handoverRecord"></param>
+        /// <returns></returns>
+        public int AddHandoverRecordTitle(HandoverRecord handoverRecord)
+        {
+            string sql = @"insert into PUB_交班记录(ID, 标题, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
+                                  values(record_id_seq.nextval, :Title, sysdate, '1', :WardID, :PatientId, :RecordUser, 0) ";
+            OracleParameter[] prms = new OracleParameter[]
+         {
+                 new OracleParameter("Title",OracleDbType.Varchar2,4000) { Value=handoverRecord.title},
+                 new OracleParameter("WardID",OracleDbType.Varchar2,36) { Value=handoverRecord.wardId},
+                 new OracleParameter("PatientId",OracleDbType.Varchar2,36) { Value=handoverRecord.patientId},
+                 new OracleParameter("RecordUser",OracleDbType.Varchar2,20) { Value=handoverRecord.recordUser}
+         };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
+
+        /// <summary>
+        /// 修改交班记录里面的内容
         /// </summary>
         /// <param name="title"></param>
         /// <param name="content"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int UpdateHandoverRecord(string title,string content,string id)
+        public int UpdateHandoverRecordContent(string content,string id)
         {
-            string sql = "update PUB_交班记录 set 标题=:Title and 内容=:Content where ID=:ID";
+            string sql = "update PUB_交班记录 set  内容=:Content where ID=:ID";
             OracleParameter[] prms = new OracleParameter[]
            {
                  new OracleParameter("ID",OracleDbType.Varchar2,36) { Value=id},
-                 new OracleParameter("Title",OracleDbType.Varchar2,4000) { Value=title},
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content}
            };
             return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);

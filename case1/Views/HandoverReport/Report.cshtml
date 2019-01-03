@@ -36,6 +36,8 @@
          .report-content-table .happening{font-size:12px;}
          .report-content-table .editShift{margin-left:12px;}
           .report-content-table .illstatu{height:16px;border-top:1px solid #666;padding-top:4px;}
+          .patient_special_state{border-collapse:collapse; border-spacing:0; width:100%;}
+         
         /**添加病人信息的样式*/
         .patient-info{width:600px;height:180px;}
         .patient-info input{margin-left:20px;height:28px;margin-top:10px;}
@@ -217,6 +219,12 @@
                         </td>
                     </tr>
                     <!--后面几行就是病人的特殊情况，病危。病重的有多少病人就有多少行，js自动生成-->
+                    <tr>
+                        <td style="width:3%;text-align:center;">病人特殊情况</td>
+                        <td colspan="4" style="border: 1px solid transparent !important;">
+                            <table id="patient_special_state" class="patient_special_state" border="1" cellspacing="0" cellpadding="0"></table>
+                        </td>
+                    </tr>
                  
                 </tbody>
             </table>
@@ -307,22 +315,13 @@
             success: (res) => {
                 var special = "";
                 for (var i = 0; i < res.length; i++) {
-                    if (i == 0) {
-                        special += "<tr><td rowspan='" + res.length + "' style='width:2%;'>病人特殊情况</td><td style='width:10%;'  class='happening'><div><span id='bedNo'>"
-                           + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
-                           + "</p>&ensp;<a href='javaScript:void(0);' title='编辑' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><div class='illstatu'>&emsp;病"
-                           + res[i].ILLSTATE + "</div></td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
-                           + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
-                    }
-                    else {
-                        special += "<tr><td style='width:10%;'  class='happening'><div ><span id='bedNo'>"
+                        special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
                       + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
                       + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><div class='illstatu'>&emsp;病"
                       + res[i].ILLSTATE + "</div></td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
-                      + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
-                    }
+                      + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"                
                 }
-                $("#report-content-table>tbody").append(special);
+                $("#patient_special_state").append(special);
             }
         });
 
@@ -362,11 +361,12 @@
                 $(this).find("a").hide();
             });
         }
+        editHide();
         
-        $("#report-content-table>tbody>tr td:gt(1)").mouseover(function () {
+        $("#patient_special_state>tbody>tr td:gt(0)").mouseover(function () {
             $(this).find("button").show();
         });
-        $("#report-content-table>tbody>tr td:gt(1)").mouseleave(function () {
+        $("#patient_special_state>tbody>tr td:gt(0)").mouseleave(function () {
             $(this).find("button").hide(50);
         });
 
@@ -497,7 +497,6 @@
                           ]]
                             , data: res
                             , limit: len
-                            ,id:AddPatients
                         });
                     });
                    
@@ -527,12 +526,7 @@
         });
 
         //点击病人信息的某行，该行颜色变化,并获取选中的病人
-
-        $("#AddPatients tr").click(function () {
-            $(this).css("background-color", "#eee");
-        });
         //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
-
         var information = "";
         layui.use("table", function () {
             var table = layui.table;
@@ -586,23 +580,28 @@
                     var layer = layui.layer;
                     layer.alert('请先选择病人', { icon: 5 });
                 });
-            } else {
-                var pId=information.PATIENTID;
+            }
+            else {
+                var pId = information.PATIENTID;
+                var title = "Name:" + information.NAME + "|BedNumber:        " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
                 $.ajax({
-                    url: "/HandoverReport/AddHandoverRecord",
-                    data: { "title": information, "wardId": '507', "patientId": pId ,"recordUser":"墨水之寒"},
+                    url: "/HandoverReport/AddHandoverRecordTitle",
+                    data: { "title": title, "wardId": '507', "patientId": pId, "recordUser": "墨水之寒" },
                     type: "post",
                     success: function (data) {
                         if (data > 0) {
                             layui.use("layer", function () {
                                 var layer = layui.layer;
-                                layer.alert('添加病人成功', { icon: 1 });
+                                layer.alert('添加病人成功', { icon: 1 },
+                                    function () {
+                                        location.reload();
+                                    });
                             });
                         }
                         else {
-                            ayui.use("layer", function () {
+                            layui.use("layer", function () {
                                 var layer = layui.layer;
-                                layer.alert('添加失败成功', { icon: 5 });
+                                layer.alert('添加失败', { icon: 5 });
                             });
                         }
                     }
@@ -641,7 +640,7 @@
             $("#patient-diagnosis input").val(patientId);
         });
 
-        //点击编辑病人诊断里面的确认按钮
+        //点击编辑病人诊断里面的确认按钮,修改病人的诊断描述
         $("#patient-diagnosis #confirm").click(function () {
             var patientId = $("#patient-diagnosis #patientId").val();
             var diagnostic=$("#patient-diagnosis textarea").val();
