@@ -326,7 +326,7 @@
             }
         });
 
-        //根据不同的时间段，交班按钮的显示情况,以及每个时间段病人的大概信息的隐藏显示
+        //根据不同的时间段，交班按钮的显示情况
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
                 $(".handOver").hide();
@@ -362,7 +362,6 @@
                 $(this).find("a").hide();
             });
         }
-        editHide();
         
         $("#report-content-table>tbody>tr td:gt(1)").mouseover(function () {
             $(this).find("button").show();
@@ -467,7 +466,7 @@
             }
             else {
                 HourShow(hour);
-                editHide();
+                editHide()
                 $("#addPatient").show();
             }
         });
@@ -498,6 +497,7 @@
                           ]]
                             , data: res
                             , limit: len
+                            ,id:AddPatients
                         });
                     });
                    
@@ -525,7 +525,14 @@
             });
 
         });
+<<<<<<< HEAD
         //点击病人信息的某行，该行颜色变化,并获取选中的病人
+=======
+        $("#AddPatients tr").click(function () {
+            $(this).css("background-color", "#eee");
+        });
+        //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
+>>>>>>> 087fb5b779e46628faab730a50b41b4210a30c78
         var information = "";
         layui.use("table", function () {
             var table = layui.table;
@@ -538,9 +545,15 @@
                 console.log()
             });
         });
+<<<<<<< HEAD
         //点击添加病人里面的搜索按钮，筛选出你搜索的病人信息
         $("#screen").click(function () {
             var p_name = $("#p_name").val();
+=======
+        
+        $("#info-confirm").click(function () {
+            var patient = [{title:information,}];
+>>>>>>> 087fb5b779e46628faab730a50b41b4210a30c78
             $.ajax({
                 url: "/HandoverReport/QueryPatientsInfoByName",
                 data: { "wardId": '507', "searchText": p_name },
