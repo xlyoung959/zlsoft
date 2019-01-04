@@ -349,15 +349,18 @@
             }
         });
         //在交班记录中查询“今天”病人的情况
+        var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val();
+        console.log(PID);
         $.ajax({
             url: "/HandoverReport/QueryPatientContentByID",
-            data: { "patientID": '', "date": nowTime, "wardID": '507' },
+            data: { "patientID": PID, "date": nowTime, "wardID": '507' },
             type: "post",
             dataType: "json",
             success: function (res) {
                 console.log(res);
+                console.log(res[0].DTIME);
             }
-        })
+        });
 
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
