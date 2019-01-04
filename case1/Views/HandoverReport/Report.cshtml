@@ -328,11 +328,7 @@
         //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
         $.ajax({
             url: "/HandoverReport/QueryPatientInfoByID",
-<<<<<<< HEAD
-            data: { "wardId": '507', "dTime":nowTime },
-=======
             data: { "wardId": '507', "dTime": nowTime },
->>>>>>> 95145e27666de78ff296ea15f81998d4fc25d8af
             type: "post",
             async: false,
             dataType: "json",
