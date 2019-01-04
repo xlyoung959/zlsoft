@@ -56,14 +56,14 @@ namespace Domain
                         cmd.Parameters.AddRange(prms);
                     }
                     con.Open();
-                   string es= cmd.ExecuteScalar().ToString();
+                   object es= cmd.ExecuteScalar();
                     if(es== null)
                     {
                         return null;
                     }
                     else
                     {
-                        return es;
+                        return es.ToString();
                     }
                 }
             }

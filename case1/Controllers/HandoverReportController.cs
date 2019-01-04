@@ -110,7 +110,7 @@ namespace case1.Controllers
             return Content(dataStr);
         }
         /// <summary>
-        /// 查询病人的内容
+        /// 查询交班记录中病人的内容，用于放在当前日期，某个班次中，显示病人的基本情况
         /// </summary>
         /// <param name="patientID"></param>
         /// <param name="date"></param>

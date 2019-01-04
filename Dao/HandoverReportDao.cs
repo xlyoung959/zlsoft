@@ -103,8 +103,8 @@ namespace Dao
         /// <returns></returns>
         public int AddHandoverRecordContent(HandoverRecord handoverRecord)
         {
-            string sql = @"insert into PUB_交班记录 (ID, 标题, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
-                                  values(record_id_seq.nextval,:Title, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0); ";
+            string sql = @"insert into PUB_交班记录 (ID,内容,记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
+                                  values(record_id_seq.nextval, :Content, to_date(:RecordTime, 'yyyy-mm-dd hh24:mi:ss'), '1', :WardID, :PatientId, :RecordUser, 0)";
             OracleParameter[] prms = new OracleParameter[]
          {
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=handoverRecord.content},
@@ -144,11 +144,12 @@ namespace Dao
         /// <returns></returns>
         public int UpdateHandoverRecordContent(string content,string id)
         {
-            string sql = "update PUB_交班记录 set  内容=:Content where ID=:ID";
+            string sql = "update PUB_交班记录 set 内容=:Content  where ID=:ID";
             OracleParameter[] prms = new OracleParameter[]
            {
-                 new OracleParameter("ID",OracleDbType.Varchar2,36) { Value=id},
-                 new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content}
+                 new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content},
+                 new OracleParameter("ID",OracleDbType.Varchar2,36) { Value=id}
+                
            };
             return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
      }

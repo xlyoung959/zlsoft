@@ -348,6 +348,16 @@
                 $("#patient_special_state").append(special);
             }
         });
+        //在交班记录中查询“今天”病人的情况
+        $.ajax({
+            url: "/HandoverReport/QueryPatientContentByID",
+            data: { "patientID": '', "date": nowTime, "wardID": '507' },
+            type: "post",
+            dataType: "json",
+            success: function (res) {
+                console.log(res);
+            }
+        })
 
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
@@ -420,6 +430,7 @@
         //在自己的班次里点击编辑按钮，编辑该班次病人的详细情况
         $(".editShift").unbind("click").bind("click", function () {//先解绑点击事件，在绑定点击时间，防止重复。
             var td_index = $(this).parent().index();//获取当前按钮所在td的索引
+            //判断是哪个班次，不同的班次，传入不同的时间段
             var recordTime;
             if (td_index == 1) {
                 recordTime = nowTime + " 08:00:00";
@@ -462,7 +473,7 @@
                 $.ajax({
                     url: "/HandoverReport/AddOrUpdateHandoverRecord",
                     data: { "content": shift, "recordTime": recordTime, "wardId": '507', "patientId": patientId, "recordUser": '墨水之寒' },
-                    type: "json",
+                    type: "post",
                     success: function (res) {
                         if (res > 0) {
                             editShift_span.html(shift);
@@ -653,7 +664,7 @@
             }
             else {
                 var pId = information.PATIENTID;
-                var title = "Name:" + information.NAME + "|BedNumber:        " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
+                var title = "Name:" + information.NAME + "|BedNumber:       " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
                 $.ajax({
                     url: "/HandoverReport/AddHandoverRecordTitle",
                     data: { "title": title, "wardId": '507', "patientId": pId, "recordUser": "墨水之寒" },
