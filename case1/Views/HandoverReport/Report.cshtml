@@ -307,7 +307,7 @@
 
         //填充病人特殊情况那里的信息，
         $.ajax({
-            url: "/HandoverReport/QueryPatientInfoByID",
+            url: "/HandoverReport/QueryPatientsSpecial",
             data: { "wardId": 507 },
             type: "post",
             async: false,
@@ -325,12 +325,13 @@
             }
         });
         //
+        
         console.log(nowTime);
         $.ajax({
             url: "/HandoverReport/QueryPatientInfoByID",
-            data: { "wardId": '507', "dtime": '2019-01-03' },
+            data: { "wardId": '507', "dTime":nowTime },
             type: "post",
-            async: true,
+            async: false,
             dataType: "json",
             success: (res) => {
                 console.log(res);
@@ -338,8 +339,8 @@
                 for (var i = 0; i < res.length; i++) {
                     special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
                   + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
-                  + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><div class='illstatu'>&emsp;病"
-                  + res[i].ILLSTATE + "</div></td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
+                  + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div>"
+                  + "</td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
                   + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
                 }
                 $("#patient_special_state").append(special);
