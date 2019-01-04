@@ -85,8 +85,14 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="handoverRecord"></param>
         /// <returns></returns>
-        public int AddOrUpdateHandoverRecord(HandoverRecord handoverRecord)
+        public int AddOrUpdateHandoverRecord(string content, string recordTime,string wardId, string patientId, string recordUser)
         {
+            HandoverRecord handoverRecord = new HandoverRecord();
+            handoverRecord.content = content;
+            handoverRecord.recordTime = recordTime;
+            handoverRecord.wardId = wardId;
+            handoverRecord.patientId = patientId;
+            handoverRecord.recordUser = recordUser;
             return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
         }
 
@@ -100,6 +106,19 @@ namespace case1.Controllers
         public ContentResult QueryPatientInfoByID(string wardId,string dTime)
         {
             var data = handoverReportService.SelectReportPatient(wardId, dTime);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
+        /// <summary>
+        /// 查询病人的内容
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="date"></param>
+        /// <param name="wardID"></param>
+        /// <returns></returns>
+        public ContentResult QueryPatientContentByID(string patientID, string date, string wardID)
+        {
+            var data = handoverReportService.SelectPatientContent( patientID,date,wardID);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }

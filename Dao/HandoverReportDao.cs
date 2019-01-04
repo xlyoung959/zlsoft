@@ -124,7 +124,7 @@ namespace Dao
         public int AddHandoverRecordTitle(HandoverRecord handoverRecord)
         {
             string sql = @"insert into PUB_交班记录(ID, 标题, 记录时间, 预留字段, 病区ID, 病人ID, 记录人, 是否作废)
-                                  values(record_id_seq.nextval, :Title, sysdate, '1', :WardID, :PatientId, :RecordUser, 0) ";
+                                  values(record_id_seq.nextval, :Title, sysdate+1/3, '1', :WardID, :PatientId, :RecordUser, 0) ";
             OracleParameter[] prms = new OracleParameter[]
          {
                  new OracleParameter("Title",OracleDbType.Varchar2,4000) { Value=handoverRecord.title},
@@ -192,7 +192,11 @@ namespace Dao
            
 
         }
-
+        /// <summary>
+        /// 根据病人id查询病人的床号，姓名，诊断描述和id
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <returns></returns>
         public DataTable SelectPatientInfoByID(string patientID)
         {
             string sql = @"select  a.当前床号 as bedID,a.姓名 as name,b.诊断描述 as illness ,a.病人ID as patientID 
@@ -205,6 +209,26 @@ namespace Dao
                 };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
+        /// <summary>
+        /// 查询交班记录中病人的内容
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="date"></param>
+        /// <param name="wardID"></param>
+        /// <returns></returns>
+        public DataTable SelectPatientContentByID(string patientID,string date,string wardID)
+        {
+            string sql = @"  select 病人id as patientID,内容 as content,记录时间 as date  from pub_交班记录 where 病人id=:patientID and 病区id=:wardID and 内容 is not null 
+   and 记录时间>to_date(:date,'yyyy-mm-dd')";
+            OracleParameter[] prms = new OracleParameter[]
+              {
+                    new OracleParameter("patientID",OracleDbType.Varchar2,32) { Value=patientID},
+                    new OracleParameter("wardID",OracleDbType.Varchar2,32) { Value=wardID},
+                    new OracleParameter("date",OracleDbType.Varchar2,32) { Value=date}    
+              };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+        }
+
 
     }
 }

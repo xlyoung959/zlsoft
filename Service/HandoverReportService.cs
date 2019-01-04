@@ -102,5 +102,9 @@ namespace Service
             return list;
         }
 
+        public DataTable SelectPatientContent(string patientID, string date, string wardID)
+        {
+            return handoverReportDao.SelectPatientContentByID(patientID, date, wardID);
+        }
     }
 }
