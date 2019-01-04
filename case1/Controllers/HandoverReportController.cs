@@ -85,8 +85,14 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="handoverRecord"></param>
         /// <returns></returns>
-        public int AddOrUpdateHandoverRecord(HandoverRecord handoverRecord)
+        public int AddOrUpdateHandoverRecord(string content, string recordTime,string wardId, string patientId, string recordUser)
         {
+            HandoverRecord handoverRecord = new HandoverRecord();
+            handoverRecord.content = content;
+            handoverRecord.recordTime = recordTime;
+            handoverRecord.wardId = wardId;
+            handoverRecord.patientId = patientId;
+            handoverRecord.recordUser = recordUser;
             return handoverReportService.AddOrUpdateHandoverRecord(handoverRecord);
         }
 
@@ -104,7 +110,7 @@ namespace case1.Controllers
             return Content(dataStr);
         }
         /// <summary>
-        /// 查询病人的内容
+        /// 查询交班记录中病人的内容，用于放在当前日期，某个班次中，显示病人的基本情况
         /// </summary>
         /// <param name="patientID"></param>
         /// <param name="date"></param>

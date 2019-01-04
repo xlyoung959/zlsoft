@@ -284,6 +284,7 @@
             });
         });
         
+        
         //获取今天的时间，并转换成类似 '2018-12-25'字符型格式
         var date = new Date();
         var month = date.getMonth() + 1;
@@ -292,7 +293,7 @@
         month = month < 10 ? "0" + month : month;//如果月份小于10变成01,02样
         day = day < 10 ? "0" + day : day;
         var nowTime = date.getFullYear() + "-" + month + "-" + day;
-       
+  
         $("#report-time").html(nowTime);  //交班报告上的时间为今天，方便打印预览是看到
         //请求病人的总人数，显示在排班情况那里
         $.ajax({
@@ -324,7 +325,7 @@
                 $("#patient_special_state").append(special);
             }
         });
-        //在叫班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
+        //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
         $.ajax({
             url: "/HandoverReport/QueryPatientInfoByID",
             data: { "wardId": '507', "dTime": nowTime },
@@ -332,7 +333,6 @@
             async: false,
             dataType: "json",
             success: (res) => {
-                console.log(res);
                 var special = "";
                 for (var i = 0; i < res.length; i++) {
                     if (res[i][0].ILLNESS == null)
@@ -348,31 +348,71 @@
                 $("#patient_special_state").append(special);
             }
         });
+        //在交班记录中查询“今天”病人的情况
+        $.ajax({
+            url: "/HandoverReport/QueryPatientContentByID",
+            data: { "patientID": '', "date": nowTime, "wardID": '507' },
+            type: "post",
+            dataType: "json",
+            success: function (res) {
+                console.log(res);
+            }
+        })
 
-        //根据不同的时间段，交班按钮的显示情况
+        //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
                 $(".handOver").hide();
                 $("#handOverOne").show();
                 $("#patient-status-night").hide();
                 $("#patient-status-late-night").hide();
+                $("#patient_special_state  tr").find("td:eq(1)").mouseover(function () {
+                    $(this).find("button").show();
+                });
+                $("#patient_special_state  tr").find("td:eq(1)").mouseleave(function () {
+                    $(this).find("button").hide(50);
+                });
             }
             else if (shi == 16) {//在16点17点之前第一个和第二个都可以显示，最多延迟交班1小时
                 $("#handOverOne").show();
                 $("#handOverTwo").show();
                 $("#patient-status-late-night").hide();
+                $("#patient_special_state  tr").find("td:lt(3)").mouseover(function () {
+                    $(this).find("button").show();
+                });
+                $("#patient_special_state  tr").find("td:lt(2)").mouseleave(function () {
+                    $(this).find("button").hide(50);
+                });
             }
             else if (shi >= 17 && shi <= 22) {//在到17点了，只有第二个交班按钮显示，其他隐藏下面类似
                 $(".handOver").hide();
                 $("#handOverTwo").show();
                 $("#patient-status-late-night").hide();
+                $("#patient_special_state  tr").find("td:eq(2)").mouseover(function () {
+                    $(this).find("button").show();
+                });
+                $("#patient_special_state  tr").find("td:eq(2)").mouseleave(function () {
+                    $(this).find("button").hide(50);
+                });
             } else if (shi == 23) {
                 $("#handOverTwo").show();
                 $("#handOverThree").show();
+                $("#patient_special_state  tr").find("td:gt(1)").mouseover(function () {
+                    $(this).find("button").show();
+                });
+                $("#patient_special_state  tr").find("td:gt(1)").mouseleave(function () {
+                    $(this).find("button").hide(50);
+                });
             }
             else {
                 $(".handOver").hide();
                 $("#handOverThree").show();
+                $("#patient_special_state  tr").find("td:eq(3)").mouseover(function () {
+                    $(this).find("button").show();
+                });
+                $("#patient_special_state  tr").find("td:eq(3)").mouseleave(function () {
+                    $(this).find("button").hide(50);
+                });
             }
         }
         HourShow(hour);
@@ -387,16 +427,21 @@
         }
         editHide();
         
-        $("#patient_special_state>tbody>tr td:gt(0)").mouseover(function () {
-            $(this).find("button").show();
-        });
-        $("#patient_special_state>tbody>tr td:gt(0)").mouseleave(function () {
-            $(this).find("button").hide(50);
-        });
-
         //在自己的班次里点击编辑按钮，编辑该班次病人的详细情况
         $(".editShift").unbind("click").bind("click", function () {//先解绑点击事件，在绑定点击时间，防止重复。
             var td_index = $(this).parent().index();//获取当前按钮所在td的索引
+            //判断是哪个班次，不同的班次，传入不同的时间段
+            var recordTime;
+            if (td_index == 1) {
+                recordTime = nowTime + " 08:00:00";
+            }
+            else if (td_index == 2) {
+                recordTime = nowTime + " 16:00:00";
+            }
+            else {
+                recordTime = nowTime + " 23:00:00";
+            }        
+            var patientId = $(this).parent().parent().find("td:eq(0)").find("input").val();//获取该行病人的ID
             editShift_span = $(this).parent().parent().find("td:eq(" + td_index + ") span");
             var editShift_span_val = $(this).prev().html();
             $("#patient-shift-state textarea").val(editShift_span_val);
@@ -415,9 +460,9 @@
                         $('#patient-shift-state').hide();
                     }
                 });
-                //点击里面的取消按钮，关闭弹窗
               
             });
+            //点击里面的取消按钮，关闭弹窗
             $("#shift-cancel").click(function () {
                 layer.close(index);
                 $('#patient-shift-state').hide();
@@ -425,12 +470,24 @@
             //点击编辑病人每班的情况里的确认按钮
             $("#shift-confirm").click(function () {
                 var shift = $("#shift-textarea").val();
-                editShift_span.html(shift);     
-                layer.close(index);            
-                $('#patient-shift-state').hide();
+                $.ajax({
+                    url: "/HandoverReport/AddOrUpdateHandoverRecord",
+                    data: { "content": shift, "recordTime": recordTime, "wardId": '507', "patientId": patientId, "recordUser": '墨水之寒' },
+                    type: "post",
+                    success: function (res) {
+                        if (res > 0) {
+                            editShift_span.html(shift);
+                            layer.close(index);
+                            $('#patient-shift-state').hide();
+                            layer.msg('编辑成功', { icon: 1, time: 2000, anim: 3 });
+                        } else {
+                            layer.msg('编辑失败', { icon: 5, time: 2000, anim: 3 });
+                        }
+                    }
+                })
                  
             });
-            jQuery.removeData(this);
+            jQuery.removeData(this);//删除之前的数据
         });
 
         //点击查询按钮要处理的事情
@@ -607,7 +664,7 @@
             }
             else {
                 var pId = information.PATIENTID;
-                var title = "Name:" + information.NAME + "|BedNumber:        " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
+                var title = "Name:" + information.NAME + "|BedNumber:       " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
                 $.ajax({
                     url: "/HandoverReport/AddHandoverRecordTitle",
                     data: { "title": title, "wardId": '507', "patientId": pId, "recordUser": "墨水之寒" },
@@ -631,8 +688,8 @@
                     }
                 })
             }
-         
-        })
+
+        });
       
      
         //点击病人信息中的编辑按钮,弹出病人信息
