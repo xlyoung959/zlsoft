@@ -93,10 +93,10 @@ namespace Service
             DataTable dt = handoverReportDao.SelectReportPatientID(wardID, date);
             DataTable d = new DataTable();
             List<DataTable> list = new List<DataTable>();
-            foreach (var dr in dt.Rows)
+            foreach (DataRow dr in dt.Rows)
             {
                 
-                d = handoverReportDao.SelectPatientInfoByID(dr.ToString());
+                d = handoverReportDao.SelectPatientInfoByID(dr.Field<string>("PATIENTID"));
                  list.Add(d);
             }
             return list;

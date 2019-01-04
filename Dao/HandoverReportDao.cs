@@ -185,17 +185,18 @@ namespace Dao
             OracleParameter[] prms = new OracleParameter[]
      {
                  new OracleParameter("startdate",OracleDbType.Varchar2,32) { Value=date+" 00:00:00"},
-                  new OracleParameter("enddate",OracleDbType.Varchar2,64) { Value=date+" 23:59:59"},
+                  new OracleParameter("enddate",OracleDbType.Varchar2,32) { Value=date+" 23:59:59"},
                   new OracleParameter("WardID",OracleDbType.Varchar2,20) { Value=wardID}
      };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+           
 
         }
 
         public DataTable SelectPatientInfoByID(string patientID)
         {
-            string sql = @"select  a.床号 as bedID,a.姓名 as name,b.诊断描述 as illness ,a.相关ID as patientID 
-  from pub_病人基本信息 a,病人诊断记录 b where a.相关ID=b.病人ID and a.相关id=:patientID and a.当前病区相关ID='507'";
+            string sql = @"select  a.当前床号 as bedID,a.姓名 as name,b.诊断描述 as illness ,a.病人ID as patientID 
+  from 病人信息 a left join 病人诊断记录 b on  a.病人ID=b.病人ID where a.病人id=:patientID and a.当前病区ID='507'";
             OracleParameter[] prms = new OracleParameter[]
                 {
                     new OracleParameter("patientID",OracleDbType.Varchar2,32) { Value=patientID}
