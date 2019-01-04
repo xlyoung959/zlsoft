@@ -144,7 +144,11 @@ namespace Dao
         /// <returns></returns>
         public int UpdateHandoverRecordContent(string content,string id)
         {
+<<<<<<< HEAD
+            string sql = "update PUB_交班记录 set 内容=:Content where ID=:ID";
+=======
             string sql = "update PUB_交班记录 set 内容=:Content  where ID=:ID";
+>>>>>>> 52afb3edb6b429604b89b966ff1dd75e27cac63d
             OracleParameter[] prms = new OracleParameter[]
            {
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content},
