@@ -329,7 +329,7 @@
         console.log(nowTime);
         $.ajax({
             url: "/HandoverReport/QueryPatientInfoByID",
-            data: { "wardId": '507', "dTime":'2019-01-03' },
+            data: { "wardId": '507', "dTime": nowTime },
             type: "post",
             async: false,
             dataType: "json",

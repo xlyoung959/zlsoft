@@ -103,5 +103,12 @@ namespace case1.Controllers
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
+
+        public ContentResult QueryPatientContentByID(string patientID, string date, string wardID)
+        {
+            var data = handoverReportService.SelectPatientContent( patientID,date,wardID);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
     }
 }
