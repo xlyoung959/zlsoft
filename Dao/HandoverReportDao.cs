@@ -218,7 +218,7 @@ namespace Dao
         /// <returns></returns>
         public DataTable SelectPatientContentByID(string patientID,string date,string wardID)
         {
-            string sql = @"  select * from pub_交班记录 where 病人id=:patientID and 病区id=:wardID and 内容 is not null 
+            string sql = @"  select 病人id as patientID,内容 as content,记录时间 as date  from pub_交班记录 where 病人id=:patientID and 病区id=:wardID and 内容 is not null 
    and 记录时间>to_date(:date,'yyyy-mm-dd')";
             OracleParameter[] prms = new OracleParameter[]
               {

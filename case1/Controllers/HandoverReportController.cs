@@ -103,7 +103,13 @@ namespace case1.Controllers
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
-
+        /// <summary>
+        /// 查询病人的内容
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="date"></param>
+        /// <param name="wardID"></param>
+        /// <returns></returns>
         public ContentResult QueryPatientContentByID(string patientID, string date, string wardID)
         {
             var data = handoverReportService.SelectPatientContent( patientID,date,wardID);
