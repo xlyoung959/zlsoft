@@ -94,12 +94,12 @@ namespace case1.Controllers
         /// <summary>
         /// 查询交班报告中的病人的id，床号，诊断情况
         /// </summary>
-        /// <param name="wardID"></param>
-        /// <param name="date"></param>
+        /// <param name="wardId"></param>
+        /// <param name="dtime"></param>
         /// <returns></returns>
-        public ContentResult QueryPatientInfoByID(string wardId,string dtime)
+        public ContentResult QueryPatientInfoByID(string wardId,string dTime)
         {
-            var data = handoverReportService.SelectReportPatient(wardId, dtime);
+            var data = handoverReportService.SelectReportPatient(wardId, dTime);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
