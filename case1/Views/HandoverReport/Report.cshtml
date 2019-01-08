@@ -349,7 +349,7 @@
             }
         });
         //在交班记录中查询“今天”病人的情况
-        $.ajax({
+        /*$.ajax({
             url: "/HandoverReport/QueryPatientContentByID",
             data: { "patientID": '', "date": nowTime, "wardID": '507' },
             type: "post",
@@ -357,7 +357,7 @@
             success: function (res) {
                 console.log(res);
             }
-        })
+        })*/
 
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
@@ -380,7 +380,7 @@
                 $("#patient_special_state  tr").find("td:lt(3)").mouseover(function () {
                     $(this).find("button").show();
                 });
-                $("#patient_special_state  tr").find("td:lt(2)").mouseleave(function () {
+                $("#patient_special_state  tr").find("td:lt(3)").mouseleave(function () {
                     $(this).find("button").hide(50);
                 });
             }
