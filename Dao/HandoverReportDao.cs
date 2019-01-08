@@ -144,8 +144,12 @@ namespace Dao
         /// <returns></returns>
         public int UpdateHandoverRecordContent(string content,string id)
         {
+<<<<<<< HEAD
 
             string sql = "update PUB_交班记录 set 内容=:Content where ID=:ID";
+=======
+            string sql = "update PUB_交班记录 set 内容=:Content  where ID=:ID";
+>>>>>>> abdda48667cdb505883a597093ee345d02087745
             OracleParameter[] prms = new OracleParameter[]
            {
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content},
@@ -220,13 +224,13 @@ namespace Dao
         /// <returns></returns>
         public DataTable SelectPatientContentByID(string patientID,string date,string wardID)
         {
-            string sql = @"  select 病人id as patientID,内容 as content,记录时间 as date  from pub_交班记录 where 病人id=:patientID and 病区id=:wardID and 内容 is not null 
-   and 记录时间>to_date(:date,'yyyy-mm-dd')";
+            string sql = @"  select 病人id as patientID,内容 as content,记录时间 as dTime  from pub_交班记录 where 病人id=:PatientID and 病区id=:WardID and 内容 is not null 
+   and 记录时间 between to_date(:DTime,'yyyy-mm-dd') and (to_date(:DTime,'yyyy-mm-dd')+1)";
             OracleParameter[] prms = new OracleParameter[]
               {
-                    new OracleParameter("patientID",OracleDbType.Varchar2,32) { Value=patientID},
-                    new OracleParameter("wardID",OracleDbType.Varchar2,32) { Value=wardID},
-                    new OracleParameter("date",OracleDbType.Varchar2,32) { Value=date}    
+                    new OracleParameter("PatientID",OracleDbType.Varchar2,32) { Value=patientID},
+                    new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardID},
+                    new OracleParameter("DTime",OracleDbType.Varchar2,32) { Value=date}    
               };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }

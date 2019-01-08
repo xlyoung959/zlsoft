@@ -349,6 +349,7 @@
             }
         });
         //在交班记录中查询“今天”病人的情况
+<<<<<<< HEAD
         /*$.ajax({
             url: "/HandoverReport/QueryPatientContentByID",
             data: { "patientID": '', "date": nowTime, "wardID": '507' },
@@ -358,6 +359,29 @@
                 console.log(res);
             }
         })*/
+=======
+        for (var i = 0; i < $("#patient_special_state tr").length; i++) {
+            var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+            $.ajax({
+                url: "/HandoverReport/QueryPatientContentByID",
+                data: { "patientID": PID, "date": nowTime, "wardID": '507' },
+                type: "post",
+                async: false,
+                dataType: "json",
+                success: function (res) {
+                    for (var j = 0; j < res.length; j++) {
+                        if (res[j].PATIENTID == pid) {//判断数据查出的该条记录中病人ID是否和表格中的病人ID是否相同，相同把对应的内容放入对应的时间段中
+                            var td_index = Math.round(res[j].DTIME.substring(11, 13) / 8);//根据数据库中的不同时间段截取小时除以8判断属于哪个td,计算td的索引
+                            var con = res[j].CONTENT;
+                            $("#patient_special_state tr:eq(" + i + ")  td:eq(" + td_index + ") span").html(con);
+                        }
+                    }
+                }
+            });
+        }
+      
+        
+>>>>>>> abdda48667cdb505883a597093ee345d02087745
 
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
