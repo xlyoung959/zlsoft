@@ -275,6 +275,7 @@
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/layui.all.js" charset="utf-8"></script>
     <script>  
+        var wordId='507';
         //layui加载日期的，可选择日期
         layui.use('laydate', function () {
             var laydate = layui.laydate;
@@ -304,49 +305,80 @@
             success: function (res) {
                 $(".patientsNum").html(res);
             }
-        })
+        });
 
-        //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
-        $.ajax({
-            url: "/HandoverReport/QueryPatientsSpecial",
-            data: { "wardId": 507 },
-            type: "post",
-            async: false,
-            dataType: "json",
-            success: (res) => {
-                var special = "";
-                for (var i = 0; i < res.length; i++) {
+        //patientTodayContent方法获取今天的病人特殊情况那里的内容
+        function patientTodayContent(dtime) {
+            //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
+            $.ajax({
+                url: "/HandoverReport/QueryPatientsSpecial",
+                data: { "wardId": 507 },
+                type: "post",
+                async: false,
+                dataType: "json",
+                success: (res) => {
+                    var special = "";
+                    for (var i = 0; i < res.length; i++) {
                         special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
                       + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
                       + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><div class='illstatu'>&emsp;病"
                       + res[i].ILLSTATE + "</div></td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
-                      + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"                
-                }
-                $("#patient_special_state").append(special);
-            }
-        });
-        //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
-        $.ajax({
-            url: "/HandoverReport/QueryPatientInfoByID",
-            data: { "wardId": '507', "dTime": nowTime },
-            type: "post",
-            async: false,
-            dataType: "json",
-            success: (res) => {
-                var special = "";
-                for (var i = 0; i < res.length; i++) {
-                    if (res[i][0].ILLNESS == null)
-                    {
-                        res[i][0].ILLNESS = "";
+                      + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
                     }
-                    special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
-                  + res[i][0].BEDID + "床&emsp;</span><span class='name'>" + res[i][0].NAME + "</span><p style='margin-top:6px;'>" + res[i][0].ILLNESS
-                  + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i][0].PATIENTID + "'></div>"
-                  + "</td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
-                  + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
+                    $("#patient_special_state").append(special);
                 }
-                $("#patient_special_state").append(special);
+            });
+            //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
+            $.ajax({
+                url: "/HandoverReport/QueryPatientInfoByID",
+                data: { "wardId": '507', "dTime": dtime },
+                type: "post",
+                async: false,
+                dataType: "json",
+                success: (res) => {
+                    var special = "";
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i][0].ILLNESS == null) {
+                            res[i][0].ILLNESS = "";
+                        }
+                        special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
+                      + res[i][0].BEDID + "床&emsp;</span><span class='name'>" + res[i][0].NAME + "</span><p style='margin-top:6px;'>" + res[i][0].ILLNESS
+                      + "</p>&ensp;<a href='javaScript:void(0);' class='editDiagnosis'>[编辑]</a><input type='hidden' name='patientId' value='" + res[i][0].PATIENTID + "'></div>"
+                      + "</td> <td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td>"
+                      + "<td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td><td><span></span><button class='layui-btn layui-btn-normal layui-btn-sm editShift'>编辑</button></td> </tr>"
+                    }
+                    $("#patient_special_state").append(special);
+                }
+            });
+            //在交班记录中查询“今天”病人的情况，先循环查询表格中有的病人
+            for (var i = 0; i < $("#patient_special_state tr").length; i++) {
+                var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+                $.ajax({
+                    url: "/HandoverReport/QueryPatientContentByID",
+                    data: { "patientID": PID, "date": dtime, "wardID": '507' },
+                    type: "post",
+                    async: false,
+                    dataType: "json",
+                    success: function (res) {
+                        for (var j = 0; j < res.length; j++) {
+                            if (res[j].PATIENTID == PID) {//判断数据查出的该条记录中病人ID是否和表格中的病人ID是否相同，相同把对应的内容放入对应的时间段中
+                                var td_index = Math.round(res[j].DTIME.substring(11, 13) / 8);//根据数据库中的不同时间段截取小时除以8判断属于哪个td,计算td的索引
+                                var con = res[j].CONTENT;
+                                $("#patient_special_state tr:eq(" + i + ")  td:eq(" + td_index + ") span").html(con);
+                            }
+                        }
+                    }
+                });
             }
+<<<<<<< HEAD
+        }
+        //访问时执行，一刷新就执行
+        patientTodayContent(nowTime);
+
+        //传入一个时间获取，以前某天病人的情况，用于前一天、后一天、查询时日期变化的内容变化
+        function patientBeforeContent(dtime) {
+            //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
+=======
         });
         //在交班记录中查询“今天”病人的情况
 
@@ -362,26 +394,75 @@
 
         for (var i = 0; i < $("#patient_special_state tr").length; i++) {
             var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+>>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
             $.ajax({
-                url: "/HandoverReport/QueryPatientContentByID",
-                data: { "patientID": PID, "date": nowTime, "wardID": '507' },
+                url: "/HandoverReport/QueryPatientsSpecial",
+                data: { "wardId": 507 },
                 type: "post",
                 async: false,
                 dataType: "json",
-                success: function (res) {
-                    for (var j = 0; j < res.length; j++) {
-                        if (res[j].PATIENTID == pid) {//判断数据查出的该条记录中病人ID是否和表格中的病人ID是否相同，相同把对应的内容放入对应的时间段中
-                            var td_index = Math.round(res[j].DTIME.substring(11, 13) / 8);//根据数据库中的不同时间段截取小时除以8判断属于哪个td,计算td的索引
-                            var con = res[j].CONTENT;
-                            $("#patient_special_state tr:eq(" + i + ")  td:eq(" + td_index + ") span").html(con);
-                        }
+                success: (res) => {
+                    var special = "";
+                    for (var i = 0; i < res.length; i++) {
+                        special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
+                      + res[i].BED + "床&emsp;</span><span class='name'>" + res[i].NAME + "</span><p style='margin-top:6px;'>" + res[i].ILLNESS
+                      + "</p><input type='hidden' name='patientId' value='" + res[i].PATIENTID + "'></div><div class='illstatu'>&emsp;病"
+                      + res[i].ILLSTATE + "</div></td> <td><span></span></td>"
+                      + "<td><span></span></td><td><span></span></td> </tr>"
                     }
+                    $("#patient_special_state").append(special);
                 }
             });
+            //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
+            $.ajax({
+                url: "/HandoverReport/QueryPatientInfoByID",
+                data: { "wardId": wordId, "dTime": dtime },
+                type: "post",
+                async: false,
+                dataType: "json",
+                success: (res) => {
+                    var special = "";
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i][0].ILLNESS == null) {
+                            res[i][0].ILLNESS = "";
+                        }
+                        special += "<tr><td style='width:9%;'  class='happening'><div ><span id='bedNo'>"
+                      + res[i][0].BEDID + "床&emsp;</span><span class='name'>" + res[i][0].NAME + "</span><p style='margin-top:6px;'>" + res[i][0].ILLNESS
+                      + "</p><input type='hidden' name='patientId' value='" + res[i][0].PATIENTID + "'></div>"
+                      + "</td> <td><span></span></td>"
+                      + "<td><span></span></td><td><span></span></td> </tr>"
+                    }
+                    $("#patient_special_state").append(special);
+                }
+            });
+            //在交班记录中查询“今天”病人的情况，先循环查询表格中有的病人
+            for (var i = 0; i < $("#patient_special_state tr").length; i++) {
+                var PID = $("#patient_special_state tr:eq(" + i + ") td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+                $.ajax({
+                    url: "/HandoverReport/QueryPatientContentByID",
+                    data: { "patientID": PID, "date": dtime, "wardID": '507' },
+                    type: "post",
+                    async: false,
+                    dataType: "json",
+                    success: function (res) {
+                        for (var j = 0; j < res.length; j++) {
+                            if (res[j].PATIENTID == PID) {//判断数据查出的该条记录中病人ID是否和表格中的病人ID是否相同，相同把对应的内容放入对应的时间段中
+                                var td_index = Math.round(res[j].DTIME.substring(11, 13) / 8);//根据数据库中的不同时间段截取小时除以8判断属于哪个td,计算td的索引
+                                var con = res[j].CONTENT;
+                                $("#patient_special_state tr:eq(" + i + ")  td:eq(" + td_index + ") span").html(con);
+                            }
+                        }
+                    }
+                });
+            }
         }
+<<<<<<< HEAD
+       
+=======
       
         
 
+>>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
@@ -516,18 +597,39 @@
         //点击查询按钮要处理的事情
         $("#query").click(function () {
             var select_date = $("#select_date").val();//获取select_date里面的值
+            var timeSelect = new Date($("#select_date").val().replace(/-/g, "/")); //在页面取得当前时间，并截取。       
             $("#report-time").html(select_date);
             //如果日期是今天，交班按钮就显示，否则隐藏
-            if (select_date != nowTime) {
-                $(".handOver").hide();
-                $("#addPatient").hide();
-            }
-            else {
+            if(select_date==nowTime){
+                $(".handOver").show();//交班按钮显示
+                $("#addPatient").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $("#report-content-table tr:gt(1)").show();
+                $("#patient_special_state").html("");
+                patientTodayContent(timeRed_format);
                 HourShow(hour);
                 editHide();
-                $("#addPatient").show();
             }
-        })
+            else if (timeSelect > date) {//日期大于今天，提示信息日期不对
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#report-content-table tr:gt(1)").hide();
+                $("#report-content-table tr:eq(0)").css("height", "90px");
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.alert('请传入合适的日期，当前日期是未来', { title: '提示', icon: 2, anim: 1, shade: [0.4, '#cccccc'] });
+                });
+            }
+            else  {//日期小于今天时
+                $("#report-content-table tr:gt(1)").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#patient_special_state").html("");
+                patientBeforeContent(select_date);
+            }
+            
+        });
 
         //点击前一天要实现的功能
         $("#before-day").click(function () {
@@ -537,19 +639,39 @@
             var timeDay = timeRed.getDate();
             mon = mon < 10 ? "0" + mon : mon;//如果月份小于10变成01,02样
             timeDay = timeDay < 10 ? "0" + timeDay : timeDay;
-            timeRed = timeRed.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
-            $("#report-time").html(timeRed);
-            $("#select_date").val(timeRed);
+            timeRed_format = timeRed.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
+            $("#report-time").html(timeRed_format);
+            $("#select_date").val(timeRed_format);
             //如果日期是今天，交班按钮就显示，否则隐藏
-            if (timeRed != nowTime) {
-                $(".handOver").hide();
-                $("#addPatient").hide();
-            }
-            else {
+            if (timeRed_format == nowTime) {
+                $(".handOver").show();//交班按钮显示
+                $("#addPatient").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $("#report-content-table tr:gt(1)").show();
+                $("#patient_special_state").html("");
+                patientTodayContent(timeRed_format);
                 HourShow(hour);
                 editHide();
-                $("#addPatient").show();
             }
+            else if (timeRed > date) {
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#report-content-table tr:gt(1)").hide();
+                $("#report-content-table tr:eq(0)").css("height", "90px");
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.alert('请传入合适的日期，当前日期是未来', { title: '提示', icon: 2, anim: 1, shade: [0.4, '#cccccc'] });
+                });   
+            }
+            else {//日期小于今天时
+                $("#report-content-table tr:gt(1)").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#patient_special_state").html("");
+                patientBeforeContent(timeRed_format);
+            }
+               
         });
 
         //点击后一天要实现的功能
@@ -560,18 +682,37 @@
             var timeDay = timeAdd.getDate();
             mon = mon < 10 ? "0" + mon : mon;//如果月份小于10变成01,02样
             timeDay = timeDay < 10 ? "0" + timeDay : timeDay;
-            timeAdd = timeAdd.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
-            $("#select_date").val(timeAdd);
-            $("#report-time").html(timeAdd);
+            timeAdd_format = timeAdd.getFullYear() + "-" + mon + "-" + timeDay; //重新格式化
+            $("#select_date").val(timeAdd_format);
+            $("#report-time").html(timeAdd_format);
             //如果日期是今天，交班按钮就显示，否则隐藏
-            if (timeAdd != nowTime) {
-                $(".handOver").hide();
-                $("#addPatient").hide();
-            }
-            else {
-                HourShow(hour);
-                editHide()
+            if (timeAdd_format == nowTime) {
+                $(".handOver").show();//交班按钮显示
                 $("#addPatient").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $("#report-content-table tr:gt(1)").show();
+                $("#patient_special_state").html("");
+                patientTodayContent(timeAdd_format);
+                HourShow(hour);
+                editHide();
+            }
+            else if (timeAdd > date) {//日期大于今天，提示信息日期不对
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#report-content-table tr:gt(1)").hide();
+                $("#report-content-table tr:eq(0)").css("height", "90px");
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.alert('请传入合适的日期，当前日期是未来', { title: '提示', icon: 2, anim: 1, shade: [0.4, '#cccccc'] });
+                });
+            }
+            else {//日期小于今天时
+                $("#report-content-table tr:gt(1)").show();
+                $("#report-content-table tr:eq(0)").css("height", "24px");
+                $(".handOver").hide();//交班按钮隐藏
+                $("#addPatient").hide();//添加病人按钮隐藏
+                $("#patient_special_state").html("");
+                patientBeforeContent(timeAdd_format);
             }
         });
 
