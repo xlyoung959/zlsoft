@@ -20,7 +20,7 @@ namespace Dao
         {
             string sql = @"select distinct a.病人Id as patientId ,a.主页id as homepageId,e.姓名 as name,a.出院病床 as bed,a.当前病况 as illState,c.诊断描述 as illness
                                      from 病案主页 a ,病人信息 e,病人诊断记录 c
-                 where a.病人ID = e.病人ID and a.病人ID = c.病人ID  and a.当前病区id =:WardID and a.当前病况 in('重','危') and a.出院日期 is null order by  a.病人Id ";
+                 where a.病人ID = e.病人ID and a.病人ID = c.病人ID  and a.当前病区id =:WardID and a.当前病况 in('重','危') and a.出院日期 is null order by illState desc";
 
             OracleParameter[] prms = new OracleParameter[]
             {
