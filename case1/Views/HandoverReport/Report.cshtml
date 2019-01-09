@@ -349,7 +349,7 @@
             }
         });
         //在交班记录中查询“今天”病人的情况
-<<<<<<< HEAD
+
         /*$.ajax({
             url: "/HandoverReport/QueryPatientContentByID",
             data: { "patientID": '', "date": nowTime, "wardID": '507' },
@@ -359,7 +359,7 @@
                 console.log(res);
             }
         })*/
-=======
+
         for (var i = 0; i < $("#patient_special_state tr").length; i++) {
             var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
             $.ajax({
@@ -381,7 +381,6 @@
         }
       
         
->>>>>>> abdda48667cdb505883a597093ee345d02087745
 
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
