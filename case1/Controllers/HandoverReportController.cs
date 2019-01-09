@@ -20,7 +20,7 @@ namespace case1.Controllers
         /// 查询病人的特殊情况，就是病危病重的人
         /// </summary>
         /// <returns></returns>
-        public ContentResult QueryPatientsSpecial(int wardId)
+        public ContentResult QueryPatientsSpecial(string wardId)
         {
             var data = handoverReportService.QueryPatientsSpecial(wardId);
              var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
