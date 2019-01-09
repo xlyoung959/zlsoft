@@ -273,7 +273,8 @@
     </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/layui.all.js" charset="utf-8"></script>
+   
+    <script src="~/Scripts/layui.all.js"></script>
     <script>  
         var wordId='507';
         //layui加载日期的，可选择日期
@@ -299,7 +300,7 @@
         //请求病人的总人数，显示在排班情况那里
         $.ajax({
             url: "/HandoverReport/QueryPatientsTotalNumber",
-            data: { "wardId": '507' },
+            data: { "wardId": wordId },
             async: false,
             type: "post",
             success: function (res) {
@@ -312,7 +313,7 @@
             //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
             $.ajax({
                 url: "/HandoverReport/QueryPatientsSpecial",
-                data: { "wardId": 507 },
+                data: { "wardId": wordId },
                 type: "post",
                 async: false,
                 dataType: "json",
@@ -331,7 +332,7 @@
             //在交班记录中查询当天添加的病人信息，也存放在病人特殊情况那里  
             $.ajax({
                 url: "/HandoverReport/QueryPatientInfoByID",
-                data: { "wardId": '507', "dTime": dtime },
+                data: { "wardId": wordId, "dTime": dtime },
                 type: "post",
                 async: false,
                 dataType: "json",
@@ -355,7 +356,7 @@
                 var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
                 $.ajax({
                     url: "/HandoverReport/QueryPatientContentByID",
-                    data: { "patientID": PID, "date": dtime, "wardID": '507' },
+                    data: { "patientID": PID, "date": dtime, "wardID": wordId },
                     type: "post",
                     async: false,
                     dataType: "json",
@@ -370,7 +371,6 @@
                     }
                 });
             }
-<<<<<<< HEAD
         }
         //访问时执行，一刷新就执行
         patientTodayContent(nowTime);
@@ -378,26 +378,9 @@
         //传入一个时间获取，以前某天病人的情况，用于前一天、后一天、查询时日期变化的内容变化
         function patientBeforeContent(dtime) {
             //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
-=======
-        });
-        //在交班记录中查询“今天”病人的情况
-<<<<<<< HEAD
-        /*$.ajax({
-            url: "/HandoverReport/QueryPatientContentByID",
-            data: { "patientID": '', "date": nowTime, "wardID": '507' },
-            type: "post",
-            dataType: "json",
-            success: function (res) {
-                console.log(res);
-            }
-        })*/
-=======
-        for (var i = 0; i < $("#patient_special_state tr").length; i++) {
-            var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
->>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
             $.ajax({
                 url: "/HandoverReport/QueryPatientsSpecial",
-                data: { "wardId": 507 },
+                data: { "wardId": wordId },
                 type: "post",
                 async: false,
                 dataType: "json",
@@ -440,7 +423,7 @@
                 var PID = $("#patient_special_state tr:eq(" + i + ") td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
                 $.ajax({
                     url: "/HandoverReport/QueryPatientContentByID",
-                    data: { "patientID": PID, "date": dtime, "wardID": '507' },
+                    data: { "patientID": PID, "date": dtime, "wardID": wordId },
                     type: "post",
                     async: false,
                     dataType: "json",
@@ -456,14 +439,7 @@
                 });
             }
         }
-<<<<<<< HEAD
        
-=======
-      
-        
->>>>>>> abdda48667cdb505883a597093ee345d02087745
-
->>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
@@ -531,6 +507,12 @@
             });
         }
         editHide();
+        //病人每个班次每中状态的人数的显示问题，用户前一天、后一天、查询时小于今天的病人状态显示
+        function pStatus() {
+            $("#patient-status-day").show();
+            $("#patient-status-night").show();
+            $("#patient-status-late-night").show();
+        }
         
         //在自己的班次里点击编辑按钮，编辑该班次病人的详细情况
         $(".editShift").unbind("click").bind("click", function () {//先解绑点击事件，在绑定点击时间，防止重复。
@@ -621,7 +603,8 @@
                     layer.alert('请传入合适的日期，当前日期是未来', { title: '提示', icon: 2, anim: 1, shade: [0.4, '#cccccc'] });
                 });
             }
-            else  {//日期小于今天时
+            else {//日期小于今天时
+                pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
                 $(".handOver").hide();//交班按钮隐藏
@@ -665,6 +648,7 @@
                 });   
             }
             else {//日期小于今天时
+                pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
                 $(".handOver").hide();//交班按钮隐藏
@@ -708,6 +692,7 @@
                 });
             }
             else {//日期小于今天时
+                pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
                 $(".handOver").hide();//交班按钮隐藏
@@ -792,7 +777,7 @@
                 var patient = [{ title: information, }];
                 $.ajax({
                     url: "/HandoverReport/QueryPatientsInfoByName",
-                    data: { "wardId": '507', "searchText": p_name },
+                    data: { "wardId": wordId, "searchText": p_name },
                     type: "post",
                     dataType: "json",
                     success: function (res) {
@@ -832,7 +817,7 @@
                 var title = "Name:" + information.NAME + "|BedNumber:       " + information.BEDID + "|PatientID:" + information.PATIENTID + "|InTimes:1"
                 $.ajax({
                     url: "/HandoverReport/AddHandoverRecordTitle",
-                    data: { "title": title, "wardId": '507', "patientId": pId, "recordUser": "墨水之寒" },
+                    data: { "title": title, "wardId": wordId, "patientId": pId, "recordUser": "墨水之寒" },
                     type: "post",
                     success: function (data) {
                         if (data > 0) {

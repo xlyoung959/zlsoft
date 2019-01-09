@@ -16,19 +16,15 @@ namespace Dao
         /// </summary>
         /// <param name="wardId">病区ID</param>
         /// <returns></returns>
-        public DataTable QueryPatientsSpecial(int wardId)
+        public DataTable QueryPatientsSpecial(string wardId)
         {
             string sql = @"select distinct a.病人Id as patientId ,a.主页id as homepageId,e.姓名 as name,a.出院病床 as bed,a.当前病况 as illState,c.诊断描述 as illness
                                      from 病案主页 a ,病人信息 e,病人诊断记录 c
-<<<<<<< HEAD
                  where a.病人ID = e.病人ID and a.病人ID = c.病人ID  and a.当前病区id =:WardID and a.当前病况 in('重','危') and a.出院日期 is null order by illState desc";
-=======
-                 where a.病人ID = e.病人ID and a.病人ID = c.病人ID  and a.当前病区id =:WardID and a.当前病况 in('重','危') and a.出院日期 is null order by  illState ";
->>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
 
             OracleParameter[] prms = new OracleParameter[]
             {
-                 new OracleParameter("WardID",OracleDbType.Int32) { Value=wardId}
+                 new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardId}
             };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
@@ -148,12 +144,7 @@ namespace Dao
         /// <returns></returns>
         public int UpdateHandoverRecordContent(string content,string id)
         {
-<<<<<<< HEAD
-
             string sql = "update PUB_交班记录 set 内容=:Content where ID=:ID";
-=======
-            string sql = "update PUB_交班记录 set 内容=:Content  where ID=:ID";
->>>>>>> abdda48667cdb505883a597093ee345d02087745
             OracleParameter[] prms = new OracleParameter[]
            {
                  new OracleParameter("Content",OracleDbType.Varchar2,4000) { Value=content},
@@ -202,6 +193,7 @@ namespace Dao
            
 
         }
+
         /// <summary>
         /// 根据病人id查询病人的床号，姓名，诊断描述和id
         /// </summary>
@@ -219,6 +211,7 @@ namespace Dao
                 };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
+
         /// <summary>
         /// 查询交班记录中病人的内容
         /// </summary>

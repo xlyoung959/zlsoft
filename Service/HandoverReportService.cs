@@ -17,7 +17,7 @@ namespace Service
         /// </summary>
         /// <param name="wardId"></param>
         /// <returns></returns>
-        public DataTable QueryPatientsSpecial(int wardId)
+        public DataTable QueryPatientsSpecial(string wardId)
         {
             return handoverReportDao.QueryPatientsSpecial(wardId);
         }
