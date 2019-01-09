@@ -370,6 +370,7 @@
                     }
                 });
             }
+<<<<<<< HEAD
         }
         //访问时执行，一刷新就执行
         patientTodayContent(nowTime);
@@ -377,6 +378,23 @@
         //传入一个时间获取，以前某天病人的情况，用于前一天、后一天、查询时日期变化的内容变化
         function patientBeforeContent(dtime) {
             //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
+=======
+        });
+        //在交班记录中查询“今天”病人的情况
+<<<<<<< HEAD
+        /*$.ajax({
+            url: "/HandoverReport/QueryPatientContentByID",
+            data: { "patientID": '', "date": nowTime, "wardID": '507' },
+            type: "post",
+            dataType: "json",
+            success: function (res) {
+                console.log(res);
+            }
+        })*/
+=======
+        for (var i = 0; i < $("#patient_special_state tr").length; i++) {
+            var PID = $("#patient_special_state tr:eq(0) td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+>>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
             $.ajax({
                 url: "/HandoverReport/QueryPatientsSpecial",
                 data: { "wardId": 507 },
@@ -438,7 +456,14 @@
                 });
             }
         }
+<<<<<<< HEAD
        
+=======
+      
+        
+>>>>>>> abdda48667cdb505883a597093ee345d02087745
+
+>>>>>>> 6fed7b9b7a3c3e6f5a201fc3a27642661f7c79ab
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
