@@ -918,6 +918,7 @@
         $(".handOver").click(function () {
             var handDate = new Date();
             var handOverTime = nowTime + "T" + handDate.getHours() + ":" + handDate.getMinutes() + ":" + handDate.getSeconds();//获取当前的具体是时间
+            console.log(handOverTime);
             $("#handOverTime").val(handOverTime);
             var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
             var submitTime="";
@@ -929,13 +930,13 @@
             console.log(handIndex);
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.open({
+                var index= layer.open({
                     type: 1,
                     title: ["  交班", ' background:#9cf9fc; color:#333;font-size:18px'],
                     anim: 1,
-                    area: ['380px', '200px'],
-                    shade: [0.1, "#666666"],
                     btn:['确认','取消'],
+                    area: ['380px', '220px'],
+                    shade: [0.1, "#666666"],
                     content: $('#handOverWindow'),
                     cancel: function () {//点击 X 关闭弹窗
                         $('#handOverWindow').hide();
@@ -990,29 +991,23 @@
                             async:false,
                             success: function (data) {
                                 if (data > 0) {
-                                    layui.use('layer', function () {
-                                        var layer = layui.layer;
-                                        layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });
-                                    });
+                                    layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });   
                                 }
                                 else {
-                                    layui.use('layer', function () {
-                                        var layer = layui.layer;
-                                        layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
-                                    });
+                                    layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
                                 }
-                               layer.close(index);
+                                layer.close(index);
                                 $('#handOverWindow').hide();
                             }
                         })
-                    },
-                    btn2: function (index) {//点击里面的取消按钮，关闭弹窗
-                        layer.close(index);
-                        $('#handOverWindow').hide();
-                    }
-
-                });
-            });
+                    
+            },
+                btn2: function (index) {//点击里面的取消按钮，关闭弹窗
+                    layer.close(index);
+                    $('#handOverWindow').hide();
+                }
+        });
+        });     
             jQuery.removeData(this);//删除之前的数据
         });
 

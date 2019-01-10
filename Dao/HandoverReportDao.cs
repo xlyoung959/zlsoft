@@ -256,17 +256,16 @@ namespace Dao
          
            string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户ID,修改时间,编辑内容,编辑时间) 
                         values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'), :Username, 1, record_id_seq.nextval,(select id from 系统_用户信息 where 用户名=:Username),
-                       sysdate+1/3, :EditContent, to_date(:EditTime, 'YYYY-MM-DD hh24:mi:ss'))";
-           
+                       sysdate+1/3, :EditContent,  sysdate+1/3)";
             OracleParameter[] prms = new OracleParameter[]
              {
                     new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
                     new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
                     new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username},
-                    new OracleParameter("EditContent",OracleDbType.Clob) {Value=editContent },
-                    new OracleParameter("EditTime",OracleDbType.Varchar2,32) {Value=editTime }
+                    new OracleParameter("EditContent",OracleDbType.Varchar2,4000) {Value=editContent }
+                   // new OracleParameter("EditTime",OracleDbType.Varchar2,32) {Value=editTime }
              };
-            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, null);
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
         }
 
     }
