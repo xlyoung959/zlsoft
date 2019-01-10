@@ -791,9 +791,8 @@
 
         //点击添加病人里面的搜索按钮，筛选出你搜索的病人信息
         $("#screen").click(function () {
+            console.log(147);
             var p_name = $("#p_name").val();
-            $("#info-confirm").click(function () {
-                var patient = [{ title: information, }];
                 $.ajax({
                     url: "/HandoverReport/QueryPatientsInfoByName",
                     data: { "wardId": wordId, "searchText": p_name },
@@ -821,7 +820,7 @@
 
                     }
                 })
-            });
+          
         });
         //点击添加病人里面的确认按钮，实现添加病人在病人特殊情况的表格那里，在交班日志和记录中添加数据
         $("#info-confirm").click(function () {
@@ -909,13 +908,24 @@
                 }
             });
         });
+        //正则表达式取消前后空格
+        function Trim(str) {
+            return str.replace(/(^\s*)|(\s*$)/g, "");
+        }
 
         //点击交班按钮后的处理事件
         //首先给交班的弹窗的时间赋值，为当前系统时间
         $(".handOver").click(function () {
-            var handOverTime = nowTime + "T" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();//获取当前的具体是时间
+            var handDate = new Date();
+            var handOverTime = nowTime + "T" + handDate.getHours() + ":" + handDate.getMinutes() + ":" + handDate.getSeconds();//获取当前的具体是时间
             $("#handOverTime").val(handOverTime);
             var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
+            var submitTime="";
+            if(handIndex==1){
+                submitTime=nowTime+" 08:00:00";
+            }else if(handIndex==2){
+                submitTime=nowTime+" 16:00:00";
+            }else{submitTime=nowTime+" 23:00:00";}
             console.log(handIndex);
             layui.use('layer', function () {
                 var layer = layui.layer;
@@ -930,61 +940,71 @@
                     cancel: function () {//点击 X 关闭弹窗
                         $('#handOverWindow').hide();
                     },
-                    yes: function (index) {//点击里面的却人按钮，实现交班功能
-                        layer.close(index);
-                        var handContent = [
-                           {
-                               "Sumperson": $(".patientsNum").html(),
-                               "title": [
-                                  { "1": 0 },
-                                  { "10": 1 },
-                                  { "11": 6 },
-                                  { "2": 0 },
-                                  { "3": 0 },
-                                  { "4": 0 },
-                                  { "5": 0 },
-                                  { "6": 0 },
-                                  { "7": 0 },
-                                  { "8": 0 },
-                                  { "9": 1 }
-                               ],
-                               "hlnr": [],
-                               "patient": [
-                                      { "49740,1": { "Content": "", "Status": null, "StatusNum": null, "Description": "(Z33.X52)妊娠状态 NOS", "BedNumber": "   16", "Name": "徐叶珍", "HomePageID": "1" } },
-                                      { "55712,1": { "Content": "147", "SysContent": "", "Status": "病重", "StatusNum": "9", "Description": "(K37.X01)阑尾炎", "BedNumber": "3", "Name": "四月", "HomePageID": "1" } },
-                                      { "52775,1": { "Content": "", "SysContent": "", "Status": "病危", "StatusNum": "10", "Description": "(031014)急性阑尾炎", "BedNumber": "12", "Name": "张萌", "HomePageID": "1" } },
-                                      { "51221,1": { "Content": "", "SysContent": "", "Status": "待手术", "StatusNum": "11", "Description": null, "BedNumber": "1", "Name": "测试", "HomePageID": "1" } }
-                               ]
-                           }];
-                        console.log(handContent);
-                        $('#handOverWindow').hide();
+                    yes: function (index) {//点击里面的却人按钮，实现交班功能         
+                        var patientInfomation = "[";
                         for (var i = 0; i < $("#patient_special_state tr").length; i++) {
                             var pid = $("#patient_special_state tr:eq(" + i + ") td:eq(0) input").val();
-                            var status = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".illstatu").text();
+                            var status = $.trim($("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".illstatu").html());
+                            var statusNum=null;
+                            if(status=="病重"){
+                                statusNum="9";
+                            }
+                            if(status=="病危"){
+                                statusNum="10"
+                            }
                             var content = $("#patient_special_state tr:eq(" + i + ") td:eq(" + handIndex + ") span").text();
                             var description = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find("p").text();
                             var bedNum = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find("#bedNo").text();
-                            var name = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".name").html()
+                            var name = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".name").html();
+                            if (i == $("#patient_special_state tr").length - 1) {
+                                patientInfomation += '{"' + pid + ',1": { "Content": "' + content + '", "Status":" ' + status + '", "StatusNum": ' + statusNum + ', "Description": "' + description + '", "BedNumber": "' + bedNum + '","Name": "' + name + '", "HomePageID": "1"} }';
+                            } else {
+                                patientInfomation += '{"' + pid + ',1": { "Content": "' + content + '", "Status":" ' + status + '", "StatusNum": ' + statusNum + ', "Description": "' + description + '", "BedNumber": "' + bedNum + '","Name": "' + name + '", "HomePageID": "1"} },';
+                            }
                         }
-                        //$.ajax({
-                        //    url: "/HandoverReport/HandOver",
-                        //    data: {},
-                        //    type: "post",
-                        //    success: function (data) {
-                        //        if (data > 0) {
-                        //            layui.use('layer', function () {
-                        //                var layer = layui.layer;
-                        //                layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });
-                        //            });
-                        //        }
-                        //        else {
-                        //            layui.use('layer', function () {
-                        //                var layer = layui.layer;
-                        //                layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
-                        //            });
-                        //        }
-                        //    }
-                        //})
+                        patientInfomation += "]";
+                        var handContent = [
+                          {
+                              "Sumperson": $(".patientsNum").text(),
+                              "title": [
+                                 { "1": 0 },
+                                 { "10": 1 },
+                                 { "11": 6 },
+                                 { "2": 0 },
+                                 { "3": 0 },
+                                 { "4": 0 },
+                                 { "5": 0 },
+                                 { "6": 0 },
+                                 { "7": 0 },
+                                 { "8": 0 },
+                                 { "9": 1 }
+                              ],
+                              "hlnr": [],
+                              "patient": $.parseJSON(patientInfomation)
+                          }];
+                        handContent = JSON.stringify(handContent);
+                        $.ajax({
+                            url: "/HandoverReport/HandOver",
+                            data: { "wordId": wordId, "submitTime": submitTime, "username": username, "editContent": handContent, "editTime": $("#handOverTime").val().replace(/T/g, " ") },
+                            type: "post",
+                            async:false,
+                            success: function (data) {
+                                if (data > 0) {
+                                    layui.use('layer', function () {
+                                        var layer = layui.layer;
+                                        layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });
+                                    });
+                                }
+                                else {
+                                    layui.use('layer', function () {
+                                        var layer = layui.layer;
+                                        layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
+                                    });
+                                }
+                               layer.close(index);
+                                $('#handOverWindow').hide();
+                            }
+                        })
                     },
                     btn2: function (index) {//点击里面的取消按钮，关闭弹窗
                         layer.close(index);
