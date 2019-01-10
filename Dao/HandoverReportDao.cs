@@ -231,6 +231,24 @@ namespace Dao
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
 
+        /// <summary>
+        /// 实现交班功能，想交班日志中添加数据
+        /// </summary>
+        public int HandOver(string wordId,string submitTime,string username,string editContent,string editTime)
+        {
+            string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户ID,修改时间,编辑内容,编辑时间)
+              values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'),:Username, 1, record_id_seq.nextval,(select id from 系统_用户信息 where 用户名=:Username'),
+                       sysdate,:EditContent,  to_date(:EditTime, 'YYYY-MM-DD hh24:mi:ss'))";
+            OracleParameter[] prms = new OracleParameter[]
+             {
+                    new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
+                    new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
+                    new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username},
+                    new OracleParameter("EditContent",OracleDbType.Clob) {Value=editContent },
+                    new OracleParameter("EditTime",OracleDbType.Varchar2,32) {Value=editTime }
+             };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
 
     }
 }

@@ -106,5 +106,10 @@ namespace Service
         {
             return handoverReportDao.SelectPatientContentByID(patientID, date, wardID);
         }
+
+        public int HandOver(string wordId, string submitTime, string username, string editContent, string editTime)
+        {
+            return handoverReportDao.HandOver(wordId, submitTime, username, editContent, editTime);
+        }
     }
 }

@@ -28,6 +28,7 @@
         .report-content-table td{width:29%;font-size:14px;font-weight:400;}
         /*病人在三个不同班次的状态的样式*/
         .patient-status-day , .patient-status-late-night , .patient-status-night{width:100%;}
+        .patient-status-day span, .patient-status-late-night span , .patient-status-night span{margin-left:6px;}
          .patient-status-day td, .patient-status-late-night td , .patient-status-night td{border-bottom:1px solid #666666;height:26px;line-height:26px;color:#333333;}
          .patient-status-day label , .patient-status-late-night label , .patient-status-night label{display:inline-block;width:20%;}
          /*报告内容的表格中，病人情况里有关编辑a标签的样式*/
@@ -49,6 +50,12 @@
          .patient-shift-state textarea{width:400px;margin-left:50px;height:200px;resize:none;margin-top:10px;}
          .editShift{display:none;}
          .trBackground{background:#eeeeee;}/*/添加病人表格行的颜色*/
+         /*点击交班时会弹出的弹窗的样式*/
+         .handOverWindow{
+             display:none;
+             height:80px;
+         }
+         .handOverWindow h3{font-family:'Microsoft Himalaya'; margin-left:40px;margin-top:20px;}
     </style>
 </head>
 <body>
@@ -77,7 +84,7 @@
     </div>
     <!--报告正文、内容-->
     <div class="report" id="report">
-        <!--报告上的签名-->
+        <!--报告上的签名，以及交班按钮-->
         <div class="signature" id="signature">
             <table id="signature-table" class="signature-table">
                 <tbody>
@@ -123,32 +130,31 @@
                             <table class="patient-status-day" id="patient-status-day" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <label>&ensp;入院<span id="admission"></span></label>
-                                        <label>病危<span id="critically-ill"></span></label>
-                                        <label>测试<span id="test"></span></label>
+                                        <label>&ensp;入院<span class="admission">0</span></label>
+                                        <label>病危<span class="critically-ill">1</span></label>
+                                        <label>测试<span class="test">6</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;出院<span id="discharged"></span></label>
-                                        <label>转入<span id="transfer"></span></label>
-                                        <label>转出<span id="transfeOut"></span></label>
+                                        <label>&ensp;出院<span class="discharged">0</span></label>
+                                        <label>转入<span class="transfer">0</span></label>
+                                        <label>转出<span class="transfeOut">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;发热<span id="heat"></span></label>
-                                        <label>手术<span id="surgery"></span></label>
-                                        <label>分娩<span id="childbirth"></span></label>
+                                        <label>&ensp;发热<span class="heat">0</span></label>
+                                        <label>手术<span class="surgery">0</span></label>
+                                        <label>分娩<span class="childbirth">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="border-bottom:0px">
-                                        <label>&ensp;死亡<span id="death"></span></label>
-                                        <label>病重<span id="sick"></span></label>
+                                        <label>&ensp;死亡<span class="death">0</span></label>
+                                        <label>病重<span class="sick"></span>1</label>
                                     </td>
                                 </tr>
-
                             </table>
                         </td>
                         <td>
@@ -156,29 +162,29 @@
                             <table class="patient-status-night" id="patient-status-night" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <label>&ensp;入院<span id="admission"></span></label>
-                                        <label>病危<span id="critically-ill"></span></label>
-                                        <label>测试<span id="test"></span></label>
+                                        <label>&ensp;入院<span class="admission">0</span></label>
+                                        <label>病危<span class="critically-ill">1</span></label>
+                                        <label>测试<span class="test">6</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;出院<span id="discharged"></span></label>
-                                        <label>转入<span id="transfer"></span></label>
-                                        <label>转出<span id="transfeOut"></span></label>
+                                        <label>&ensp;出院<span class="discharged">0</span></label>
+                                        <label>转入<span class="transfer">0</span></label>
+                                        <label>转出<span class="transfeOut">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;发热<span id="heat"></span></label>
-                                        <label>手术<span id="surgery"></span></label>
-                                        <label>分娩<span id="childbirth"></span></label>
+                                        <label>&ensp;发热<span class="heat">0</span></label>
+                                        <label>手术<span class="surgery">0</span></label>
+                                        <label>分娩<span class="childbirth">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="border-bottom:0px">
-                                        <label>&ensp;死亡<span id="death"></span></label>
-                                        <label>病重<span id="sick"></span></label>
+                                        <label>&ensp;死亡<span class="death">0</span></label>
+                                        <label>病重<span class="sick"></span>1</label>
                                     </td>
                                 </tr>
 
@@ -189,29 +195,29 @@
                             <table class="patient-status-late-night" id="patient-status-late-night" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <label>&ensp;入院<span id="admission"></span></label>
-                                        <label>病危<span id="critically-ill"></span></label>
-                                        <label>测试<span id="test"></span></label>
+                                        <label>&ensp;入院<span class="admission">0</span></label>
+                                        <label>病危<span class="critically-ill">1</span></label>
+                                        <label>测试<span class="test">6</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;出院<span id="discharged"></span></label>
-                                        <label>转入<span id="transfer"></span></label>
-                                        <label>转出<span id="transfeOut"></span></label>
+                                        <label>&ensp;出院<span class="discharged">0</span></label>
+                                        <label>转入<span class="transfer">0</span></label>
+                                        <label>转出<span class="transfeOut">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label>&ensp;发热<span id="heat"></span></label>
-                                        <label>手术<span id="surgery"></span></label>
-                                        <label>分娩<span id="childbirth"></span></label>
+                                        <label>&ensp;发热<span class="heat">0</span></label>
+                                        <label>手术<span class="surgery">0</span></label>
+                                        <label>分娩<span class="childbirth">0</span></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="border-bottom:0px">
-                                        <label>&ensp;死亡<span id="death"></span></label>
-                                        <label>病重<span id="sick"></span></label>
+                                        <label>&ensp;死亡<span class="death">0</span></label>
+                                        <label>病重<span class="sick"></span>1</label>
                                     </td>
                                 </tr>
 
@@ -229,6 +235,7 @@
                 </tbody>
             </table>
         </div>
+        
     </div>
 
   
@@ -272,11 +279,21 @@
         </div>
     </div>
 
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <!--点击交班时会弹出的弹窗-->
+    <div class="handOverWindow" id="handOverWindow">
+        <h3>您确定要交班吗？</h3>
+        <div style="margin-top:20px;margin-left:40px;">
+            <span>交班时间：</span>
+            <input type="datetime-local" id="handOverTime" required  />
+        </div>
+    </div>
    
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/layui.all.js"></script>
     <script>  
-        var wordId='507';
+        var wordId = '507';
+        var username = '墨水之寒';
         //layui加载日期的，可选择日期
         layui.use('laydate', function () {
             var laydate = layui.laydate;
@@ -289,14 +306,15 @@
         
         //获取今天的时间，并转换成类似 '2018-12-25'字符型格式
         var date = new Date();
-        var month = date.getMonth() + 1;
+        var month = date.getMonth() + 1;//获取月份
         var day = date.getDate();
-        var hour = date.getHours();
+        var hour = date.getHours();//获取小时
         month = month < 10 ? "0" + month : month;//如果月份小于10变成01,02样
         day = day < 10 ? "0" + day : day;
         var nowTime = date.getFullYear() + "-" + month + "-" + day;
   
         $("#report-time").html(nowTime);  //交班报告上的时间为今天，方便打印预览是看到
+
         //请求病人的总人数，显示在排班情况那里
         $.ajax({
             url: "/HandoverReport/QueryPatientsTotalNumber",
@@ -378,10 +396,25 @@
 
         //传入一个时间获取，以前某天病人的情况，用于前一天、后一天、查询时日期变化的内容变化
         function patientBeforeContent(dtime) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
+        });
+        //在交班记录中查询“今天”病人的情况
+>>>>>>> 17bdc272d1ddb74567ecefb98676b09f15ac953f
 
       
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> 476336dca3cbf4291b758b4dad5bee409d47aab7
+            //填充病人特殊情况那里的信息，向病人基本信息中查询出病危。病重的病人，
+>>>>>>> 04a3387c7f1efba8eaa94625ab1a367c33dc684c
+>>>>>>> 17bdc272d1ddb74567ecefb98676b09f15ac953f
             $.ajax({
                 url: "/HandoverReport/QueryPatientsSpecial",
                 data: { "wardId": wordId },
@@ -593,7 +626,7 @@
                 $("#report-content-table tr:eq(0)").css("height", "24px");
                 $("#report-content-table tr:gt(1)").show();
                 $("#patient_special_state").html("");
-                patientTodayContent(timeRed_format);
+                patientTodayContent(select_date);
                 HourShow(hour);
                 editHide();
             }
@@ -844,7 +877,6 @@
             }
 
         });
-      
      
         //点击病人信息中的编辑按钮,弹出病人信息
         $("#report-content-table>tbody>tr .happening a").click(function () {
@@ -896,6 +928,91 @@
             });
         });
 
+        //点击交班按钮后的处理事件
+        //首先给交班的弹窗的时间赋值，为当前系统时间
+        $(".handOver").click(function () {
+            var handOverTime = nowTime + "T" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();//获取当前的具体是时间
+            $("#handOverTime").val(handOverTime);
+            var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
+            console.log(handIndex);
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 1,
+                    title: ["  交班", ' background:#9cf9fc; color:#333;font-size:18px'],
+                    anim: 1,
+                    area: ['380px', '200px'],
+                    shade: [0.1, "#666666"],
+                    btn:['确认','取消'],
+                    content: $('#handOverWindow'),
+                    cancel: function () {//点击 X 关闭弹窗
+                        $('#handOverWindow').hide();
+                    },
+                    yes: function (index) {//点击里面的却人按钮，实现交班功能
+                        layer.close(index);
+                        var handContent = [
+                           {
+                               "Sumperson": $(".patientsNum").html(),
+                               "title": [
+                                  { "1": 0 },
+                                  { "10": 1 },
+                                  { "11": 6 },
+                                  { "2": 0 },
+                                  { "3": 0 },
+                                  { "4": 0 },
+                                  { "5": 0 },
+                                  { "6": 0 },
+                                  { "7": 0 },
+                                  { "8": 0 },
+                                  { "9": 1 }
+                               ],
+                               "hlnr": [],
+                               "patient": [
+                                      { "49740,1": { "Content": "", "Status": null, "StatusNum": null, "Description": "(Z33.X52)妊娠状态 NOS", "BedNumber": "   16", "Name": "徐叶珍", "HomePageID": "1" } },
+                                      { "55712,1": { "Content": "147", "SysContent": "", "Status": "病重", "StatusNum": "9", "Description": "(K37.X01)阑尾炎", "BedNumber": "3", "Name": "四月", "HomePageID": "1" } },
+                                      { "52775,1": { "Content": "", "SysContent": "", "Status": "病危", "StatusNum": "10", "Description": "(031014)急性阑尾炎", "BedNumber": "12", "Name": "张萌", "HomePageID": "1" } },
+                                      { "51221,1": { "Content": "", "SysContent": "", "Status": "待手术", "StatusNum": "11", "Description": null, "BedNumber": "1", "Name": "测试", "HomePageID": "1" } }
+                               ]
+                           }];
+                        console.log(handContent);
+                        $('#handOverWindow').hide();
+                        for (var i = 0; i < $("#patient_special_state tr").length; i++) {
+                            var pid = $("#patient_special_state tr:eq(" + i + ") td:eq(0) input").val();
+                            var status = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".illstatu").text();
+                            var content = $("#patient_special_state tr:eq(" + i + ") td:eq(" + handIndex + ") span").text();
+                            var description = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find("p").text();
+                            var bedNum = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find("#bedNo").text();
+                            var name = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".name").html()
+                        }
+                        //$.ajax({
+                        //    url: "/HandoverReport/HandOver",
+                        //    data: {},
+                        //    type: "post",
+                        //    success: function (data) {
+                        //        if (data > 0) {
+                        //            layui.use('layer', function () {
+                        //                var layer = layui.layer;
+                        //                layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });
+                        //            });
+                        //        }
+                        //        else {
+                        //            layui.use('layer', function () {
+                        //                var layer = layui.layer;
+                        //                layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
+                        //            });
+                        //        }
+                        //    }
+                        //})
+                    },
+                    btn2: function (index) {//点击里面的取消按钮，关闭弹窗
+                        layer.close(index);
+                        $('#handOverWindow').hide();
+                    }
+
+                });
+            });
+            jQuery.removeData(this);//删除之前的数据
+        });
 
     </script>
 </body>
