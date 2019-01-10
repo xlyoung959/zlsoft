@@ -30,7 +30,14 @@ namespace Service
         /// <returns></returns>
         public int ChangeDiagnosticDescription(int patientId, string diagnostic)
         {
-            return handoverReportDao.ChangeDiagnosticDescription(patientId, diagnostic);
+            if (handoverReportDao.ChangeDiagnosticDescription(patientId, diagnostic) > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return handoverReportDao.AddDiagnosticDescription(patientId, diagnostic);
+            }
         }
 
         /// <summary>

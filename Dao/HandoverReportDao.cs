@@ -28,6 +28,23 @@ namespace Dao
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
         }
 
+   
+        /// <summary>
+        /// 如果病人诊断记录中没有该病人，就往病人诊断记录中添加病人和诊断记录
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="diagnostic"></param>
+        /// <returns></returns>
+        public int AddDiagnosticDescription(int patientID,string diagnostic)
+        {
+            string sql = "insert into 病人诊断记录(ID,诊断描述,病人ID) values(病人诊断记录id.nextval,:Diagnostic,:PatientId)";
+            OracleParameter[] prms = new OracleParameter[]
+          {
+                 new OracleParameter("Diagnostic",OracleDbType.Varchar2,100) { Value=diagnostic},
+                  new OracleParameter("PatientId",OracleDbType.Int32) { Value=patientID}
+          };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
         /// <summary>
         /// 修改病人诊断记录表中的诊断描述
         /// </summary>
