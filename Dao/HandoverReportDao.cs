@@ -253,9 +253,11 @@ namespace Dao
         /// </summary>
         public int HandOver(string wordId,string submitTime,string username,string editContent,string editTime)
         {
-            string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户ID,修改时间,编辑内容,编辑时间)
-              values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'),:Username, 1, record_id_seq.nextval,(select id from 系统_用户信息 where 用户名=:Username'),
-                       sysdate,:EditContent,  to_date(:EditTime, 'YYYY-MM-DD hh24:mi:ss'))";
+         
+           string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户ID,修改时间,编辑内容,编辑时间) 
+                        values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'), :Username, 1, record_id_seq.nextval,(select id from 系统_用户信息 where 用户名=:Username),
+                       sysdate+1/3, :EditContent, to_date(:EditTime, 'YYYY-MM-DD hh24:mi:ss'))";
+           
             OracleParameter[] prms = new OracleParameter[]
              {
                     new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
@@ -264,7 +266,7 @@ namespace Dao
                     new OracleParameter("EditContent",OracleDbType.Clob) {Value=editContent },
                     new OracleParameter("EditTime",OracleDbType.Varchar2,32) {Value=editTime }
              };
-            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, null);
         }
 
        
