@@ -122,5 +122,14 @@ namespace case1.Controllers
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
+
+        /// <summary>
+        /// 实现交班功能
+        /// </summary>
+        /// <returns></returns>
+        public int HandOver(string wordId, string submitTime, string username, string editContent, string editTime)
+        {
+            return handoverReportService.HandOver(wordId, submitTime, username, editContent, editTime);
+        }
     }
 }
