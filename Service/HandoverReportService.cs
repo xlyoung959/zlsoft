@@ -118,5 +118,20 @@ namespace Service
         {
             return handoverReportDao.HandOver(wordId, submitTime, username, editContent, editTime);
         }
+
+        public int CancelHandOver(string submitTime, string username)
+        {
+            return handoverReportDao.CancelHandOver(submitTime, username);
+        }
+
+        public int Succession(string wordId, string submitTime, string username)
+        {
+            return handoverReportDao.Succession(wordId, submitTime, username);
+        }
+
+        public int CancelSuccession(string submitTime, string username)
+        {
+            return handoverReportDao.CancelSuccession(submitTime, username);
+        }
     }
 }
