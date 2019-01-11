@@ -253,32 +253,76 @@ namespace Dao
         /// </summary>
         public int HandOver(string wordId,string submitTime,string username,string editContent,string editTime)
         {
-<<<<<<< HEAD
-         
-           string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户ID,修改时间,编辑内容,编辑时间) 
-                        values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'), :Username, 1, record_id_seq.nextval,(select id from 系统_用户信息 where 用户名=:Username),
-                       sysdate+1/3, :EditContent,  sysdate+1/3)";
-=======
             string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,ID,编辑内容,修改时间,用户id,类型,编辑时间)
               values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'),:Username, record_id_seq.nextval,
                       :editContent,sysdate+1/3,(select id from 系统_用户信息 where 用户名=:Username),1,sysdate+1/3)";
->>>>>>> 9dc461ecfea1cf5c323a5029ec60ac81c924857f
+
             OracleParameter[] prms = new OracleParameter[]
              {
                     new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
                     new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
                     new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username},
-<<<<<<< HEAD
-                    new OracleParameter("EditContent",OracleDbType.Varchar2,4000) {Value=editContent }
-                   // new OracleParameter("EditTime",OracleDbType.Varchar2,32) {Value=editTime }
-=======
                     new OracleParameter("editContent",OracleDbType.Clob) { Value=editContent }
->>>>>>> 9dc461ecfea1cf5c323a5029ec60ac81c924857f
              };
             return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
         }
 
-       
+        /// <summary>
+        /// 取消交班，删除交班记录中的一条数据
+        /// </summary>
+        /// <returns></returns>
+        public int CancelHandOver(string submitTime, string username)
+        {
+            string sql = @"delete from PUB_交班日志 where 提交时间=to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss') 
+                                and 提交人=:Username and 类型=1";
+            OracleParameter[] prms = new OracleParameter[]
+            {
+                    new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
+                    new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username}   
+            };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
+
+        /// <summary>
+        /// 接班
+        /// </summary>
+        /// <param name="wordId"></param>
+        /// <param name="submitTime"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public int Succession(string wordId, string submitTime, string username)
+        {
+            string sql = @"insert into PUB_交班日志(对象ID,提交时间,提交人,类型,ID,用户id,修改时间,编辑时间)
+              values(:WordId, to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss'),:Username,2, record_id_seq.nextval,
+                      (select id from 系统_用户信息 where 用户名=:Username),sysdate+1/3,sysdate+1/3)";
+            OracleParameter[] prms = new OracleParameter[]
+             {
+                    new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
+                    new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
+                    new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username}
+             };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
+
+        /// <summary>
+        /// 取消接班
+        /// </summary>
+        /// <param name="submitTime"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public int CancelSuccession(string submitTime, string username)
+        {
+            string sql = @"delete from PUB_交班日志 where 提交时间=to_date(:SubmitTime, 'YYYY-MM-DD hh24:mi:ss') 
+                                and 提交人=:Username and 类型=2";
+            OracleParameter[] prms = new OracleParameter[]
+            {
+                    new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime},
+                    new OracleParameter("Username",OracleDbType.Varchar2,20) { Value=username}
+            };
+            return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
+        }
+
+
 
 
 

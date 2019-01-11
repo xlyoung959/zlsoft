@@ -20,9 +20,14 @@
              height:46px;
              font-size:12px;     
          }
-        .signature-table>tr td{width:28%;}
+        .signature-table>tr>td{width:28%;}
+         .signature-table>tr>td>div{width:28%;}
         .signature-table .secondList{margin-top:8px;}
-        .signature-table tr td div>span{display:inline-block; width:48%;}
+       .signature-table tr td div>span{display:-moz-inline-box;display:inline-block; width:48%;overflow:hidden;}
+         .signature-table tr td .handPeople{width:38%;}
+          .signature-table tr td .secondList>span:first-child{width:38%;}
+          .signature-table .cancelHandOver,  .signature-table .succession,  .signature-table .cancelSuccession{display:none;}
+        /**交班报告的主要内容*/
         .report-content{width:98%;margin-left:1%;}
          .report-content-table{border-collapse:collapse; border-spacing:0; width:100%;}  
         .report-content-table td{width:29%;font-size:14px;font-weight:400;}
@@ -51,11 +56,11 @@
          .editShift{display:none;}
          .trBackground{background:#eeeeee;}/*/添加病人表格行的颜色*/
          /*点击交班时会弹出的弹窗的样式*/
-         .handOverWindow{
+         .handOverWindow,.successionWindow{
              display:none;
              height:80px;
          }
-         .handOverWindow h3{font-family:'Microsoft Himalaya'; margin-left:40px;margin-top:20px;}
+         .handOverWindow h3,.successionWindow h3{font-family:'Microsoft Himalaya'; margin-left:40px;margin-top:20px;}
     </style>
 </head>
 <body>
@@ -88,24 +93,40 @@
         <div class="signature" id="signature">
             <table id="signature-table" class="signature-table">
                 <tbody>
+                    <!---交班按钮，接班按钮等-->
                     <tr style="margin-left:auto;margin-right:auto;">
                         <td></td>
-                        <td><button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverOne">交班</button></td>
-                        <td><button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverTwo">交班</button></td>
-                        <td><button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverThree">交班</button></td>
+                        <td>
+                            <button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverOne">交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelHandOver">取消交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm succession">接班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelSuccession">取消接班</button>
+                        </td>
+                        <td>
+                           <button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverTwo">交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelHandOver">取消交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm succession">接班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelSuccession">取消接班</button>
+                        </td>
+                        <td>
+                           <button class="layui-btn layui-btn-sm layui-btn-normal handOver" id="handOverThree">交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelHandOver">取消交班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm succession">接班</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger cancelSuccession">取消接班</button>
+                        </td>
                     </tr>
                     <tr>
                         <td  id="report-time" style="text-align:center;width:13%;font-size:14px;"></td><!--交班报告上的时间，平时隐藏，只有打印预览时看到-->
-                        <td>
-                            <div><span>交班人:</span> <span>交班时间:</span></div>
-                            <div class="secondList"><span>接班人:</span> <span>接班时间:</span></div>
+                        <td style="width:28%;">
+                            <div><span class="handPeople">交班人:</span><span class="handTime"> 交班时间:</span></div>
+                            <div class="secondList"><span >接班人:</span> <span>接班时间:</span></div>
                         </td>
-                        <td>
-                           <div><span>交班人:</span><span>交班时间:</span></div>
+                        <td style="width:28%;">
+                           <div><span class="handPeople">交班人:</span><span class="handTime">交班时间:</span></div>
                            <div class="secondList"><span>接班人:</span><span>接班时间:</span></div>
                         </td>
-                        <td>
-                            <div><span>交班人:</span><span>交班时间:</span></div>
+                        <td style="width:28%;">
+                            <div><span class="handPeople">交班人:</span><span  class="handTime">交班时间:</span></div>
                             <div class="secondList"><span>接班人:</span><span>接班时间:</span></div>
                         </td>
                     </tr>
@@ -287,6 +308,16 @@
             <input type="datetime-local" id="handOverTime" required  />
         </div>
     </div>
+    <!--点击接班时会弹出的弹窗-->
+    <div class="successionWindow" id="successionWindow">
+        <h3>您确定要接班吗？</h3>
+        <div style="margin-top:20px;margin-left:40px;">
+            <span>接班时间：</span>
+            <input type="datetime-local" id="successionTime" required />
+        </div>
+    </div>
+
+
    
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -916,9 +947,13 @@
         //点击交班按钮后的处理事件
         //首先给交班的弹窗的时间赋值，为当前系统时间
         $(".handOver").click(function () {
+            var hand_td = $(this).parent();//获取点击的交班按钮的符标签
             var handDate = new Date();
-            var handOverTime = nowTime + "T" + handDate.getHours() + ":" + handDate.getMinutes() + ":" + handDate.getSeconds();//获取当前的具体是时间
-            console.log(handOverTime);
+            var handHouer = handDate.getHours();
+            var handMi = handDate.getMinutes();
+            handHouer = handHouer < 10 ? "0" + handHouer : handHouer;
+            handMi = handMi < 10 ? "0" + handMi : handMi;
+            var handOverTime = nowTime + "T" + handHouer + ":" + handMi;//获取当前的具体是时间
             $("#handOverTime").val(handOverTime);
             var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
             var submitTime="";
@@ -927,7 +962,6 @@
             }else if(handIndex==2){
                 submitTime=nowTime+" 16:00:00";
             }else{submitTime=nowTime+" 23:00:00";}
-            console.log(handIndex);
             layui.use('layer', function () {
                 var layer = layui.layer;
                 var index= layer.open({
@@ -942,7 +976,7 @@
                         $('#handOverWindow').hide();
                     },
                     yes: function (index) {//点击里面的却人按钮，实现交班功能         
-                        var patientInfomation = "[";
+                      var patientInfomation = "[";
                         for (var i = 0; i < $("#patient_special_state tr").length; i++) {
                             var pid = $("#patient_special_state tr:eq(" + i + ") td:eq(0) input").val();
                             var status = $.trim($("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".illstatu").html());
@@ -959,7 +993,8 @@
                             var name = $("#patient_special_state tr:eq(" + i + ") td:eq(0) ").find(".name").html();
                             if (i == $("#patient_special_state tr").length - 1) {
                                 patientInfomation += '{"' + pid + ',1": { "Content": "' + content + '", "Status":" ' + status + '", "StatusNum": ' + statusNum + ', "Description": "' + description + '", "BedNumber": "' + bedNum + '","Name": "' + name + '", "HomePageID": "1"} }';
-                            } else {
+                            }
+                            else {
                                 patientInfomation += '{"' + pid + ',1": { "Content": "' + content + '", "Status":" ' + status + '", "StatusNum": ' + statusNum + ', "Description": "' + description + '", "BedNumber": "' + bedNum + '","Name": "' + name + '", "HomePageID": "1"} },';
                             }
                         }
@@ -988,10 +1023,16 @@
                             url: "/HandoverReport/HandOver",
                             data: { "wordId": wordId, "submitTime": submitTime, "username": username, "editContent": handContent, "editTime": $("#handOverTime").val().replace(/T/g, " ") },
                             type: "post",
-                            async:false,
+                            async: false,
                             success: function (data) {
                                 if (data > 0) {
-                                    layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });   
+                                    $(".handOver").hide();
+                                    hand_td.find(".cancelHandOver").show();
+                                    hand_td.find(".succession").show();                               
+                                    layer.msg('交班成功!', { icon: 1, time: 2000, anim: 1 });
+                                    $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find("span").attr("width", "140");
+                                    $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".handPeople").append(username);
+                                    $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".handTime").append($("#handOverTime").val().replace(/T/g, " "));
                                 }
                                 else {
                                     layer.msg('交班失败!', { icon: 2, time: 2000, anim: 1 });
@@ -1000,17 +1041,150 @@
                                 $('#handOverWindow').hide();
                             }
                         })
-                    
             },
-                btn2: function (index) {//点击里面的取消按钮，关闭弹窗
-                    layer.close(index);
-                    $('#handOverWindow').hide();
+                   btn2: function (index) {//点击里面的取消按钮，关闭弹窗
+                      layer.close(index);
+                      $('#handOverWindow').hide();
                 }
         });
         });     
             jQuery.removeData(this);//删除之前的数据
         });
 
+        //点击取消交班
+        $(".cancelHandOver").unbind("click").bind("click", function () {
+            var hand_td = $(this).parent();//获取点击的交班按钮的父标签
+            var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
+            var submitTime = "";
+            if (handIndex == 1) {
+                submitTime = nowTime + " 08:00:00";
+            } else if (handIndex == 2) {
+                submitTime = nowTime + " 16:00:00";
+            } else { submitTime = nowTime + " 23:00:00"; }
+            $.ajax({
+                url: "/HandoverReport/CancelHandOver",
+                data: { "submitTime": submitTime, "username": username },
+                type: "post",
+                async: false,
+                success: function (data) {
+                    if (data > 0) {
+                        hand_td.find(".handOver").show();
+                        $(".cancelHandOver").hide();
+                        $(".succession").hide();
+                        $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".handPeople").html("交班人:");
+                        $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".handTime").html("交班时间")
+                    }
+                    else {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('取消交班失败', { icon: 5, time: 2000, anim: 2 });
+                        })
+                    }
+                }
+            })
+          
+           
+        });
+
+        //点击接班
+        $(".succession").unbind("click").bind("click", function () {
+            var hand_td = $(this).parent();//获取点击的交班按钮的父标签
+            var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
+            var submitTime = "";
+            if (handIndex == 1) {
+                submitTime = nowTime + " 08:00:00";
+            } else if (handIndex == 2) {
+                submitTime = nowTime + " 16:00:00";
+            } else { submitTime = nowTime + " 23:00:00"; }
+            var handDate = new Date();
+            var handHouer = handDate.getHours();
+            var handMi = handDate.getMinutes();
+            handHouer = handHouer < 10 ? "0" + handHouer : handHouer;
+            handMi = handMi < 10 ? "0" + handMi : handMi;
+            var handOverTime = nowTime + "T" + handHouer + ":" + handMi;//获取当前的具体是时间
+            $("#successionTime").val(handOverTime);
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                var index = layer.open({
+                    type: 1,
+                    title: ["  接班", ' background:#9cf9fc; color:#333;font-size:18px'],
+                    anim: 1,
+                    btn: ['确认', '取消'],
+                    area: ['380px', '220px'],
+                    shade: [0.1, "#666666"],
+                    content: $('#successionWindow'),
+                    cancel: function () {//点击 X 关闭弹窗
+                        $('#successionWindow').hide();
+                    },
+                    yes: function (index) {//点击里面的却人按钮，实现交班功能         
+                        $.ajax({
+                            url: "/HandoverReport/Succession",
+                            data: { "wordId": wordId, "submitTime": submitTime, "username": username },
+                            type: "post",
+                            success: function (data) {
+                                if (data > 0) {
+                                    hand_td.find(".cancelSuccession").show();
+                                    $(".cancelHandOver").hide();
+                                    $(".succession").hide();
+                                    $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(0)").append(username);
+                                    $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(1)").append($("#successionTime").val().replace(/T/g, " "));
+                                    
+                                }
+                                else {
+                                    layui.use('layer', function () {
+                                        var layer = layui.layer;
+                                        layer.msg('接班班失败', { icon: 5, time: 2000, anim: 2 });
+                                    });
+                                }
+                                layer.close(index);
+                                $('#successionWindow').hide();
+                            }
+                        })
+                    },
+                    btn2: function (index) {//点击里面的取消按钮，关闭弹窗
+                        layer.close(index);
+                        $('#successionWindow').hide();
+                    }
+                });
+            });
+            jQuery.removeData(this);//删除之前的数据
+         
+        });
+        //点击取消接班
+        $(".cancelSuccession").unbind("click").bind("click", function () {
+            var hand_td = $(this).parent();//获取点击的交班按钮的父标签
+            var handIndex = $(this).parent().index();//获取该个交班按钮在table tr中的td索引，判断属于那班，1白班，2小夜班，3打夜班
+            var submitTime = "";
+            if (handIndex == 1) {
+                submitTime = nowTime + " 08:00:00";
+            } else if (handIndex == 2) {
+                submitTime = nowTime + " 16:00:00";
+            } else { submitTime = nowTime + " 23:00:00"; }
+            $.ajax({
+                url: "/HandoverReport/CancelSuccession",
+                data: { "submitTime": submitTime, "username": username },
+                type: "post",
+                success: function (data) {
+                    if (data > 0) {
+                        $(".cancelSuccession").hide();
+                        hand_td.find(".cancelHandOver").show();
+                        hand_td.find(".succession").show();
+                        $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(0)").html("交班人:");
+                        $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(1)").html("交班时间");
+                    }
+                    else {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('接班失败', { icon: 5, time: 2000, anim: 2 });
+                        })
+                    }
+                }
+            })
+
+        });
+        //<button class="layui-btn layui-btn-sm layui-btn-normal cancelHandOver">取消交班</button>
+       // <button class="layui-btn layui-btn-sm layui-btn-normal succession">接班</button>
+        //<button class="layui-btn layui-btn-sm layui-btn-normal cancelSuccession">取消接班</button>
     </script>
 </body>
 </html>

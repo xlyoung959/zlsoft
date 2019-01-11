@@ -131,5 +131,28 @@ namespace case1.Controllers
         {
             return handoverReportService.HandOver(wordId, submitTime, username, editContent, editTime);
         }
+
+        /// <summary>
+        /// 取消交班
+        /// </summary>
+        /// <param name="submitTime"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public int CancelHandOver(string submitTime, string username)
+        {
+            return handoverReportService.CancelHandOver(submitTime, username);
+        }
+
+        //接班
+        public int Succession(string wordId, string submitTime, string username)
+        {
+            return handoverReportService.Succession(wordId, submitTime, username);
+        }
+
+        //取消接班
+        public int CancelSuccession(string submitTime, string username)
+        {
+            return handoverReportService.CancelSuccession(submitTime, username);
+        }
     }
 }
