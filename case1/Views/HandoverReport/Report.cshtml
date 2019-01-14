@@ -24,8 +24,10 @@
          .signature-table>tr>td>div{width:28%;}
         .signature-table .secondList{margin-top:8px;}
        .signature-table tr td div>span{display:-moz-inline-box;display:inline-block; width:48%;overflow:hidden;}
-         .signature-table tr td .handPeople{width:38%;}
-          .signature-table tr td .secondList>span:first-child{width:38%;}
+         .signature-table tr td .handPeople{width:31%;}
+         .signature-table tr td .handTime{width:69%}
+          .signature-table tr td .secondList>span:first-child{width:30%;}
+           .signature-table tr td .secondList>span:nth-child(2){width:68%}
           .signature-table .cancelHandOver,  .signature-table .succession,  .signature-table .cancelSuccession{display:none;}
         /**交班报告的主要内容*/
         .report-content{width:98%;margin-left:1%;}
@@ -490,6 +492,65 @@
             }
         }
 
+        //判断是否已经交班,或者接班
+        function IsHandOver(){
+            $.ajax({
+                url: "/HandoverReport/IsHandOver",
+                data: { "wordId": wordId, "submitTime": nowTime },
+                type: "post",
+                success: function (data) {
+                    var dataJson = $.parseJSON(data);//把JSON字符串转为JSON对象
+                    var s = 0;
+                    //判断是否已交班
+                    if (dataJson.length > 0) {
+                        //交班的简单信息
+                       for (var i = 0; i < dataJson.length; i++) {
+                           s = Math.round((dataJson[i].SUBMITTIME).substring(11, 13) / 8);
+                           if (hour > 16) {
+                               $("#signature-table tr:eq(0) td:eq(1)").find(".cancelHandOver").hide();
+                               $("#signature-table tr:eq(0) td:eq(1)").find(".succession").hide();
+                           }
+                           if (hour > 22) {
+                               $("#signature-table tr:eq(0) td:lt(3)").find(".cancelHandOver").hide();
+                               $("#signature-table tr:eq(0) td:lt(3)").find(".succession").hide();
+                           }
+                           $("#signature-table tr:eq(1) td:eq(" + s + ")").find(".handPeople").append(dataJson[i].NAME);
+                           $("#signature-table tr:eq(1) td:eq(" + s + ")").find(".handTime").append((dataJson[i].EDITTIME).replace(/T/g, " "));
+                           $("#signature-table tr:eq(0) td:eq(" + s + ")").find(".cancelHandOver").show();
+                           $("#signature-table tr:eq(0) td:eq(" + s + ")").find(".succession").show();
+                           $("#signature-table tr:eq(0) td:eq(" + s + ")").find(".handOver").hide();
+                       }
+                       //交班后查询是否已经接班
+                       $.ajax({
+                           url: "/HandoverReport/IsSuccession",
+                           data: { "wordId": wordId, "submitTime": nowTime },
+                           type: "post",
+                           success: function (res) {
+                               var resJson = $.parseJSON(res);//把JSON字符串转为JSON对象                           
+                               var h = 0;
+                               //已接班，显示取消接班按钮
+                               if (resJson.length > 0) {
+                                   for (var j = 0; j < resJson.length; j++) {
+                                       h = Math.round((resJson[j].SUBMITTIME).substring(11, 13) / 8);
+                                        $("#signature-table tr:eq(0) td:eq(" + h + ")").find("button").hide();
+                                        $("#signature-table tr:eq(0) td:eq(" + h + ")").find(".cancelSuccession").show();
+                                       $("#signature-table tr:eq(1) td:eq(" + h + ")").find(".secondList span:eq(0)").append(resJson[j].NAME);
+                                       $("#signature-table tr:eq(1) td:eq(" + h + ")").find(".secondList span:eq(1)").append((resJson[j].EDITTIME).replace(/T/g, " "));
+                                   }
+                               }                         
+
+                           }
+                       });
+                 
+                    }
+                    else {
+                        console.log("未交班");
+                    }    
+                }
+            })
+        }
+        IsHandOver();
+      
         //根据不同的时间段，交班按钮的显示情况,以及每个班次里面的编辑按钮，鼠标放上显示，离开隐藏
         function HourShow(shi) {
             if (shi >= 8 && shi <= 15) {//在16点之前只有第一个交班显示
@@ -516,7 +577,7 @@
                 });
             }
             else if (shi >= 17 && shi <= 22) {//在到17点了，只有第二个交班按钮显示，其他隐藏下面类似
-                $(".handOver").hide();
+                $("#signature-table tr:eq(0)").find("button").hide();
                 $("#handOverTwo").show();
                 $("#patient-status-late-night").hide();
                 $("#patient_special_state  tr").find("td:eq(2)").mouseover(function () {
@@ -525,7 +586,8 @@
                 $("#patient_special_state  tr").find("td:eq(2)").mouseleave(function () {
                     $(this).find("button").hide(50);
                 });
-            } else if (shi == 23) {
+            }
+            else if (shi == 23) {
                 $("#handOverTwo").show();
                 $("#handOverThree").show();
                 $("#patient_special_state  tr").find("td:gt(1)").mouseover(function () {
@@ -536,7 +598,7 @@
                 });
             }
             else {
-                $(".handOver").hide();
+                $("#signature-table tr:eq(0)").find("button").hide();
                 $("#handOverThree").show();
                 $("#patient_special_state  tr").find("td:eq(3)").mouseover(function () {
                     $(this).find("button").show();
@@ -634,17 +696,10 @@
             $("#report-time").html(select_date);
             //如果日期是今天，交班按钮就显示，否则隐藏
             if(select_date==nowTime){
-                $(".handOver").show();//交班按钮显示
-                $("#addPatient").show();
-                $("#report-content-table tr:eq(0)").css("height", "24px");
-                $("#report-content-table tr:gt(1)").show();
-                $("#patient_special_state").html("");
-                patientTodayContent(select_date);
-                HourShow(hour);
-                editHide();
+                location.reload();
             }
             else if (timeSelect > date) {//日期大于今天，提示信息日期不对
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#report-content-table tr:gt(1)").hide();
                 $("#report-content-table tr:eq(0)").css("height", "90px");
@@ -657,7 +712,7 @@
                 pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#patient_special_state").html("");
                 patientBeforeContent(select_date);
@@ -678,17 +733,10 @@
             $("#select_date").val(timeRed_format);
             //如果日期是今天，交班按钮就显示，否则隐藏
             if (timeRed_format == nowTime) {
-                $(".handOver").show();//交班按钮显示
-                $("#addPatient").show();
-                $("#report-content-table tr:eq(0)").css("height", "24px");
-                $("#report-content-table tr:gt(1)").show();
-                $("#patient_special_state").html("");
-                patientTodayContent(timeRed_format);
-                HourShow(hour);
-                editHide();
+                location.reload();
             }
             else if (timeRed > date) {
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#report-content-table tr:gt(1)").hide();
                 $("#report-content-table tr:eq(0)").css("height", "90px");
@@ -701,7 +749,7 @@
                 pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#patient_special_state").html("");
                 patientBeforeContent(timeRed_format);
@@ -722,17 +770,10 @@
             $("#report-time").html(timeAdd_format);
             //如果日期是今天，交班按钮就显示，否则隐藏
             if (timeAdd_format == nowTime) {
-                $(".handOver").show();//交班按钮显示
-                $("#addPatient").show();
-                $("#report-content-table tr:eq(0)").css("height", "24px");
-                $("#report-content-table tr:gt(1)").show();
-                $("#patient_special_state").html("");
-                patientTodayContent(timeAdd_format);
-                HourShow(hour);
-                editHide();
+                location.reload();
             }
             else if (timeAdd > date) {//日期大于今天，提示信息日期不对
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#report-content-table tr:gt(1)").hide();
                 $("#report-content-table tr:eq(0)").css("height", "90px");
@@ -745,7 +786,7 @@
                 pStatus();
                 $("#report-content-table tr:gt(1)").show();
                 $("#report-content-table tr:eq(0)").css("height", "24px");
-                $(".handOver").hide();//交班按钮隐藏
+                $("#signature-table button").hide();//交班那里所有按钮隐藏
                 $("#addPatient").hide();//添加病人按钮隐藏
                 $("#patient_special_state").html("");
                 patientBeforeContent(timeAdd_format);
@@ -754,9 +795,22 @@
 
         //点击增加病人,显示在院某个病区 所有病人的基本信息，但除去已在表格里的病人
         $("#addPatient").click(function () {
+            var pId = new Array();
+            var pIds = "";
+            for (var i = 0; i < $("#patient_special_state tr").length; i++) {             
+                if (i < $("#patient_special_state tr").length - 1) {
+                    var PID = $("#patient_special_state tr:eq(" + i + ") td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+                    pIds += PID;
+                    pIds += "','";
+                }
+                else {
+                    var PID = $("#patient_special_state tr:eq(" + i + ") td:eq(0)").find("input").val(); //循环查询出病人特殊情况表格中每行的病人的ID
+                    pIds += PID;
+                }
+            }
             $.ajax({
                 url: "/HandoverReport/QueryPatientsInfo",
-                data: { "wardId": '507' },
+                data: { "wardId": '507' ,"pIds":pIds},
                 type: "POST",
                 async:false,
                 dataType: "json",
@@ -806,8 +860,7 @@
 
         });
 
-        //点击病人信息的某行，该行颜色变化,并获取选中的病人
-        //点击添加病人弹框中的确认按钮，把病人添加到交班报告表格中
+        //点击病人信息的某行，该行颜色变化,并获取选中的病人      
         var information = "";
         layui.use("table", function () {
             var table = layui.table;
@@ -890,7 +943,7 @@
 
         });
      
-        //点击病人信息中的编辑按钮,弹出病人信息
+        //点击病人信息中的编辑按钮,弹出病人信息，编辑病人诊断
         $("#report-content-table>tbody>tr .happening a").click(function () {
             var name = $(this).parent().find('.name').html();
             var illness = $(this).parent().find('p').html();
@@ -1124,8 +1177,8 @@
                             success: function (data) {
                                 if (data > 0) {
                                     hand_td.find(".cancelSuccession").show();
-                                    $(".cancelHandOver").hide();
-                                    $(".succession").hide();
+                                    $("#signature-table tr:eq(0) td:eq(" + handIndex + ")").find(".cancelHandOver").hide();
+                                    $("#signature-table tr:eq(0) td:eq(" + handIndex + ")").find(".succession").hide();                                
                                     $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(0)").append(username);
                                     $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(1)").append($("#successionTime").val().replace(/T/g, " "));
                                     
@@ -1166,7 +1219,7 @@
                 type: "post",
                 success: function (data) {
                     if (data > 0) {
-                        $(".cancelSuccession").hide();
+                        hand_td.find(".cancelSuccession").hide();
                         hand_td.find(".cancelHandOver").show();
                         hand_td.find(".succession").show();
                         $("#signature-table tr:eq(1) td:eq(" + handIndex + ")").find(".secondList span:eq(0)").html("交班人:");

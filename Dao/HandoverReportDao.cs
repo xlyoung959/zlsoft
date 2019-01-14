@@ -45,6 +45,7 @@ namespace Dao
           };
             return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
         }
+
         /// <summary>
         /// 修改病人诊断记录表中的诊断描述
         /// </summary>
@@ -67,13 +68,15 @@ namespace Dao
         /// </summary>
         /// <param name="wardId">当前病区相关id</param>
         /// <returns></returns>
-        public DataTable QueryPatientsInfo(string wardId)
+        public DataTable QueryPatientsInfo(string wardId, string pIds)
         {
-            string sql = @"select t.姓名 as name, t.住院号 as hospitalNum , t.床号 as bedId,t.相关ID as patientId from PUB_病人基本信息 t where t.当前病区相关id=:WardId  and t.相关ID not in(
-                              select distinct a.病人Id from 病案主页 a where a.当前病区id =:WardID  and a.当前病况 in('重','危') and a.出院日期 is null ) order by t.床号 ";
+            string sql = @"select t.姓名 as name, t.住院号 as hospitalNum , t.床号 as bedId,t.相关ID as patientId from PUB_病人基本信息 t where t.当前病区相关id=:WardId  and t.相关ID not in(:PIDS)";
+                              //select distinct a.病人Id from 病案主页 a where a.当前病区id =:WardID  and a.当前病况 in('重','危') and a.出院日期 is null ) order by t.床号 ";
             OracleParameter[] prms = new OracleParameter[]
           {
-                 new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardId}
+                 new OracleParameter("WardID",OracleDbType.Varchar2,32) { Value=wardId},
+                 new OracleParameter("PIDS",OracleDbType.Varchar2,1000) { Value=pIds}
+
           };
             return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
 
@@ -187,6 +190,7 @@ namespace Dao
             return OracleHelper.ExecuteScalar(sql, CommandType.Text, prms);
 
         }
+
         /// <summary>
         /// 从交班报告中查询一般病人
         /// </summary>
@@ -322,7 +326,44 @@ namespace Dao
             return OracleHelper.ExecuteNonQuery(sql, CommandType.Text, prms);
         }
 
+        /// <summary>
+        /// 判断当前班次是否已交班，如果以交班就在页面显示接班
+        /// </summary>
+        /// <returns></returns>
+        public DataTable  IsHandOver(string wordId,string submitTime)
+        {
+            string sql = @"select 提交人 as name , 编辑时间 as editTime ,提交时间 as submitTime from PUB_交班日志 j where j.对象id=:WordId and j.类型=1 
+                   and j.提交时间 between to_date(:SubmitTime,'YYYY-MM-DD hh24:mi:ss') and to_date(:SubmitTime,'YYYY-MM-DD hh24:mi:ss')+1";
+                         
+            OracleParameter[] prms = new OracleParameter[]
+            {
+                  new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
+                   new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime}          
+            };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+            
+        }
 
+        /// <summary>
+        /// 判断当前是否已经接班
+        /// </summary>
+        /// <param name="wordId"></param>
+        /// <param name="submitTime"></param>
+        /// <returns></returns>
+        public DataTable IsSuccession(string wordId, string submitTime)
+        {
+            string sql = @"select 提交人 as name , 编辑时间 as editTime ,提交时间 as submitTime from PUB_交班日志 j where j.对象id=:WordId and j.类型=2
+                      and j.提交时间 between to_date(:SubmitTime,'YYYY-MM-DD hh24:mi:ss') and to_date(:SubmitTime,'YYYY-MM-DD hh24:mi:ss')+1";
+
+
+            OracleParameter[] prms = new OracleParameter[]
+            {
+                  new OracleParameter("WordId",OracleDbType.Varchar2,36) { Value=wordId},
+                   new OracleParameter("SubmitTime",OracleDbType.Varchar2,32) { Value=submitTime}
+            };
+            return OracleHelper.ExecuteDataTable(sql, CommandType.Text, prms);
+
+        }
 
 
 

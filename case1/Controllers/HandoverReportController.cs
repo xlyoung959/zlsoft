@@ -43,9 +43,9 @@ namespace case1.Controllers
         /// </summary>
         /// <param name="wardId"></param>
         /// <returns></returns>
-        public ContentResult QueryPatientsInfo(string wardId)
+        public ContentResult QueryPatientsInfo(string wardId,string pIds)
         {
-            var data = handoverReportService.QueryPatientsInfo(wardId);
+            var data = handoverReportService.QueryPatientsInfo(wardId, pIds);
             var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
             return Content(dataStr);
         }
@@ -154,5 +154,22 @@ namespace case1.Controllers
         {
             return handoverReportService.CancelSuccession(submitTime, username);
         }
+
+        //判断当前是否已交班
+        public ContentResult  IsHandOver(string wordId, string submitTime)
+        {
+           var data =handoverReportService.IsHandOver(wordId, submitTime);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+
+        }
+        //判断是否已接班
+        public ContentResult IsSuccession(string wordId, string submitTime)
+        {
+            var data = handoverReportService.IsSuccession(wordId, submitTime);
+            var dataStr = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            return Content(dataStr);
+        }
+
     }
 }

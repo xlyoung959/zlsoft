@@ -45,9 +45,9 @@ namespace Service
         /// </summary>
         /// <param name="wardId"></param>
         /// <returns></returns>
-        public DataTable QueryPatientsInfo(string wardId)
+        public DataTable QueryPatientsInfo(string wardId, string pIds)
         {
-            return handoverReportDao.QueryPatientsInfo(wardId);
+            return handoverReportDao.QueryPatientsInfo(wardId, pIds);
         }
 
         public DataTable QueryPatientsInfoByName(string wardId, string searchText)
@@ -113,25 +113,35 @@ namespace Service
         {
             return handoverReportDao.SelectPatientContentByID(patientID, date, wardID);
         }
-
+        //交班
         public int HandOver(string wordId, string submitTime, string username, string editContent, string editTime)
         {
             return handoverReportDao.HandOver(wordId, submitTime, username, editContent, editTime);
         }
-
+        //取消交班
         public int CancelHandOver(string submitTime, string username)
         {
             return handoverReportDao.CancelHandOver(submitTime, username);
         }
-
+        //接班
         public int Succession(string wordId, string submitTime, string username)
         {
             return handoverReportDao.Succession(wordId, submitTime, username);
         }
-
+        //取消接班
         public int CancelSuccession(string submitTime, string username)
         {
             return handoverReportDao.CancelSuccession(submitTime, username);
+        }
+        //判断当前是否已交班
+        public DataTable IsHandOver(string wordId, string submitTime)
+        {
+            return handoverReportDao.IsHandOver(wordId, submitTime);
+        }
+        //判断是否已接班
+        public DataTable IsSuccession(string wordId, string submitTime)
+        {
+            return handoverReportDao.IsSuccession(wordId, submitTime);
         }
     }
 }
